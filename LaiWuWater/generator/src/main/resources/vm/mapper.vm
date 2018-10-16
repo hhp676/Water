@@ -1,0 +1,16 @@
+#set($mapperFolder="mapper")
+#set($MapperSuffix="Mapper")
+package $meta.pkgName.$mapperFolder;
+
+import com.hongguaninfo.hgdf.adp.core.base.BaseSqlMapper;
+
+ /**
+ * $meta.tableDesc: $meta.tableName
+ * mapper $meta.sLayer
+ * @author henry
+ */
+
+public interface $meta.className$MapperSuffix extends BaseSqlMapper {
+
+}
+

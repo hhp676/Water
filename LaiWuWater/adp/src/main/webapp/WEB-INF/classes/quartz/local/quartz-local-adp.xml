@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd"
+	default-lazy-init="true">
+
+	<!-- 自动生成当天日报待办  未使用-->
+	<bean id="oaDiaryAutoCrtTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail">
+			<bean
+				class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+				<property name="targetObject" ref="oaDiaryAutoCrtJob" />
+				<property name="targetMethod" value="crtTodayDiary" />
+				<!-- 同一任务在前一次执行未完成而Trigger时间又到时是否并发开始新的执行, 默认为true. -->
+				<property name="concurrent" value="false" />
+			</bean>
+		</property>
+		<property name="cronExpression" value="0 * * ? * *" />
+	</bean>
+	<!-- 自动生成当天日报待办 -->
+
+	<!-- 代办或待认领数量超过一定数目时发送通知邮件 -->
+	<bean id="oaNotifyTodoMailSendTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail">
+			<bean
+				class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+				<property name="targetObject" ref="oaNotifyMailSendJob" />
+				<property name="targetMethod" value="sendApproveTodoMail" />
+				<!-- 同一任务在前一次执行未完成而Trigger时间又到时是否并发开始新的执行, 默认为true. -->
+				<property name="concurrent" value="false" />
+			</bean>
+		</property>
+		<property name="cronExpression" value="${quartz.cronExpression.oaNotifyTodoMailSendTrigger}" />
+	</bean>
+
+	<!-- 发送日报未填写通知（3天内未填写）-->
+	<bean id="oaNotifyUnFilloutDiaryMailByDayTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail">
+			<bean
+				class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+				<property name="targetObject" ref="oaNotifyMailSendJob" />
+				<property name="targetMethod" value="sendUnFilloutDiaryMailByDay" />
+				<property name="concurrent" value="false" />
+			</bean>
+		</property>
+		<property name="cronExpression" value="${quartz.cronExpression.oaNotifyUnFilloutDiaryMailByDayTrigger}" />
+	</bean>
+
+	<!-- 发送上个月日报未完整填写通知(每月第一个周一)-->
+	<bean id="oaNotifyUnFilloutDiaryMailByMonthTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail">
+			<bean
+				class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+				<property name="targetObject" ref="oaNotifyMailSendJob" />
+				<property name="targetMethod" value="sendUnFilloutDiaryMailByMonth" />
+				<property name="concurrent" value="false" />
+			</bean>
+		</property>
+		<property name="cronExpression" value="${quartz.cronExpression.oaNotifyUnFilloutDiaryMailByMonthTrigger}" />
+	</bean>
+	
+	<!-- 自动解锁用户-->
+	<bean id="unlockSysUserTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail">
+			<bean
+				class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+				<property name="targetObject" ref="unlockSysUserJob" />
+				<property name="targetMethod" value="doUnlockSysUser" />
+				<property name="concurrent" value="false" />
+			</bean>
+		</property>
+		<property name="cronExpression" value="${quartz.cronExpression.unlockSysUserTrigger}" />
+	</bean>
+</beans>

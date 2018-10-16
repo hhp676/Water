@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hongguaninfo.hgdf.adp.mapper.sys.SysRoleMapper">
+
+	<!-- The corresponding field and type -->
+	<resultMap type="SysRole" id="ResultMap">
+		<result column="roleId" javaType="java.math.BigDecimal"
+			property="roleId" />
+		<result column="roleName" javaType="String" property="roleName" />
+		<result column="roleCode" javaType="String" property="roleCode" />
+		<result column="isDelete" javaType="Integer" property="isDelete" />
+		<result column="isFinal" javaType="Integer" property="isFinal" />
+		<result column="crtTime" jdbcType="TIMESTAMP" property="crtTime" />
+		<result column="updTime" jdbcType="TIMESTAMP" property="updTime" />
+		<result column="crtUserid" javaType="java.math.BigDecimal"
+			property="crtUserid" />
+		<result column="updUserid" javaType="java.math.BigDecimal"
+			property="updUserid" />
+		<result column="descr" javaType="String" property="descr" />
+	</resultMap>
+
+	<!-- Each field corresponding alias, convenient call -->
+	<sql id="SQL_SYS_ROLE_COLUMN">
+		SR.ROLE_ID_ roleId, SR.ROLE_NAME_ roleName, SR.ROLE_CODE_
+		roleCode, SR.IS_DELETE_ isDelete,
+		SR.IS_FINAL_ isFinal,SR.CRT_TIME_ crtTime, SR.UPD_TIME_ updTime,SR.CRT_USERID_
+		crtUserid,
+		SR.UPD_USERID_ updUserid,SR.DESCR_ descr
+	</sql>
+
+	<!-- whether multiple fields is empty -->
+	<sql id="SQL_SYS_ROLE_WHERE">
+		<if test="roleId !=null ">
+			AND SR.ROLE_ID_=#{roleId}
+		</if>
+		<if test="roleName !=null and roleName.length()!=0 ">
+			AND SR.ROLE_NAME_ like '%${roleName}%'
+		</if>
+		<if test="roleCode !=null and roleCode.length()!=0 ">
+			AND SR.ROLE_CODE_ =#{roleCode}
+		</if>
+		<if test="roleCodeForQuery !=null and roleCodeForQuery.length()!=0">
+			AND SR.ROLE_CODE_ like '%${roleCodeForQuery}%'
+		</if>
+		<if test="isDelete !=null ">
+			AND SR.IS_DELETE_=#{isDelete}
+		</if>
+		<if test="isFinal !=null ">
+			AND SR.IS_FINAL_=#{isFinal}
+		</if>
+		<if test="crtTime !=null ">
+			AND SR.CRT_TIME_=#{crtTime}
+		</if>
+		<if test="updTime !=null ">
+			AND SR.UPD_TIME_=#{updTime}
+		</if>
+		<if test="crtUserid !=null ">
+			AND SR.CRT_USERID_=#{crtUserid}
+		</if>
+		<if test="updUserid !=null ">
+			AND SR.UPD_USERID_=#{updUserid}
+		</if>
+		<if test="descr !=null and descr.length()!=0 ">
+			AND SR.DESCR_=#{descr}
+		</if>
+	</sql>
+
+	<!-- Query All -->
+	<select id="getList" parameterType="SysRole" resultType="SysRole">
+		select
+		<include refid="SQL_SYS_ROLE_COLUMN" />
+		from SYS_ROLE SR
+		<where>
+			<include refid="SQL_SYS_ROLE_WHERE" />
+		</where>
+		<if test="orderStr != null and orderStr.length() != 0">
+			ORDER BY ${orderStr}
+		</if>
+		<if test="orderStr == null or orderStr.length() == 0">
+			ORDER BY SR.ROLE_ID_ desc
+		</if>
+	</select>
+
+	<!-- Statistical line -->
+	<select id="getListCount" parameterType="SysRole" resultType="int">
+		select count(*) as counts
+		from SYS_ROLE SR
+		<where>
+			<include refid="SQL_SYS_ROLE_WHERE" />
+		</where>
+	</select>
+
+<!-- 角色关联的人员列表 -->
+	<select id="getUserList" parameterType="SysRole" resultType="SysRole">
+		   
+		  select  b.userId,  b.userName ,b.loginName,b.email from   (SELECT DISTINCT a.userId,  a.userName ,a.loginName,a.email from  (
+		  select su.USER_ID_ userId, su.USER_NAME_ userName ,su.LOGIN_NAME_ loginName,su.EMAIL_ email 
+		  from SYS_USER su ,SYS_USER_ROLE_JOIN surj 
+		  where su.USER_ID_ = surj.USER_ID_ and surj.ROLE_ID_ = #{roleId} and su.IS_DELETE_ = 0 
+		  UNION ALL
+		  select su.USER_ID_ userId, su.USER_NAME_ userName ,su.LOGIN_NAME_ loginName,su.EMAIL_ email 
+		  from   sys_role_ugroup_join sruj ,sys_user_ugroup_join suuj,sys_user su 
+		   where sruj.ROLE_ID_ =#{roleId} and su.IS_DELETE_ = 0 
+           and su.USER_ID_ = suuj.USER_ID_  
+	 
+		   and  suuj.group_id_ = sruj.GROUP_ID_
+		)a )b
+		
+		 
+		<where>
+		    
+			<if test="userName != null and userName.length() != 0">
+				and b.userName like '%${userName}%'
+			</if>
+		</where>
+		
+	</select>
+
+	<select id="getUserListCount" parameterType="SysRole" resultType="int">
+		  select  count(*) from   (SELECT DISTINCT a.userId,  a.userName ,a.loginName,a.email from  (
+		  select su.USER_ID_ userId, su.USER_NAME_ userName ,su.LOGIN_NAME_ loginName,su.EMAIL_ email 
+		  from SYS_USER su ,SYS_USER_ROLE_JOIN surj 
+		  where su.USER_ID_ = surj.USER_ID_ and surj.ROLE_ID_ = #{roleId} and su.IS_DELETE_ = 0 
+		  UNION ALL
+		  select su.USER_ID_ userId, su.USER_NAME_ userName ,su.LOGIN_NAME_ loginName,su.EMAIL_ email 
+		  from   sys_role_ugroup_join sruj ,sys_user_ugroup_join suuj,sys_user su 
+		   where sruj.ROLE_ID_ =#{roleId} and su.IS_DELETE_ = 0 
+           and su.USER_ID_ = suuj.USER_ID_  
+	 
+		   and  suuj.group_id_ = sruj.GROUP_ID_
+		)a )b 
+			<where>
+			 
+				<if test="userName != null and userName.length() != 0">
+					and b.userName like '%${userName}%'
+				</if>
+			</where>
+		</select>
+	<!-- According to the id check record -->
+	<select id="getById" parameterType="int" resultType="SysRole">
+		select
+		<include refid="SQL_SYS_ROLE_COLUMN" />
+		from SYS_ROLE SR
+		<where>SR.ROLE_ID_ = #{idValue}</where>
+	</select>
+
+	<!-- add -->
+	<insert id="insert" parameterType="SysRole">
+		insert into SYS_ROLE
+		(
+		ROLE_ID_ , ROLE_NAME_ ,ROLE_CODE_ ,IS_DELETE_ ,IS_FINAL_ ,
+		CRT_TIME_ ,
+		UPD_TIME_ , CRT_USERID_ ,UPD_USERID_ ,DESCR_ )
+		VALUES (#{roleId,jdbcType=NUMERIC} ,#{roleName,jdbcType=VARCHAR} ,
+		#{roleCode,jdbcType=VARCHAR} ,#{isDelete,jdbcType=NUMERIC}
+		,#{isFinal,jdbcType=NUMERIC} ,
+		#{crtTime,jdbcType=TIMESTAMP}
+		,#{updTime,jdbcType=TIMESTAMP} ,#{crtUserid,jdbcType=NUMERIC} ,
+		#{updUserid,jdbcType=NUMERIC} , #{descr,jdbcType=VARCHAR} )
+	</insert>
+
+	<!-- update -->
+	<update id="update" parameterType="SysRole">
+		UPDATE SYS_ROLE
+		<set>
+			<if test="roleName !=null">
+				ROLE_NAME_ = #{roleName} ,
+			</if>
+			<if test="roleCode !=null">
+				ROLE_CODE_ = #{roleCode} ,
+			</if>
+			<if test="isDelete !=null">
+				IS_DELETE_ = #{isDelete} ,
+			</if>
+			<if test="isFinal !=null">
+				IS_FINAL_ = #{isFinal} ,
+			</if>
+			<if test="crtTime !=null">
+				CRT_TIME_ = #{crtTime} ,
+			</if>
+			<if test="updTime !=null">
+				UPD_TIME_ = #{updTime} ,
+			</if>
+			<if test="crtUserid !=null">
+				CRT_USERID_ = #{crtUserid} ,
+			</if>
+			<if test="updUserid !=null">
+				UPD_USERID_ = #{updUserid} ,
+			</if>
+			<if test="descr !=null">
+				DESCR_ = #{descr}
+			</if>
+		</set>
+		WHERE ROLE_ID_=#{roleId} AND IS_DELETE_=0 and IS_FINAL_=0
+	</update>
+
+	<!-- delete -->
+	<delete id="delete" parameterType="SysRole">
+		DELETE FROM SYS_ROLE
+		WHERE
+		ROLE_ID_=#{roleId}
+	</delete>
+
+
+
+</mapper>

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hongguaninfo.hgdf.wadp.mapper.sys.SysConfigMapper">
+
+	<!-- The corresponding field and type -->
+	<resultMap type="SysConfig" id="ResultMap">
+		<result column="configKey" javaType="String" property="configKey" />
+		<result column="configValue" javaType="String" property="configValue" />
+		<result column="configDesc" javaType="String" property="configDesc" />
+		<result column="configType" javaType="String" property="configType" />
+		<result column="defaultValue" javaType="String" property="defaultValue" />
+		<result column="updTime" jdbcType="TIMESTAMP" property="updTime" />
+		<result column="updUserid" javaType="java.math.BigDecimal"
+			property="updUserid" />
+	</resultMap>
+
+	<!-- Each field corresponding alias, convenient call -->
+	<sql id="SQL_SYS_CONFIG_COLUMN">
+		SC.CONFIG_KEY_ configKey, SC.CONFIG_VALUE_ configValue, SC.CONFIG_DESC_ configDesc,
+		SC.CONFIG_TYPE_ configType, SC.DEFAULT_VALUE_ defaultValue,
+		SC.UPD_TIME_ updTime, SC.UPD_USERID_ updUserid,SC.IS_FINAL_ isFinal,SC.IS_VISIBLE_ isVisible
+	</sql>
+
+	<!-- whether multiple fields is empty -->
+	<sql id="SQL_SYS_CONFIG_WHERE">
+		<if test="configKey !=null and configKey.length()!=0 ">
+			AND SC.CONFIG_KEY_=#{configKey}
+		</if>
+		<if test="configValue !=null and configValue.length()!=0 ">
+			AND SC.CONFIG_VALUE_=#{configValue}
+		</if>
+		<if test="configDesc !=null and configDesc.length()!=0 ">
+			AND SC.CONFIG_DESC_=#{configDesc}
+		</if>
+		<if test="configType !=null and configType.length()!=0 ">
+			AND SC.CONFIG_TYPE_=#{configType}
+		</if>
+		<if test="defaultValue !=null and defaultValue.length()!=0 ">
+			AND SC.DEFAULT_VALUE_=#{defaultValue}
+		</if>
+		<if test="updTime !=null ">
+			AND SC.UPD_TIME_=#{updTime}
+		</if>
+		<if test="updUserid !=null ">
+			AND SC.UPD_USERID_=#{updUserid}
+		</if>
+		<if test="isFinal !=null ">
+			AND SC.IS_FINAL_=#{isFinal}
+		</if>
+		<if test="isVisible !=null ">
+			AND SC.IS_VISIBLE_=#{isVisible}
+		</if>
+	</sql>
+
+	<!-- Query All -->
+	<select id="getList" parameterType="SysConfig" resultType="SysConfig">
+		select
+		<include refid="SQL_SYS_CONFIG_COLUMN" />
+		from SYS_CONFIG SC
+		<where>
+			<include refid="SQL_SYS_CONFIG_WHERE" />
+		</where>
+		<if test="orderStr != null and orderStr.length() != 0">
+			ORDER BY ${orderStr}
+		</if>
+		<if test="orderStr == null or orderStr.length() == 0">
+			ORDER BY
+			SC.CONFIG_KEY_ desc
+		</if>
+	</select>
+
+	<!-- Statistical line -->
+	<select id="getListCount" parameterType="SysConfig" resultType="int">
+		select count(*) as counts
+		from SYS_CONFIG SC
+		<where>
+			<include refid="SQL_SYS_CONFIG_WHERE" />
+		</where>
+	</select>
+
+	<!-- According to the id check record -->
+	<select id="getById" parameterType="int" resultType="SysConfig">
+		select
+		<include refid="SQL_SYS_CONFIG_COLUMN" />
+		from SYS_CONFIG SC
+		<where>
+			SC.CONFIG_KEY_ = #{idValue}
+		</where>
+	</select>
+
+	<!-- add -->
+	<insert id="insert" parameterType="SysConfig">
+		<!-- KeyProperty may not be id !! No primary key can't sequence !!! -->
+		insert into SYS_CONFIG (
+		CONFIG_KEY_ , CONFIG_VALUE_ , CONFIG_DESC_ , CONFIG_TYPE_ , DEFAULT_VALUE_ ,
+		UPD_TIME_ , UPD_USERID_ ) VALUES (
+		#{configKey,jdbcType=VARCHAR} , #{configValue,jdbcType=VARCHAR} , #{configDesc,jdbcType=VARCHAR} ,
+		#{configType,jdbcType=VARCHAR} , #{defaultValue,jdbcType=VARCHAR} ,
+		#{updTime,jdbcType=TIMESTAMP} , #{updUserid,jdbcType=NUMERIC} )
+	</insert>
+
+	<!-- update -->
+	<update id="update" parameterType="SysConfig">
+		UPDATE SYS_CONFIG
+		<set>
+			<if test="configValue !=null">
+				CONFIG_VALUE_ = #{configValue} ,
+			</if>
+			<if test="configDesc !=null">
+				CONFIG_DESC_ = #{configDesc} ,
+			</if>
+			<if test="configType !=null">
+				CONFIG_TYPE_ = #{configType} ,
+			</if>
+			<if test="defaultValue !=null">
+				DEFAULT_VALUE_ = #{defaultValue} ,
+			</if>
+			<if test="updTime !=null">
+				UPD_TIME_ = #{updTime} ,
+			</if>
+			<if test="updUserid !=null">
+				UPD_USERID_ = #{updUserid}
+			</if>
+		</set>
+		WHERE
+		CONFIG_KEY_ = #{configKey}
+	</update>
+
+	<!-- delete -->
+	<delete id="delete" parameterType="SysConfig">
+		DELETE FROM SYS_CONFIG
+		WHERE
+		CONFIG_KEY_=#{configKey}
+	</delete>
+
+	<!-- delete(ids) -->
+	<delete id="deleteById" parameterType="java.lang.Integer">
+		DELETE FROM SYS_CONFIG
+		WHERE
+		CONFIG_KEY_=#{configKey}
+	</delete>
+
+</mapper>

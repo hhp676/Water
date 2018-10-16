@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<portable-config>
+    <config-file path="WEB-INF/classes/logback.xml">
+        <replace xpath="/configuration/property[@name='LOG_DIR']/@value">/opt/logs/hgdf-wadp/</replace>
+        <replace xpath="/configuration/property[@name='LOG_LEVEL']/@value">ERROR</replace>
+        <!-- <replace xpath="/configuration/root/@level">ERROR</replace> -->
+        <replace xpath="/configuration/property[@name='LOG_REF']/@value">FILE</replace>
+    </config-file>
+    <config-file path="WEB-INF/classes/env.properties" type=".properties">
+        <replace key="jdbc.driverUrl">jdbc:oracle:thin:@192.168.3.11:1521:orcl</replace>
+        <replace key="jdbc.password">hgadp</replace>
+        <replace key="jdbc.password">hgadp</replace>
+    </config-file>
+</portable-config>

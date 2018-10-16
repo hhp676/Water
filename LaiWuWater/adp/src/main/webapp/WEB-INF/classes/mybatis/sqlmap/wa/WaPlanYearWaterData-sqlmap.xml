@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hongguaninfo.hgdf.wa.mapper.WaPlanYearWaterDataMapper">
+
+
+    <!-- sqlColumn -->
+    <sql id="SQL_WA_PLAN_YEAR_WATER_DATA_COLUMN">
+        wpywd.PLAN_WATER_ID_ planWaterId,
+        wpywd.COMPANY_ID_ companyId,
+        wpywd.PLAN_YEAR_ planYear,
+        wpywd.PLAN_YEAR_AVG_WATER_ planYearAvgWater,
+        wpywd.PLAN_YEAR_EDIT_WATER_ planYearEditWater,
+        wpywd.ACT_YEAR_WATER_ actYearWater,
+        wpywd.IS_OVERPROOF_ isOverproof,
+        wpywd.IS_DELTE_ isDelte,
+        wpywd.CRT_TIME_ crtTime,
+        wpywd.UPD_TIME_ updTime
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_WA_PLAN_YEAR_WATER_DATA_WHERE">
+        	<if test="planWaterId != null">
+	            AND wpywd.PLAN_WATER_ID_ = #{planWaterId}
+        </if>
+        		<if test="companyId != null and companyId.length() != 0">
+        		AND wpywd.COMPANY_ID_ like '%${companyId}%'
+        </if>
+        		<if test="planYear != null and planYear.length() != 0">
+        		AND wpywd.PLAN_YEAR_ like '%${planYear}%'
+        </if>
+        		<if test="planYearAvgWater != null and planYearAvgWater.length() != 0">
+        		AND wpywd.PLAN_YEAR_AVG_WATER_ like '%${planYearAvgWater}%'
+        </if>
+        		<if test="planYearEditWater != null and planYearEditWater.length() != 0">
+        		AND wpywd.PLAN_YEAR_EDIT_WATER_ like '%${planYearEditWater}%'
+        </if>
+        		<if test="actYearWater != null and actYearWater.length() != 0">
+        		AND wpywd.ACT_YEAR_WATER_ like '%${actYearWater}%'
+        </if>
+        	<if test="isOverproof != null">
+	            AND wpywd.IS_OVERPROOF_ = #{isOverproof}
+        </if>
+        	<if test="isDelte != null">
+	            AND wpywd.IS_DELTE_ = #{isDelte}
+        </if>
+        	<if test="crtTime != null">
+	            AND wpywd.CRT_TIME_ = #{crtTime}
+        </if>
+        	<if test="updTime != null">
+	            AND wpywd.UPD_TIME_ = #{updTime}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultType="WaPlanYearWaterData">
+        select <include  refid="SQL_WA_PLAN_YEAR_WATER_DATA_COLUMN" />,
+		com.COMPANY_NAME_ companyName,
+		com.COMPANY_CODE_ companyCode,
+		com.IS_IMPORT_ isImport
+		from WA_PLAN_YEAR_WATER_DATA wpywd, WA_COMPANY_INFO com
+		WHERE wpywd.COMPANY_ID_ = com.COMPANY_ID_
+		AND wpywd.PLAN_WATER_ID_ = #{planWaterId}
+    </select>
+
+	<!-- According to the id check record  -->
+	<!--<select id="getPlanWaterList" parameterType="WaPlanYearWaterData" resultType="WaPlanYearWaterData">
+		select <include  refid="SQL_WA_PLAN_YEAR_WATER_DATA_COLUMN" />
+		from WA_PLAN_YEAR_WATER_DATA wpywd
+
+		<where>
+			wpywd.PLAN_WATER_ID_ = #{planWaterId}
+		</where>
+	</select>-->
+
+	<select id="getByYearWaterData" parameterType="WaPlanYearWaterData" resultType="WaPlanYearWaterData">
+		select <include  refid="SQL_WA_PLAN_YEAR_WATER_DATA_COLUMN" />,
+		com.COMPANY_NAME_ companyName,
+		com.COMPANY_CODE_ companyCode,
+		com.IS_IMPORT_ isImport
+		from WA_PLAN_YEAR_WATER_DATA wpywd, WA_COMPANY_INFO com
+		WHERE wpywd.COMPANY_ID_ = com.COMPANY_ID_
+		<if test="companyId != null">
+			AND wpywd.COMPANY_ID_ = #{companyId}
+		</if>
+		<if test="planYear != null">
+			AND wpywd.PLAN_YEAR_ = #{planYear}
+		</if>
+		<if test="isDelte != null">
+			AND wpywd.IS_DELTE_ = #{isDelte}
+		</if>
+	</select>
+
+	<delete id="deleteByWaterData" parameterType="WaPlanYearWaterData">
+		DELETE FROM WA_PLAN_YEAR_WATER_DATA
+		WHERE
+		COMPANY_ID_ = #{companyId} AND PLAN_YEAR_ = #{planYear}
+	</delete>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="WaPlanYearWaterData" resultType="WaPlanYearWaterData">
+        select <include  refid="SQL_WA_PLAN_YEAR_WATER_DATA_COLUMN"/> ,
+		com.COMPANY_NAME_ companyName,
+		com.COMPANY_CODE_ companyCode,
+		com.IS_IMPORT_ isImport
+        from WA_PLAN_YEAR_WATER_DATA wpywd , WA_COMPANY_INFO com
+		WHERE wpywd.COMPANY_ID_ = com.COMPANY_ID_
+		<if test="isDelte != null">
+			AND wpywd.IS_DELTE_ = #{isDelte}
+		</if>
+		<if test="companyId != null">
+			AND wpywd.COMPANY_ID_ = #{companyId}
+		</if>
+		<if test="companyCode != null">
+			AND com.COMPANY_CODE_ like '%${companyCode}%'
+		</if>
+		<if test="companyName != null">
+			AND com.COMPANY_NAME_ like '%${companyName}%'
+		</if>
+		<if test="planYear != null">
+			AND wpywd.PLAN_YEAR_ like '%${planYear}%'
+		</if>
+		<if test="isImport != null">
+			AND com.IS_IMPORT_ = #{isImport}
+		</if>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                wpywd.PLAN_YEAR_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="WaPlanYearWaterData" resultType="int">
+        select count(
+            wpywd.PLAN_WATER_ID_
+        ) as counts
+        from WA_PLAN_YEAR_WATER_DATA wpywd , WA_COMPANY_INFO com
+		WHERE wpywd.COMPANY_ID_ = com.COMPANY_ID_
+		<if test="isDelte != null">
+			AND wpywd.IS_DELTE_ = #{isDelte}
+		</if>
+		<if test="companyId != null">
+			AND wpywd.COMPANY_ID_ = #{companyId}
+		</if>
+		<if test="companyCode != null">
+			AND com.COMPANY_CODE_ like '%${companyCode}%'
+		</if>
+		<if test="companyName != null">
+			AND com.COMPANY_NAME_ like '%${companyName}%'
+		</if>
+		<if test="planYear != null">
+			AND wpywd.PLAN_YEAR_ like '%${planYear}%'
+		</if>
+		<if test="isImport != null">
+			AND com.IS_IMPORT_ = #{isImport}
+		</if>
+    </select>
+    
+	<!-- add 默认使用全局ID -->
+	<insert id="insert" parameterType="WaPlanYearWaterData" >
+		insert into WA_PLAN_YEAR_WATER_DATA 
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+		  	<if test="planWaterId != null">
+        		PLAN_WATER_ID_,
+      		</if>
+		  	<if test="companyId != null">
+        		COMPANY_ID_,
+      		</if>
+		  	<if test="planYear != null">
+        		PLAN_YEAR_,
+      		</if>
+		  	<if test="planYearAvgWater != null">
+        		PLAN_YEAR_AVG_WATER_,
+      		</if>
+		  	<if test="planYearEditWater != null">
+        		PLAN_YEAR_EDIT_WATER_,
+      		</if>
+		  	<if test="actYearWater != null">
+        		ACT_YEAR_WATER_,
+      		</if>
+		  	<if test="isOverproof != null">
+        		IS_OVERPROOF_,
+      		</if>
+		  	<if test="isDelte != null">
+        		IS_DELTE_,
+      		</if>
+		  	<if test="crtTime != null">
+        		CRT_TIME_,
+      		</if>
+		  	<if test="updTime != null">
+        		UPD_TIME_,
+      		</if>
+		</trim> 
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			  	<if test="planWaterId != null">
+			  	  	   #{planWaterId,jdbcType=NUMERIC},
+			  	</if>  
+			  	<if test="companyId != null">
+			  	  	   #{companyId,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="planYear != null">
+			  	  	   #{planYear,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="planYearAvgWater != null">
+			  	  	   #{planYearAvgWater,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="planYearEditWater != null">
+			  	  	   #{planYearEditWater,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="actYearWater != null">
+			  	  	   #{actYearWater,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="isOverproof != null">
+			  	  	   #{isOverproof,jdbcType=NUMERIC},
+			  	</if>  
+			  	<if test="isDelte != null">
+			  	  	   #{isDelte,jdbcType=NUMERIC},
+			  	</if>  
+			  	<if test="crtTime != null">
+			  	  	   #{crtTime,jdbcType=TIMESTAMP},
+			  	</if>  
+			  	<if test="updTime != null">
+			  	  	   #{updTime,jdbcType=TIMESTAMP},
+			  	</if>  
+		</trim>
+    </insert>
+
+	<!-- update  -->
+	<update id="update" parameterType="WaPlanYearWaterData">
+		UPDATE WA_PLAN_YEAR_WATER_DATA wpywd
+		<set>
+		  	<if test="planWaterId != null">
+        		PLAN_WATER_ID_ = #{planWaterId} ,
+      		</if>
+		  	<if test="companyId != null">
+        		COMPANY_ID_ = #{companyId} ,
+      		</if>
+		  	<if test="planYear != null">
+        		PLAN_YEAR_ = #{planYear} ,
+      		</if>
+		  	<if test="planYearAvgWater != null">
+        		PLAN_YEAR_AVG_WATER_ = #{planYearAvgWater} ,
+      		</if>
+		  	<if test="planYearEditWater != null">
+        		PLAN_YEAR_EDIT_WATER_ = #{planYearEditWater} ,
+      		</if>
+		  	<if test="actYearWater != null">
+        		ACT_YEAR_WATER_ = #{actYearWater} ,
+      		</if>
+		  	<if test="isOverproof != null">
+        		IS_OVERPROOF_ = #{isOverproof} ,
+      		</if>
+		  	<if test="isDelte != null">
+        		IS_DELTE_ = #{isDelte} ,
+      		</if>
+		  	<if test="crtTime != null">
+        		CRT_TIME_ = #{crtTime} ,
+      		</if>
+		  	<if test="updTime != null">
+        		UPD_TIME_ = #{updTime} 
+      		</if>
+		 
+		</set>
+		WHERE
+            wpywd.PLAN_WATER_ID_ = #{planWaterId}
+	</update>
+
+	<!-- delete  -->
+	<delete id="delete" parameterType="WaPlanYearWaterData">
+		DELETE FROM WA_PLAN_YEAR_WATER_DATA wpywd
+		WHERE
+            wpywd.PLAN_WATER_ID_ = #{planWaterId}
+	</delete>
+
+
+</mapper>

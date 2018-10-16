@@ -1,0 +1,17 @@
+{"total":7,"rows":[
+	{"id":111,"name":"鸿冠信息","fullname":"行政部2","code":"ssssssssssssss","isFinal":"是","iconCls":"m-icon-pkg"},
+	{"id":1,"name":"人事部","fullname":"人事部2","code":"xxxxx","isFinal":"是","iconCls":"m-icon-pkg","_parentId":111},
+	{"id":2,"name":"行政部","fullname":"行政部2","code":"ssssssssssssss","isFinal":"是","iconCls":"m-icon-pkg","_parentId":111},
+	{"id":3,"name":"财务部","fullname":"财务部2","code":"xxxxx","isFinal":"是","iconCls":"m-icon-pkg","_parentId":111},
+	{"id":4,"name":"行政部","fullname":"行政部2","code":"ssssssssssssss","isFinal":"是","iconCls":"m-icon-pkg","_parentId":111},
+	{"id":5,"name":"技术部","fullname":"财务部2","code":"xxxxx","isFinal":"是","iconCls":"m-icon-pkg","_parentId":111},
+	{"id":6,"name":"业务一部","fullname":"行政部2","code":"ssssssssssssss","isFinal":"是","iconCls":"m-icon-pkg","_parentId":111},
+	{"id":7,"name":"业务二部","fullname":"财务部2","code":"xxxxx","isFinal":"是","iconCls":"m-icon-pkg","_parentId":111},
+	{"id":8,"name":"业务三部","fullname":"行政部2","code":"ssssssssssssss","isFinal":"是","iconCls":"m-icon-pkg","_parentId":111},
+	{"id":9,"name":"财务部","fullname":"财务部2","code":"xxxxx","isFinal":"是","iconCls":"m-icon-pkg","_parentId":111},
+	{"id":10,"name":"行政部","fullname":"行政部2","code":"ssssssssssssss","isFinal":"是","iconCls":"m-icon-pkg","_parentId":111},
+	{"id":11,"name":"财务部","fullname":"财务部2","code":"xxxxx","isFinal":"是","iconCls":"m-icon-pkg","_parentId":111}
+
+],"footer":[
+	{"name":"总数:17","iconCls":"icon-sum"}
+]}

@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hongguaninfo.hgdf.adp.mapper.sys.SysNotifyMapper">
+
+	<!-- Each field corresponding alias, convenient call -->
+	<sql id="SQL_SYS_NOTIFY_COLUMN">
+		sn.NOTIFY_ID_ notifyId, sn.USER_ID_ userId, sn.TEMP_ID_ tempId, sn.TITLE_ title,
+		sn.CONTENT_ content, sn.CRT_TIME_ crtTime, sn.IS_READ_ isRead,
+		sn.READ_TIME_ readTime
+	</sql>
+
+	<!-- whether multiple fields is empty -->
+	<sql id="SQL_SYS_NOTIFY_WHERE">
+		<if test="notifyId !=null ">
+			AND sn.NOTIFY_ID_=#{notifyId}
+		</if>
+		<if test="userId !=null ">
+			AND sn.USER_ID_ like '%${userId}%'
+		</if>
+		<if test="tempId !=null ">
+			AND sn.TEMP_ID_ like '%${tempId}%'
+		</if>
+		<if test="title !=null and title.length()!=0 ">
+			AND sn.TITLE_=#{title}
+		</if>
+		<if test="content !=null and content.length()!=0 ">
+			AND sn.CONTENT_=#{content}
+		</if>
+		<if test="crtTime !=null ">
+			AND sn.CRT_TIME_=#{crtTime}
+		</if>
+		<if test="isRead !=null ">
+			AND sn.IS_READ_=#{isRead}
+		</if>
+		<if test="readTime !=null ">
+			AND sn.READ_TIME_=#{readTime}
+		</if>
+	</sql>
+
+	<!-- Query All -->
+	<select id="getList" parameterType="SysNotify" resultType="SysNotify">
+		select
+		<include refid="SQL_SYS_NOTIFY_COLUMN" />
+		from SYS_NOTIFY sn
+		<where>
+			<include refid="SQL_SYS_NOTIFY_WHERE" />
+		</where>
+		<if test="orderStr != null and orderStr.length() != 0">
+			ORDER BY ${orderStr}
+		</if>
+		<if test="orderStr == null or orderStr.length() == 0">
+			ORDER BY
+			sn.NOTIFY_ID_ desc
+		</if>
+	</select>
+
+	<!-- Statistical line -->
+	<select id="getListCount" parameterType="SysNotify" resultType="int">
+		select count(*) as counts
+		from SYS_NOTIFY sn
+		<where>
+			<include refid="SQL_SYS_NOTIFY_WHERE" />
+		</where>
+	</select>
+
+	<!-- According to the id check record -->
+	<select id="getById" parameterType="int" resultType="SysNotify">
+		select
+		<include refid="SQL_SYS_NOTIFY_COLUMN" />
+		from SYS_NOTIFY sn
+		<where>
+			sn.NOTIFY_ID_ = #{idValue}
+		</where>
+	</select>
+
+	<!-- add é»è®¤ä½¿ç¨å¨å±ID -->
+	<!-- FOR ORACLE DEMO <selectKey resultType="java.math.BigDecimal" keyProperty="varId" 
+		order="BEFORE"> select SEQ_SYS_VARIABLE.nextVal as varId from dual </selectKey> -->
+	<!-- FOR MYSQL KEY DEMO <selectKey keyProperty="varId" resultType="java.math.BigDecimal" 
+		order="AFTER"> select LAST_INSERT_ID() </selectKey> -->
+	<insert id="insert" parameterType="SysNotify">
+		insert into SYS_NOTIFY
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="notifyId != null">
+				NOTIFY_ID_,
+			</if>
+			<if test="userId != null">
+				USER_ID_,
+			</if>
+			<if test="tempId != null">
+				TEMP_ID_,
+			</if>
+			<if test="title != null">
+				TITLE_,
+			</if>
+			<if test="content != null">
+				CONTENT_,
+			</if>
+			<if test="crtTime != null">
+				CRT_TIME_,
+			</if>
+			<if test="isRead != null">
+				IS_READ_,
+			</if>
+			<if test="readTime != null">
+				READ_TIME_,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="notifyId != null">
+				#{notifyId,jdbcType=NUMERIC},
+			</if>
+			<if test="userId != null">
+				#{userId,jdbcType=NUMERIC},
+			</if>
+			<if test="tempId != null">
+				#{tempId,jdbcType=NUMERIC},
+			</if>
+			<if test="title != null">
+				#{title,jdbcType=VARCHAR},
+			</if>
+			<if test="content != null">
+				#{content,jdbcType=VARCHAR},
+			</if>
+			<if test="crtTime != null">
+				#{crtTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="isRead != null">
+				#{isRead,jdbcType=NUMERIC},
+			</if>
+			<if test="readTime != null">
+				#{readTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- update -->
+	<update id="update" parameterType="SysNotify">
+		UPDATE SYS_NOTIFY
+		<set>
+			<if test="notifyId !=null">
+				NOTIFY_ID_ = #{notifyId} ,
+			</if>
+			<if test="userId !=null">
+				USER_ID_ = #{userId} ,
+			</if>
+			<if test="tempId !=null">
+				TEMP_ID_ = #{tempId} ,
+			</if>
+			<if test="title !=null">
+				TITLE_ = #{title} ,
+			</if>
+			<if test="content !=null">
+				CONTENT_ = #{content} ,
+			</if>
+			<if test="crtTime !=null">
+				CRT_TIME_ = #{crtTime} ,
+			</if>
+			<if test="isRead !=null">
+				IS_READ_ = #{isRead} ,
+			</if>
+			<if test="readTime !=null">
+				READ_TIME_ = #{readTime}
+			</if>
+		</set>
+		WHERE
+		NOTIFY_ID_=#{notifyId}
+	</update>
+
+	<!-- delete -->
+	<delete id="delete" parameterType="SysNotify">
+		DELETE FROM SYS_NOTIFY
+		WHERE
+		NOTIFY_ID_=#{notifyId}
+	</delete>
+
+	<!-- delete(ids) -->
+	<delete id="deleteById" parameterType="java.lang.Integer">
+		DELETE FROM sys_notify
+		WHERE
+		NOTIFY_ID_=#{notifyId}
+	</delete>
+
+</mapper>

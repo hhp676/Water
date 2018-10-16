@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hongguaninfo.hgdf.wa.mapper.totalinfo.WaIndustryWaterDataMapper">
+
+
+    <!-- sqlColumn -->
+    <sql id="SQL_WA_INDUSTRY_WATER_DATA_COLUMN">
+        wiwd.INDUSTRY_WATER_ID_ industryWaterId,
+        wiwd.COMPANY_ID_ companyId,
+        wiwd.MONTH_DATE_ monthDate,
+        wiwd.NEW_WATER_TOTAL_COUNT_ newWaterTotalCount,
+        wiwd.INTER_COLD_WATER_ interColdWater,
+        wiwd.FRESH_WATER_ freshWater,
+        wiwd.BOILER_WATER_ boilerWater,
+        wiwd.BOILER_GAS_AMOUNT_ boilerGasAmount,
+        wiwd.FACTORY_LIVE_WATER_ factoryLiveWater,
+        wiwd.REUSE_TOTAL_AMOUNT_ reuseTotalAmount,
+        wiwd.INTER_COLD_WATER_LOOP_AMOUNT_ interColdWaterLoopAmount,
+        wiwd.FRESH_WATER_BACK_AMOUNT_ freshWaterBackAmount,
+        wiwd.BOILER_WATER_BACK_AMOUNT_ boilerWaterBackAmount,
+        wiwd.STEAM_CONDEN_BACK_AMOUNT_ steamCondenBackAmount,
+        wiwd.LIVE_WATER_REPET_AMOUNT_ liveWaterRepetAmount,
+        wiwd.IS_DELETE_ isDelete,
+        wiwd.CRT_TIME_ crtTime,
+        wiwd.UPT_TIME_ uptTime
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_WA_INDUSTRY_WATER_DATA_WHERE">
+        	<if test="industryWaterId != null">
+	            AND wiwd.INDUSTRY_WATER_ID_ = #{industryWaterId}
+        </if>
+        	<if test="companyId != null">
+	            AND wiwd.COMPANY_ID_ = #{companyId}
+        </if>
+        		<if test="monthDate != null and monthDate.length() != 0">
+        		AND wiwd.MONTH_DATE_ like '%${monthDate}%'
+        </if>
+        		<if test="newWaterTotalCount != null and newWaterTotalCount.length() != 0">
+        		AND wiwd.NEW_WATER_TOTAL_COUNT_ like '%${newWaterTotalCount}%'
+        </if>
+        		<if test="interColdWater != null and interColdWater.length() != 0">
+        		AND wiwd.INTER_COLD_WATER_ like '%${interColdWater}%'
+        </if>
+        		<if test="freshWater != null and freshWater.length() != 0">
+        		AND wiwd.FRESH_WATER_ like '%${freshWater}%'
+        </if>
+        		<if test="boilerWater != null and boilerWater.length() != 0">
+        		AND wiwd.BOILER_WATER_ like '%${boilerWater}%'
+        </if>
+        		<if test="boilerGasAmount != null and boilerGasAmount.length() != 0">
+        		AND wiwd.BOILER_GAS_AMOUNT_ like '%${boilerGasAmount}%'
+        </if>
+        		<if test="factoryLiveWater != null and factoryLiveWater.length() != 0">
+        		AND wiwd.FACTORY_LIVE_WATER_ like '%${factoryLiveWater}%'
+        </if>
+        		<if test="reuseTotalAmount != null and reuseTotalAmount.length() != 0">
+        		AND wiwd.REUSE_TOTAL_AMOUNT_ like '%${reuseTotalAmount}%'
+        </if>
+        		<if test="interColdWaterLoopAmount != null and interColdWaterLoopAmount.length() != 0">
+        		AND wiwd.INTER_COLD_WATER_LOOP_AMOUNT_ like '%${interColdWaterLoopAmount}%'
+        </if>
+        		<if test="freshWaterBackAmount != null and freshWaterBackAmount.length() != 0">
+        		AND wiwd.FRESH_WATER_BACK_AMOUNT_ like '%${freshWaterBackAmount}%'
+        </if>
+        		<if test="boilerWaterBackAmount != null and boilerWaterBackAmount.length() != 0">
+        		AND wiwd.BOILER_WATER_BACK_AMOUNT_ like '%${boilerWaterBackAmount}%'
+        </if>
+        		<if test="steamCondenBackAmount != null and steamCondenBackAmount.length() != 0">
+        		AND wiwd.STEAM_CONDEN_BACK_AMOUNT_ like '%${steamCondenBackAmount}%'
+        </if>
+        		<if test="liveWaterRepetAmount != null and liveWaterRepetAmount.length() != 0">
+        		AND wiwd.LIVE_WATER_REPET_AMOUNT_ like '%${liveWaterRepetAmount}%'
+        </if>
+        	<if test="isDelete != null">
+	            AND wiwd.IS_DELETE_ = #{isDelete}
+        </if>
+        	<if test="crtTime != null">
+	            AND wiwd.CRT_TIME_ = #{crtTime}
+        </if>
+        	<if test="uptTime != null">
+	            AND wiwd.UPT_TIME_ = #{uptTime}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultType="WaIndustryWaterData">
+        select <include  refid="SQL_WA_INDUSTRY_WATER_DATA_COLUMN" />
+        from WA_INDUSTRY_WATER_DATA wiwd
+        <where>
+            wiwd.INDUSTRY_WATER_ID_ = #{industryWaterId}
+        </where>
+    </select>
+
+	<select id="getIndustryDataByCompanyId" parameterType="Integer" resultType="WaIndustryWaterData">
+		select <include  refid="SQL_WA_INDUSTRY_WATER_DATA_COLUMN" />
+		from WA_INDUSTRY_WATER_DATA wiwd
+		<where>
+			wiwd.COMPANY_ID_ = #{companyId}
+		</where>
+	</select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="WaIndustryWaterData" resultType="WaIndustryWaterData">
+        select <include  refid="SQL_WA_INDUSTRY_WATER_DATA_COLUMN"/>
+        from WA_INDUSTRY_WATER_DATA wiwd
+        <where>
+            <include  refid="SQL_WA_INDUSTRY_WATER_DATA_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                wiwd.INDUSTRY_WATER_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="WaIndustryWaterData" resultType="int">
+        select count(
+            wiwd.INDUSTRY_WATER_ID_
+        ) as counts
+        from WA_INDUSTRY_WATER_DATA wiwd
+        <where>
+            <include  refid="SQL_WA_INDUSTRY_WATER_DATA_WHERE"/>
+        </where>
+    </select>
+    
+	<!-- add 默认使用全局ID -->
+	<insert id="insert" parameterType="WaIndustryWaterData" >
+		insert into WA_INDUSTRY_WATER_DATA 
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+		  	<if test="industryWaterId != null">
+        		INDUSTRY_WATER_ID_,
+      		</if>
+		  	<if test="companyId != null">
+        		COMPANY_ID_,
+      		</if>
+		  	<if test="monthDate != null">
+        		MONTH_DATE_,
+      		</if>
+		  	<if test="newWaterTotalCount != null">
+        		NEW_WATER_TOTAL_COUNT_,
+      		</if>
+		  	<if test="interColdWater != null">
+        		INTER_COLD_WATER_,
+      		</if>
+		  	<if test="freshWater != null">
+        		FRESH_WATER_,
+      		</if>
+		  	<if test="boilerWater != null">
+        		BOILER_WATER_,
+      		</if>
+		  	<if test="boilerGasAmount != null">
+        		BOILER_GAS_AMOUNT_,
+      		</if>
+		  	<if test="factoryLiveWater != null">
+        		FACTORY_LIVE_WATER_,
+      		</if>
+		  	<if test="reuseTotalAmount != null">
+        		REUSE_TOTAL_AMOUNT_,
+      		</if>
+		  	<if test="interColdWaterLoopAmount != null">
+        		INTER_COLD_WATER_LOOP_AMOUNT_,
+      		</if>
+		  	<if test="freshWaterBackAmount != null">
+        		FRESH_WATER_BACK_AMOUNT_,
+      		</if>
+		  	<if test="boilerWaterBackAmount != null">
+        		BOILER_WATER_BACK_AMOUNT_,
+      		</if>
+		  	<if test="steamCondenBackAmount != null">
+        		STEAM_CONDEN_BACK_AMOUNT_,
+      		</if>
+		  	<if test="liveWaterRepetAmount != null">
+        		LIVE_WATER_REPET_AMOUNT_,
+      		</if>
+		  	<if test="isDelete != null">
+        		IS_DELETE_,
+      		</if>
+		  	<if test="crtTime != null">
+        		CRT_TIME_,
+      		</if>
+		  	<if test="uptTime != null">
+        		UPT_TIME_,
+      		</if>
+		</trim> 
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			  	<if test="industryWaterId != null">
+			  	  	   #{industryWaterId,jdbcType=NUMERIC},
+			  	</if>  
+			  	<if test="companyId != null">
+			  	  	   #{companyId,jdbcType=NUMERIC},
+			  	</if>  
+			  	<if test="monthDate != null">
+			  	  	   #{monthDate,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="newWaterTotalCount != null">
+			  	  	   #{newWaterTotalCount,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="interColdWater != null">
+			  	  	   #{interColdWater,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="freshWater != null">
+			  	  	   #{freshWater,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="boilerWater != null">
+			  	  	   #{boilerWater,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="boilerGasAmount != null">
+			  	  	   #{boilerGasAmount,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="factoryLiveWater != null">
+			  	  	   #{factoryLiveWater,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="reuseTotalAmount != null">
+			  	  	   #{reuseTotalAmount,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="interColdWaterLoopAmount != null">
+			  	  	   #{interColdWaterLoopAmount,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="freshWaterBackAmount != null">
+			  	  	   #{freshWaterBackAmount,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="boilerWaterBackAmount != null">
+			  	  	   #{boilerWaterBackAmount,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="steamCondenBackAmount != null">
+			  	  	   #{steamCondenBackAmount,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="liveWaterRepetAmount != null">
+			  	  	   #{liveWaterRepetAmount,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="isDelete != null">
+			  	  	   #{isDelete,jdbcType=NUMERIC},
+			  	</if>
+				<if test="crtTime != null">
+					#{crtTime,jdbcType=TIMESTAMP},
+				</if>
+				<if test="uptTime != null">
+					#{updTime,jdbcType=TIMESTAMP},
+				</if>
+		</trim>
+    </insert>
+
+	<!-- update  -->
+	<update id="update" parameterType="WaIndustryWaterData">
+		UPDATE WA_INDUSTRY_WATER_DATA
+		<set>
+		  	<if test="industryWaterId != null">
+        		INDUSTRY_WATER_ID_ = #{industryWaterId} ,
+      		</if>
+		  	<if test="companyId != null">
+        		COMPANY_ID_ = #{companyId} ,
+      		</if>
+		  	<if test="monthDate != null">
+        		MONTH_DATE_ = #{monthDate} ,
+      		</if>
+		  	<if test="newWaterTotalCount != null">
+        		NEW_WATER_TOTAL_COUNT_ = #{newWaterTotalCount} ,
+      		</if>
+		  	<if test="interColdWater != null">
+        		INTER_COLD_WATER_ = #{interColdWater} ,
+      		</if>
+		  	<if test="freshWater != null">
+        		FRESH_WATER_ = #{freshWater} ,
+      		</if>
+		  	<if test="boilerWater != null">
+        		BOILER_WATER_ = #{boilerWater} ,
+      		</if>
+		  	<if test="boilerGasAmount != null">
+        		BOILER_GAS_AMOUNT_ = #{boilerGasAmount} ,
+      		</if>
+		  	<if test="factoryLiveWater != null">
+        		FACTORY_LIVE_WATER_ = #{factoryLiveWater} ,
+      		</if>
+		  	<if test="reuseTotalAmount != null">
+        		REUSE_TOTAL_AMOUNT_ = #{reuseTotalAmount} ,
+      		</if>
+		  	<if test="interColdWaterLoopAmount != null">
+        		INTER_COLD_WATER_LOOP_AMOUNT_ = #{interColdWaterLoopAmount} ,
+      		</if>
+		  	<if test="freshWaterBackAmount != null">
+        		FRESH_WATER_BACK_AMOUNT_ = #{freshWaterBackAmount} ,
+      		</if>
+		  	<if test="boilerWaterBackAmount != null">
+        		BOILER_WATER_BACK_AMOUNT_ = #{boilerWaterBackAmount} ,
+      		</if>
+		  	<if test="steamCondenBackAmount != null">
+        		STEAM_CONDEN_BACK_AMOUNT_ = #{steamCondenBackAmount} ,
+      		</if>
+		  	<if test="liveWaterRepetAmount != null">
+        		LIVE_WATER_REPET_AMOUNT_ = #{liveWaterRepetAmount} ,
+      		</if>
+		  	<if test="isDelete != null">
+        		IS_DELETE_ = #{isDelete} ,
+      		</if>
+		  	<if test="crtTime != null">
+        		CRT_TIME_ = #{crtTime} ,
+      		</if>
+		  	<if test="uptTime != null">
+        		UPT_TIME_ = #{uptTime} 
+      		</if>
+		 
+		</set>
+		WHERE
+            INDUSTRY_WATER_ID_ = #{industryWaterId}
+	</update>
+
+	<!-- delete  -->
+	<delete id="delete" parameterType="WaIndustryWaterData">
+		DELETE FROM WA_INDUSTRY_WATER_DATA wiwd
+		WHERE
+            wiwd.INDUSTRY_WATER_ID_ = #{industryWaterId}
+	</delete>
+ 
+</mapper>

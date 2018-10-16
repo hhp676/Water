@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hongguaninfo.hgdf.adp.mapper.sys.SysNotifyTemplateMapper">
+	<!-- Each field corresponding alias, convenient call -->
+	<sql id="SQL_SYS_NOTIFY_TEMPLATE_COLUMN">
+		snt.TEMP_ID_ tempId, snt.NAME_ name, snt.MODULE_ module, snt.TITLE_TEMPLATE_
+		titleTemplate, snt.CONTENT_TEMPLATE_ contentTemplate, snt.IS_DELETE_
+		isDelete, snt.IS_FINAL_ isFinal, snt.CRT_TIME_ crtTime, snt.UPD_TIME_
+		updTime, snt.CRT_USERID_ crtUserid, snt.UPD_USERID_ updUserid
+	</sql>
+
+	<!-- whether multiple fields is empty -->
+	<sql id="SQL_SYS_NOTIFY_TEMPLATE_WHERE">
+		<if test="tempId !=null ">
+			AND snt.TEMP_ID_=#{tempId}
+		</if>
+		<if test="name !=null and name.length()!=0">
+			AND snt.NAME_=#{name}
+		</if>
+		<if test="module !=null and module.length()!=0 ">
+			AND snt.MODULE_=#{module}
+		</if>
+		<if test="titleTemplate !=null and titleTemplate.length()!=0 ">
+			AND snt.TITLE_TEMPLATE_=#{titleTemplate}
+		</if>
+		<if test="contentTemplate !=null and contentTemplate.length()!=0 ">
+			AND snt.CONTENT_TEMPLATE_=#{contentTemplate}
+		</if>
+		<if test="isDelete !=null ">
+			AND snt.IS_DELETE_=#{isDelete}
+		</if>
+		<if test="isFinal !=null ">
+			AND snt.IS_FINAL_=#{isFinal}
+		</if>
+		<if test="crtTime !=null ">
+			AND snt.CRT_TIME_=#{crtTime}
+		</if>
+		<if test="updTime !=null ">
+			AND snt.UPD_TIME_=#{updTime}
+		</if>
+		<if test="crtUserid !=null ">
+			AND snt.CRT_USERID_=#{crtUserid}
+		</if>
+		<if test="updUserid !=null ">
+			AND snt.UPD_USERID_=#{updUserid}
+		</if>
+	</sql>
+
+	<!-- Query All -->
+	<select id="getList" parameterType="SysNotifyTemplate"
+		resultType="SysNotifyTemplate">
+		select
+		<include refid="SQL_SYS_NOTIFY_TEMPLATE_COLUMN" />
+		from SYS_NOTIFY_TEMPLATE snt
+		<where>
+			<include refid="SQL_SYS_NOTIFY_TEMPLATE_WHERE" />
+		</where>
+		<if test="orderStr != null and orderStr.length() != 0">
+			ORDER BY ${orderStr}
+		</if>
+		<if test="orderStr == null or orderStr.length() == 0">
+			ORDER BY
+			snt.TEMP_ID_ desc
+		</if>
+	</select>
+
+	<!-- Statistical line -->
+	<select id="getListCount" parameterType="SysNotifyTemplate"
+		resultType="int">
+		select count(*) as counts
+		from SYS_NOTIFY_TEMPLATE snt
+		<where>
+			<include refid="SQL_SYS_NOTIFY_TEMPLATE_WHERE" />
+		</where>
+	</select>
+
+	<!-- According to the id check record -->
+	<select id="getById" parameterType="int" resultType="SysNotifyTemplate">
+		select
+		<include refid="SQL_SYS_NOTIFY_TEMPLATE_COLUMN" />
+		from SYS_NOTIFY_TEMPLATE snt
+		<where>
+			snt.TEMP_ID_ = #{idValue}
+		</where>
+	</select>
+
+	<!-- add é»è®¤ä½¿ç¨å¨å±ID -->
+	<!-- FOR ORACLE DEMO <selectKey resultType="java.math.BigDecimal" keyProperty="varId" 
+		order="BEFORE"> select SEQ_SYS_VARIABLE.nextVal as varId from dual </selectKey> -->
+	<!-- FOR MYSQL KEY DEMO <selectKey keyProperty="varId" resultType="java.math.BigDecimal" 
+		order="AFTER"> select LAST_INSERT_ID() </selectKey> -->
+	<insert id="insert" parameterType="SysNotifyTemplate">
+		insert into SYS_NOTIFY_TEMPLATE
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="tempId != null">
+				TEMP_ID_,
+			</if>
+			<if test="name != null">
+				NAME_,
+			</if>
+			<if test="module != null">
+				MODULE_,
+			</if>
+			<if test="titleTemplate != null">
+				TITLE_TEMPLATE_,
+			</if>
+			<if test="contentTemplate != null">
+				CONTENT_TEMPLATE_,
+			</if>
+			<if test="isDelete != null">
+				IS_DELETE_,
+			</if>
+			<if test="isFinal != null">
+				IS_FINAL_,
+			</if>
+			<if test="crtTime != null">
+				CRT_TIME_,
+			</if>
+			<if test="updTime != null">
+				UPD_TIME_,
+			</if>
+			<if test="crtUserid != null">
+				CRT_USERID_,
+			</if>
+			<if test="updUserid != null">
+				UPD_USERID_,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="tempId != null">
+				#{tempId,jdbcType=NUMERIC},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=NUMERIC},
+			</if>
+			<if test="module != null">
+				#{module,jdbcType=VARCHAR},
+			</if>
+			<if test="titleTemplate != null">
+				#{titleTemplate,jdbcType=VARCHAR},
+			</if>
+			<if test="contentTemplate != null">
+				#{contentTemplate,jdbcType=VARCHAR},
+			</if>
+			<if test="isDelete != null">
+				#{isDelete,jdbcType=NUMERIC},
+			</if>
+			<if test="isFinal != null">
+				#{isFinal,jdbcType=NUMERIC},
+			</if>
+			<if test="crtTime != null">
+				#{crtTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updTime != null">
+				#{updTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="crtUserid != null">
+				#{crtUserid,jdbcType=NUMERIC},
+			</if>
+			<if test="updUserid != null">
+				#{updUserid,jdbcType=NUMERIC},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- update -->
+	<update id="update" parameterType="SysNotifyTemplate">
+		UPDATE SYS_NOTIFY_TEMPLATE
+		<set>
+			<if test="tempId !=null">
+				TEMP_ID_ = #{tempId} ,
+			</if>
+			<if test="name !=null">
+				NAME_ = #{name} ,
+			</if>
+			<if test="module !=null">
+				MODULE_ = #{module} ,
+			</if>
+			<if test="titleTemplate !=null">
+				TITLE_TEMPLATE_ = #{titleTemplate} ,
+			</if>
+			<if test="contentTemplate !=null">
+				CONTENT_TEMPLATE_ = #{contentTemplate} ,
+			</if>
+			<if test="isDelete !=null">
+				IS_DELETE_ = #{isDelete} ,
+			</if>
+			<if test="isFinal !=null">
+				IS_FINAL_ = #{isFinal} ,
+			</if>
+			<if test="crtTime !=null">
+				CRT_TIME_ = #{crtTime} ,
+			</if>
+			<if test="updTime !=null">
+				UPD_TIME_ = #{updTime} ,
+			</if>
+			<if test="crtUserid !=null">
+				CRT_USERID_ = #{crtUserid} ,
+			</if>
+			<if test="updUserid !=null">
+				UPD_USERID_ = #{updUserid}
+			</if>
+		</set>
+		WHERE
+		TEMP_ID_=#{tempId}
+	</update>
+
+	<!-- delete -->
+	<delete id="delete" parameterType="SysNotifyTemplate">
+		DELETE FROM
+		SYS_NOTIFY_TEMPLATE
+		WHERE
+		TEMP_ID_=#{tempId}
+	</delete>
+
+	<!-- delete(ids) -->
+	<delete id="deleteById" parameterType="java.lang.Integer">
+		DELETE FROM
+		sys_notify_template
+		WHERE
+		TEMP_ID_=#{tempId}
+	</delete>
+
+</mapper>

@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hongguaninfo.hgdf.wa.mapper.totalinfo.WaDormitoryWaterDataMapper">
+
+
+    <!-- sqlColumn -->
+    <sql id="SQL_WA_DORMITORY_WATER_DATA_COLUMN">
+        wdwd.DORMITORY_WATER_ID_ dormitoryWaterId,
+        wdwd.COMPANY_ID_ companyId,
+        wdwd.MONTH_DATE_ monthDate,
+        wdwd.PEOPLE_AMOUNT_ peopleAmount,
+        wdwd.NEW_WATER_AMOUNT_ newWaterAmount,
+        wdwd.TEMP_NEW_WATER_AMOUNT_ tempNewWaterAmount,
+        wdwd.IS_DELTE_ isDelte,
+        wdwd.CRT_TIME_ crtTime,
+        wdwd.UPD_TIME_ updTime
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_WA_DORMITORY_WATER_DATA_WHERE">
+        	<if test="dormitoryWaterId != null">
+	            AND wdwd.DORMITORY_WATER_ID_ = #{dormitoryWaterId}
+        </if>
+        	<if test="companyId != null">
+	            AND wdwd.COMPANY_ID_ = #{companyId}
+        </if>
+        		<if test="monthDate != null and monthDate.length() != 0">
+        		AND wdwd.MONTH_DATE_ like '%${monthDate}%'
+        </if>
+        		<if test="peopleAmount != null and peopleAmount.length() != 0">
+        		AND wdwd.PEOPLE_AMOUNT_ like '%${peopleAmount}%'
+        </if>
+        		<if test="newWaterAmount != null and newWaterAmount.length() != 0">
+        		AND wdwd.NEW_WATER_AMOUNT_ like '%${newWaterAmount}%'
+        </if>
+        		<if test="tempNewWaterAmount != null and tempNewWaterAmount.length() != 0">
+        		AND wdwd.TEMP_NEW_WATER_AMOUNT_ like '%${tempNewWaterAmount}%'
+        </if>
+        	<if test="isDelte != null">
+	            AND wdwd.IS_DELTE_ = #{isDelte}
+        </if>
+        	<if test="crtTime != null">
+	            AND wdwd.CRT_TIME_ = #{crtTime}
+        </if>
+        	<if test="updTime != null">
+	            AND wdwd.UPD_TIME_ = #{updTime}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultType="WaDormitoryWaterData">
+        select <include  refid="SQL_WA_DORMITORY_WATER_DATA_COLUMN" />
+        from WA_DORMITORY_WATER_DATA wdwd
+        <where>
+            wdwd.DORMITORY_WATER_ID_ = #{dormitoryWaterId}
+        </where>
+    </select>
+
+	<select id="getDorDataByCompanyId" parameterType="Integer" resultType="WaDormitoryWaterData">
+		select <include  refid="SQL_WA_DORMITORY_WATER_DATA_COLUMN" />
+		from WA_DORMITORY_WATER_DATA wdwd
+		<where>
+			wdwd.COMPANY_ID_ = #{companyId}
+		</where>
+	</select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="WaDormitoryWaterData" resultType="WaDormitoryWaterData">
+        select <include  refid="SQL_WA_DORMITORY_WATER_DATA_COLUMN"/>
+        from WA_DORMITORY_WATER_DATA wdwd
+        <where>
+            <include  refid="SQL_WA_DORMITORY_WATER_DATA_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                wdwd.DORMITORY_WATER_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="WaDormitoryWaterData" resultType="int">
+        select count(
+            wdwd.DORMITORY_WATER_ID_
+        ) as counts
+        from WA_DORMITORY_WATER_DATA wdwd
+        <where>
+            <include  refid="SQL_WA_DORMITORY_WATER_DATA_WHERE"/>
+        </where>
+    </select>
+    
+	<!-- add 默认使用全局ID -->
+	<insert id="insert" parameterType="WaDormitoryWaterData" >
+		insert into WA_DORMITORY_WATER_DATA 
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+		  	<if test="dormitoryWaterId != null">
+        		DORMITORY_WATER_ID_,
+      		</if>
+		  	<if test="companyId != null">
+        		COMPANY_ID_,
+      		</if>
+		  	<if test="monthDate != null">
+        		MONTH_DATE_,
+      		</if>
+		  	<if test="peopleAmount != null">
+        		PEOPLE_AMOUNT_,
+      		</if>
+		  	<if test="newWaterAmount != null">
+        		NEW_WATER_AMOUNT_,
+      		</if>
+		  	<if test="tempNewWaterAmount != null">
+        		TEMP_NEW_WATER_AMOUNT_,
+      		</if>
+		  	<if test="isDelte != null">
+        		IS_DELTE_,
+      		</if>
+		  	<if test="crtTime != null">
+        		CRT_TIME_,
+      		</if>
+		  	<if test="updTime != null">
+        		UPD_TIME_,
+      		</if>
+		</trim> 
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			  	<if test="dormitoryWaterId != null">
+			  	  	   #{dormitoryWaterId,jdbcType=NUMERIC},
+			  	</if>  
+			  	<if test="companyId != null">
+			  	  	   #{companyId,jdbcType=NUMERIC},
+			  	</if>  
+			  	<if test="monthDate != null">
+			  	  	   #{monthDate,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="peopleAmount != null">
+			  	  	   #{peopleAmount,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="newWaterAmount != null">
+			  	  	   #{newWaterAmount,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="tempNewWaterAmount != null">
+			  	  	   #{tempNewWaterAmount,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="isDelte != null">
+			  	  	   #{isDelte,jdbcType=NUMERIC},
+			  	</if>  
+			  	<if test="crtTime != null">
+			  	  	   #{crtTime,jdbcType=TIMESTAMP},
+			  	</if>  
+			  	<if test="updTime != null">
+			  	  	   #{updTime,jdbcType=TIMESTAMP},
+			  	</if>  
+		</trim>
+    </insert>
+
+	<!-- update  -->
+	<update id="update" parameterType="WaDormitoryWaterData">
+		UPDATE WA_DORMITORY_WATER_DATA
+		<set>
+		  	<if test="dormitoryWaterId != null">
+        		DORMITORY_WATER_ID_ = #{dormitoryWaterId} ,
+      		</if>
+		  	<if test="companyId != null">
+        		COMPANY_ID_ = #{companyId} ,
+      		</if>
+		  	<if test="monthDate != null">
+        		MONTH_DATE_ = #{monthDate} ,
+      		</if>
+		  	<if test="peopleAmount != null">
+        		PEOPLE_AMOUNT_ = #{peopleAmount} ,
+      		</if>
+		  	<if test="newWaterAmount != null">
+        		NEW_WATER_AMOUNT_ = #{newWaterAmount} ,
+      		</if>
+		  	<if test="tempNewWaterAmount != null">
+        		TEMP_NEW_WATER_AMOUNT_ = #{tempNewWaterAmount} ,
+      		</if>
+		  	<if test="isDelte != null">
+        		IS_DELTE_ = #{isDelte} ,
+      		</if>
+		  	<if test="crtTime != null">
+        		CRT_TIME_ = #{crtTime} ,
+      		</if>
+		  	<if test="updTime != null">
+        		UPD_TIME_ = #{updTime} 
+      		</if>
+		 
+		</set>
+		WHERE
+            DORMITORY_WATER_ID_ = #{dormitoryWaterId}
+	</update>
+
+	<!-- delete  -->
+	<delete id="delete" parameterType="WaDormitoryWaterData">
+		DELETE FROM WA_DORMITORY_WATER_DATA wdwd
+		WHERE
+            wdwd.DORMITORY_WATER_ID_ = #{dormitoryWaterId}
+	</delete>
+ 
+</mapper>

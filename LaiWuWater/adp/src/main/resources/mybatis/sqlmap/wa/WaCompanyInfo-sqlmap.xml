@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">-->
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hongguaninfo.hgdf.wa.mapper.WaCompanyInfoMapper">
+
+    <sql id="SQL_WA_COMPANY_INFO_COLUMN">
+        wci.COMPANY_ID_ companyId,
+        wci.COMPANY_CODE_ companyCode,
+        wci.COMPANY_NAME_ companyName,
+        wci.CONTACT_NUM_ contactNum,
+        wci.CONTACT_MAN_ contactMan,
+        wci.DEPARTMENT_ department,
+        wci.USER_TYPE_ userType,
+        wci.EMAIL_ email,
+        wci.TELPHONE_ telphone,
+        wci.CITY_AREA_ cityArea,
+        wci.POSTCODE_ postcode,
+        wci.PEOPLE_COUNT_ peopleCount,
+        wci.ACREAGE_ acreage,
+        wci.WATER_TYPE_ waterType,
+        wci.IS_IMPORT_ isImport,
+        wci.IS_DELETE_ isDelete,
+        wci.DESCR_ descr,
+        wci.CRT_TIME_ crtTime,
+        wci.UPD_TIME_ updTime
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_WA_COMPANY_INFO_WHERE">
+        	<if test="companyId != null">
+	            AND wci.COMPANY_ID_ = #{companyId}
+        </if>
+        		<if test="companyCode != null and companyCode.length() != 0">
+        		AND wci.COMPANY_CODE_ like '%${companyCode}%'
+        </if>
+        		<if test="companyName != null and companyName.length() != 0">
+        		AND wci.COMPANY_NAME_ like '%${companyName}%'
+        </if>
+        		<if test="contactNum != null and contactNum.length() != 0">
+        		AND wci.CONTACT_NUM_ like '%${contactNum}%'
+        </if>
+        		<if test="contactMan != null and contactMan.length() != 0">
+        		AND wci.CONTACT_MAN_ like '%${contactMan}%'
+        </if>
+        		<if test="department != null and department.length() != 0">
+        		AND wci.DEPARTMENT_ like '%${department}%'
+        </if>
+        		<if test="userType != null and userType.length() != 0">
+        		AND wci.USER_TYPE_ like '%${userType}%'
+        </if>
+        		<if test="email != null and email.length() != 0">
+        		AND wci.EMAIL_ like '%${email}%'
+        </if>
+        		<if test="telphone != null and telphone.length() != 0">
+        		AND wci.TELPHONE_ like '%${telphone}%'
+        </if>
+        		<if test="cityArea != null and cityArea.length() != 0">
+        		AND wci.CITY_AREA_ like '%${cityArea}%'
+        </if>
+        		<if test="postcode != null and postcode.length() != 0">
+        		AND wci.POSTCODE_ like '%${postcode}%'
+        </if>
+        		<if test="peopleCount != null and peopleCount.length() != 0">
+        		AND wci.PEOPLE_COUNT_ like '%${peopleCount}%'
+        </if>
+        		<if test="acreage != null and acreage.length() != 0">
+        		AND wci.ACREAGE_ like '%${acreage}%'
+        </if>
+        		<if test="waterType != null and waterType.length() != 0">
+        		AND wci.WATER_TYPE_ like '%${waterType}%'
+        </if>
+        	<if test="isImport != null and isImport.length() != 0">
+	            AND wci.IS_IMPORT_ = #{isImport}
+        </if>
+        	<if test="isDelete != null">
+	            AND wci.IS_DELETE_ = #{isDelete}
+        </if>
+        		<if test="descr != null and descr.length() != 0">
+        		AND wci.DESCR_ like '%${descr}%'
+        </if>
+        	<if test="crtTime != null">
+	            AND wci.CRT_TIME_ = #{crtTime}
+        </if>
+        	<if test="updTime != null">
+	            AND wci.UPD_TIME_ = #{updTime}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultType="WaCompanyInfo">
+        select <include  refid="SQL_WA_COMPANY_INFO_COLUMN" />
+        from WA_COMPANY_INFO wci
+        <where>
+            wci.COMPANY_ID_ = #{companyId}
+        </where>
+    </select>
+
+	<select id="getByCompanyId" parameterType="Long" resultType="WaCompanyInfo">
+		select <include  refid="SQL_WA_COMPANY_INFO_COLUMN" />
+		from WA_COMPANY_INFO wci
+		<where>
+			wci.COMPANY_ID_ = #{companyId}
+		</where>
+	</select>
+
+	<select id="getEntityByCode" parameterType="WaCompanyInfo" resultType="WaCompanyInfo">
+		select <include  refid="SQL_WA_COMPANY_INFO_COLUMN" />
+		from WA_COMPANY_INFO wci
+		<where>
+			<if test="companyCode != null">
+				COMPANY_CODE_ = #{companyCode}
+			</if>
+
+			<if test="companyName != null">
+				COMPANY_NAME_  = #{companyName}
+			</if>
+		</where>
+	</select>
+
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="WaCompanyInfo" resultType="WaCompanyInfo">
+        select <include  refid="SQL_WA_COMPANY_INFO_COLUMN"/>
+        from WA_COMPANY_INFO wci
+        <where>
+            <include  refid="SQL_WA_COMPANY_INFO_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                wci.COMPANY_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="WaCompanyInfo" resultType="int">
+        select count(
+            wci.COMPANY_ID_
+        ) as counts
+        from WA_COMPANY_INFO wci
+        <where>
+            <include  refid="SQL_WA_COMPANY_INFO_WHERE"/>
+        </where>
+    </select>
+    
+	<!-- add 默认使用全局ID -->
+	<insert id="insert" parameterType="WaCompanyInfo" >
+		insert into WA_COMPANY_INFO 
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+		  	<if test="companyId != null">
+				COMPANY_ID_,
+      		</if>
+		  	<if test="companyCode != null">
+        		COMPANY_CODE_,
+      		</if>
+		  	<if test="companyName != null">
+        		COMPANY_NAME_,
+      		</if>
+		  	<if test="contactNum != null">
+        		CONTACT_NUM_,
+      		</if>
+		  	<if test="contactMan != null">
+        		CONTACT_MAN_,
+      		</if>
+		  	<if test="department != null">
+        		DEPARTMENT_,
+      		</if>
+		  	<if test="userType != null">
+        		USER_TYPE_,
+      		</if>
+		  	<if test="email != null">
+        		EMAIL_,
+      		</if>
+		  	<if test="telphone != null">
+        		TELPHONE_,
+      		</if>
+		  	<if test="cityArea != null">
+        		CITY_AREA_,
+      		</if>
+		  	<if test="postcode != null">
+        		POSTCODE_,
+      		</if>
+		  	<if test="peopleCount != null">
+        		PEOPLE_COUNT_,
+      		</if>
+		  	<if test="acreage != null">
+        		ACREAGE_,
+      		</if>
+		  	<if test="waterType != null">
+        		WATER_TYPE_,
+      		</if>
+		  	<if test="isImport != null">
+        		IS_IMPORT_,
+      		</if>
+		  	<if test="isDelete != null">
+        		IS_DELETE_,
+      		</if>
+		  	<if test="descr != null">
+        		DESCR_,
+      		</if>
+		  	<if test="crtTime != null">
+        		CRT_TIME_,
+      		</if>
+		  	<if test="updTime != null">
+        		UPD_TIME_,
+      		</if>
+		</trim> 
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			  	<if test="companyId != null">
+			  	  	   #{companyId,jdbcType=NUMERIC},
+			  	</if>  
+			  	<if test="companyCode != null">
+			  	  	   #{companyCode,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="companyName != null">
+			  	  	   #{companyName,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="contactNum != null">
+			  	  	   #{contactNum,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="contactMan != null">
+			  	  	   #{contactMan,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="department != null">
+			  	  	   #{department,jdbcType=VARCHAR},
+			  	</if>
+			  	<if test="userType != null">
+			  	  	   #{userType,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="email != null">
+			  	  	   #{email,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="telphone != null">
+			  	  	   #{telphone,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="cityArea != null">
+			  	  	   #{cityArea,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="postcode != null">
+			  	  	   #{postcode,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="peopleCount != null">
+			  	  	   #{peopleCount,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="acreage != null">
+			  	  	   #{acreage,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="waterType != null">
+			  	  	   #{waterType,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="isImport != null">
+			  	  	   #{isImport,jdbcType=NUMERIC},
+			  	</if>  
+			  	<if test="isDelete != null">
+			  	  	   #{isDelete,jdbcType=NUMERIC},
+			  	</if>  
+			  	<if test="descr != null">
+			  	  	   #{descr,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="crtTime != null">
+			  	  	   #{crtTime,jdbcType=TIMESTAMP},
+			  	</if>  
+			  	<if test="updTime != null">
+			  	  	   #{updTime,jdbcType=TIMESTAMP},
+			  	</if>  
+		</trim>
+    </insert>
+
+	<!-- update  -->
+	<update id="update" parameterType="WaCompanyInfo">
+		UPDATE WA_COMPANY_INFO wci
+		<set>
+		  <!--	<if test="companyId != null">
+        		COMPANY_ID_ = #{companyId} ,
+      		</if>-->
+		  	<if test="companyCode != null">
+        		COMPANY_CODE_ = #{companyCode} ,
+      		</if>
+		  	<if test="companyName != null">
+        		COMPANY_NAME_ = #{companyName} ,
+      		</if>
+		  	<if test="contactNum != null">
+        		CONTACT_NUM_ = #{contactNum} ,
+      		</if>
+		  	<if test="contactMan != null">
+        		CONTACT_MAN_ = #{contactMan} ,
+      		</if>
+		  	<if test="department != null">
+        		DEPARTMENT_ = #{department} ,
+      		</if>
+		  	<if test="userType != null">
+        		USER_TYPE_ = #{userType} ,
+      		</if>
+		  	<if test="email != null">
+        		EMAIL_ = #{email} ,
+      		</if>
+		  	<if test="telphone != null">
+        		TELPHONE_ = #{telphone} ,
+      		</if>
+		  	<if test="cityArea != null">
+        		CITY_AREA_ = #{cityArea} ,
+      		</if>
+		  	<if test="postcode != null">
+        		POSTCODE_ = #{postcode} ,
+      		</if>
+		  	<if test="peopleCount != null">
+        		PEOPLE_COUNT_ = #{peopleCount} ,
+      		</if>
+		  	<if test="acreage != null">
+        		ACREAGE_ = #{acreage} ,
+      		</if>
+		  	<if test="waterType != null">
+        		WATER_TYPE_ = #{waterType} ,
+      		</if>
+		  	<if test="isImport != null">
+        		IS_IMPORT_ = #{isImport} ,
+      		</if>
+		  	<if test="isDelete != null">
+        		IS_DELETE_ = #{isDelete} ,
+      		</if>
+		  	<if test="descr != null">
+        		DESCR_ = #{descr} ,
+      		</if>
+		  	<if test="crtTime != null">
+        		CRT_TIME_ = #{crtTime} ,
+      		</if>
+		  	<if test="updTime != null">
+        		UPD_TIME_ = #{updTime} 
+      		</if>
+		 
+		</set>
+		WHERE
+            wci.COMPANY_ID_ = #{companyId}
+	</update>
+
+	<!-- delete  -->
+	<delete id="delete" parameterType="WaCompanyInfo">
+		DELETE FROM WA_COMPANY_INFO wci
+		WHERE
+            wci.COMPANY_ID_ = #{companyId}
+	</delete>
+ 
+</mapper>

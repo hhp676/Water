@@ -1,0 +1,66 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    font-family: "微软雅黑", Tahoma;
+}
+
+#logo {
+    height: 95px;
+    width: auto;
+    margin-top: 20px;
+}
+
+#login_lable {
+    width: 515px;
+    height: 358px;
+    background: url(../images/page/login_lable_bg.png) no-repeat;
+    margin-top: 20px;
+}
+
+#foot {
+    height: 30px;
+    line-height: 30px;
+    font-size: 12px;
+    margin-top: 10px;
+}
+
+.title {
+    width: 465px;
+    height: 40px;
+    padding-top: 25px;
+    margin-left: 5px;
+    text-align: left;
+    font-size: 28px;
+    color: #ffffff;
+    border-bottom: 1px solid #ffffff;
+}
+
+.content {
+    margin-left: 5px;
+    width: 465px;
+    height: 230px;
+    padding-top: 35px;
+}
+
+.content table {
+    color: #ffffff;
+    font-size: 12px;
+}
+
+.content table th {
+    text-align: right;
+    color: #ffffff;
+    height: 40px;
+    font-size: 14px;
+}
+
+.content table input[type=text] {
+    width: 180px;
+    height: 20px;
+    padding: 2px;
+}
+
+.checkbox {
+    height: 25px;
+    padding-top: 5px;
+}

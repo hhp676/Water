@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hongguaninfo.hgdf.adp.mapper.sys.SysUserRoleJoinMapper">
+
+	<!-- The corresponding field and type -->
+	<resultMap type="SysUserRoleJoin" id="ResultMap">
+		<result column="userId" javaType="java.math.BigDecimal"
+			property="userId" />
+		<result column="roleId" javaType="java.math.BigDecimal"
+			property="roleId" />
+		<result column="isFinal" javaType="Integer" property="isFinal" />
+		<result column="crtTime" jdbcType="TIMESTAMP" property="crtTime" />
+		<result column="crtUserid" javaType="java.math.BigDecimal"
+			property="crtUserid" />
+	</resultMap>
+
+	<!-- Each field corresponding alias, convenient call -->
+	<sql id="SQL_SYS_USER_ROLE_JOIN_COLUMN">
+		SURJ.USER_ID_ userId, SURJ.ROLE_ID_ roleId, SURJ.IS_FINAL_ isFinal, SURJ.CRT_TIME_
+		crtTime, SURJ.CRT_USERID_ crtUserid
+	</sql>
+
+	<!-- whether multiple fields is empty -->
+	<sql id="SQL_SYS_USER_ROLE_JOIN_WHERE">
+		<if test="userId !=null ">
+			AND SURJ.USER_ID_=#{userId}
+		</if>
+		<if test="roleId !=null ">
+			AND SURJ.ROLE_ID_=#{roleId}
+		</if>
+		<if test="isFinal !=null ">
+			AND SURJ.IS_FINAL_=#{isFinal}
+		</if>
+		<if test="crtTime !=null ">
+			AND SURJ.CRT_TIME_=#{crtTime}
+		</if>
+		<if test="crtUserid !=null ">
+			AND SURJ.CRT_USERID_=#{crtUserid}
+		</if>
+	</sql>
+
+	<!-- Query All -->
+	<select id="getList" parameterType="SysUserRoleJoin" resultType="SysUserRoleJoin">
+		select
+		<include refid="SQL_SYS_USER_ROLE_JOIN_COLUMN" />,SR.ROLE_NAME_ roleName
+		from SYS_USER_ROLE_JOIN SURJ,SYS_ROLE SR
+		<where>
+			SURJ.ROLE_ID_ = SR.ROLE_ID_
+			<include refid="SQL_SYS_USER_ROLE_JOIN_WHERE" />
+		</where>
+		<if test="orderStr != null and orderStr.length() != 0">
+			ORDER BY ${orderStr}
+		</if>
+		<if test="orderStr == null or orderStr.length() == 0">
+			ORDER BY SURJ.ROLE_ID_ desc
+		</if>
+	</select>
+
+	<!-- Statistical line -->
+	<select id="getListCount" parameterType="SysUserRoleJoin"
+		resultType="int">
+		select count(*) as counts
+		from SYS_USER_ROLE_JOIN SURJ
+		<where>
+			<include refid="SQL_SYS_USER_ROLE_JOIN_WHERE" />
+		</where>
+	</select>
+	
+	<select id="getSpecUserList" parameterType="string" resultType="SysUser">
+		select distinct SU.USER_ID_ userId,SU.USER_NAME_ userName,SU.LOGIN_NAME_ loginName from SYS_USER_ROLE_JOIN SURJ,
+		SYS_USER SU,SYS_USER_UGROUP_JOIN SUUJ,SYS_USER_GROUP SUG, SYS_DEPARTMENT SD ,oa_user_extension OUE
+		where SURJ.USER_ID_ = SU.USER_ID_ and  SU.USER_ID_ = SUUJ.USER_ID_ AND SUUJ.GROUP_ID_ = SUG.GROUP_ID_ AND SUG.DEPART_ID_=SD.DEPART_ID_
+		AND  SU.USER_ID_ = OUE.USER_ID_
+		AND SU.IS_DELETE_ = 0
+		${value}
+		 order by su.LOGIN_NAME_
+	</select>
+
+	<!-- According to the id check record -->
+	<select id="getById" parameterType="int" resultType="SysUserRoleJoin">
+		select
+		<include refid="SQL_SYS_USER_ROLE_JOIN_COLUMN" />
+		from SYS_USER_ROLE_JOIN SURJ
+		<where>
+			SURJ.USER_ID_ = #{idValue}
+			SURJ.ROLE_ID_ = #{idValue}
+		</where>
+	</select>
+<select id="getUserListByRoleId" parameterType="java.lang.Integer" resultType="SysUser">
+		SELECT DISTINCT  a.userId, a.userName ,a.loginName,a.email from  (
+		  select su.USER_ID_ userId, su.USER_NAME_ userName ,su.LOGIN_NAME_ loginName,su.EMAIL_ email 
+		  from SYS_USER su ,SYS_USER_ROLE_JOIN surj 
+		  where su.USER_ID_ = surj.USER_ID_ and surj.ROLE_ID_ = #{roleId} and su.IS_DELETE_ = 0 
+		  UNION ALL
+		  select su.USER_ID_ userId, su.USER_NAME_ userName ,su.LOGIN_NAME_ loginName,su.EMAIL_ email 
+		  from   sys_role_ugroup_join sruj ,sys_user_ugroup_join suuj,sys_user su, sys_role_auth_join sraj
+		   where sraj.ROLE_ID_ =#{roleId} and su.IS_DELETE_ = 0 
+           and su.USER_ID_ = suuj.USER_ID_  
+		   and   sraj.ROLE_ID_ = sruj.ROLE_ID_
+		   and  suuj.group_id_ = sruj.GROUP_ID_
+		)a
+		 
+	</select>
+	<!-- add -->
+	<insert id="insert" parameterType="SysUserRoleJoin">
+		insert into SYS_USER_ROLE_JOIN (
+		USER_ID_ , ROLE_ID_ , IS_FINAL_ , CRT_TIME_ , CRT_USERID_ ) VALUES (
+		#{userId,jdbcType=NUMERIC} , #{roleId,jdbcType=NUMERIC} ,
+		#{isFinal,jdbcType=NUMERIC} , #{crtTime,jdbcType=TIMESTAMP} ,
+		#{crtUserid,jdbcType=NUMERIC} )
+	</insert>
+
+	<!-- update -->
+	<update id="update" parameterType="SysUserRoleJoin">
+		UPDATE SYS_USER_ROLE_JOIN
+		<set>
+			<if test="userId !=null">
+				USER_ID_ = #{userId} ,
+			</if>
+			<if test="roleId !=null">
+				ROLE_ID_ = #{roleId} ,
+			</if>
+			<if test="isFinal !=null">
+				IS_FINAL_ = #{isFinal} ,
+			</if>
+			<if test="crtTime !=null">
+				CRT_TIME_ = #{crtTime} ,
+			</if>
+			<if test="crtUserid !=null">
+				CRT_USERID_ = #{crtUserid}
+			</if>
+		</set>
+		WHERE
+		USER_ID_=#{userId} and ROLE_ID_=#{roleId} AND ISDELETE=0 AND ISFINAL=0
+	</update>
+
+	<!-- delete -->
+	<delete id="delete" parameterType="SysUserRoleJoin">
+		DELETE FROM SYS_USER_ROLE_JOIN
+		WHERE
+		USER_ID_=#{userId} and ROLE_ID_=#{roleId}
+	</delete>
+
+	<!-- delete(ids) -->
+	<delete id="deleteById" parameterType="java.lang.Integer">
+		DELETE FROM
+		SYS_USER_ROLE_JOIN
+		WHERE
+		USER_ID_=#{userId} and IS_FINAL_= 0
+	</delete>
+<!-- delete(ids) -->
+	<delete id="deleteByRoleId" parameterType="java.lang.Integer">
+		DELETE FROM
+		SYS_USER_ROLE_JOIN
+		WHERE
+		ROLE_ID_=#{roleId} and IS_FINAL_= 0
+	</delete>
+</mapper>

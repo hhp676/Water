@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hongguaninfo.hgdf.adp.mapper.sys.SysUserGroupMapper">
+
+	<!-- The corresponding field and type -->
+	<resultMap type="SysUserGroup" id="ResultMap">
+		<result column="groupId" javaType="java.math.BigDecimal"
+			property="groupId" />
+		<result column="departId" javaType="java.math.BigDecimal"
+			property="departId" />
+		<result column="groupName" javaType="String" property="groupName" />
+		<result column="groupCode" javaType="String" property="groupCode" />
+		<result column="descr" javaType="String" property="descr" />
+		<result column="fid" javaType="java.math.BigDecimal" property="fid" />
+		<result column="isDelete" javaType="Integer" property="isDelete" />
+		<result column="isFinal" javaType="Integer" property="isFinal" />
+		<result column="crtTime" jdbcType="TIMESTAMP" property="crtTime" />
+		<result column="updTime" jdbcType="TIMESTAMP" property="updTime" />
+		<result column="crtUserid" javaType="java.math.BigDecimal"
+			property="crtUserid" />
+		<result column="updUserid" javaType="java.math.BigDecimal"
+			property="updUserid" />
+	</resultMap>
+
+	<!-- Each field corresponding alias, convenient call -->
+	<sql id="SQL_SYS_USER_GROUP_COLUMN">
+		SUG.GROUP_ID_ groupId, SUG.DEPART_ID_ departId,
+		SUG.GROUP_NAME_ groupName,
+		SUG.GROUP_CODE_ groupCode, SUG.DESCR_ descr,
+		SUG.FID_ fid,
+		SUG.IS_DELETE_ isDelete, SUG.IS_FINAL_ isFinal,
+		SUG.CRT_TIME_ crtTime,
+		SUG.UPD_TIME_ updTime, SUG.CRT_USERID_
+		crtUserid, SUG.UPD_USERID_
+		updUserid
+	</sql>
+
+	<!-- whether multiple fields is empty -->
+	<sql id="SQL_SYS_USER_GROUP_WHERE">
+		<if test="groupId !=null ">
+			AND SUG.GROUP_ID_=#{groupId}
+		</if>
+		<if test="departId !=null ">
+			AND SUG.DEPART_ID_=#{departId}
+		</if>
+		<if test="groupName !=null and groupName.length()!=0 ">
+			AND SUG.GROUP_NAME_ like '%${groupName}%'
+		</if>
+		<if test="groupCode !=null and groupCode.length()!=0 ">
+			AND SUG.GROUP_CODE_ like '%${groupCode}%'
+		</if>
+		<if test="descr !=null and descr.length()!=0 ">
+			AND SUG.DESCR_=#{descr}
+		</if>
+		<if test="fid !=null ">
+			AND SUG.FID_=#{fid}
+		</if>
+		<if test="isDelete !=null ">
+			AND SUG.IS_DELETE_=#{isDelete}
+		</if>
+		<if test="isFinal !=null ">
+			AND SUG.IS_FINAL_=#{isFinal}
+		</if>
+		<if test="crtTime !=null ">
+			AND SUG.CRT_TIME_=#{crtTime}
+		</if>
+		<if test="updTime !=null ">
+			AND SUG.UPD_TIME_=#{updTime}
+		</if>
+		<if test="crtUserid !=null ">
+			AND SUG.CRT_USERID_=#{crtUserid}
+		</if>
+		<if test="updUserid !=null ">
+			AND SUG.UPD_USERID_=#{updUserid}
+		</if>
+	</sql>
+
+	<!-- Query All -->
+	<select id="getList" parameterType="SysUserGroup" resultType="SysUserGroup">
+		select
+		<include refid="SQL_SYS_USER_GROUP_COLUMN" />,SD.DEPART_NAME_ departName,COUNT(sua.USER_ID_) userCount
+		from SYS_USER_GROUP SUG 
+		LEFT JOIN  SYS_DEPARTMENT SD  ON SUG.DEPART_ID_ = SD.DEPART_ID_
+		LEFT JOIN sys_user_ugroup_join SUUJ ON SUG.GROUP_ID_ = SUUJ.GROUP_ID_
+		LEFT JOIN (select su.USER_ID_ from sys_user su where su.IS_DELETE_=0 )sua ON sua.USER_ID_ = SUUJ.USER_ID_ 
+		<where>			
+			<include refid="SQL_SYS_USER_GROUP_WHERE" />
+		</where>
+		GROUP BY SUG.GROUP_ID_
+		<if test="orderStr != null and orderStr.length() != 0">
+			ORDER BY ${orderStr}
+		</if>
+		<if test="orderStr == null or orderStr.length() == 0">
+			ORDER BY SUG.GROUP_ID_
+		</if>
+	</select>
+
+	<!-- Statistical line -->
+	<select id="getListCount" parameterType="SysUserGroup"
+		resultType="int">
+		select count(*) as counts
+		from SYS_USER_GROUP SUG LEFT JOIN  SYS_DEPARTMENT SD  ON SUG.DEPART_ID_ = SD.DEPART_ID_
+		LEFT JOIN sys_user_ugroup_join SUUJ ON SUG.GROUP_ID_ = SUUJ.GROUP_ID_
+		LEFT JOIN (select su.USER_ID_ from sys_user su where su.IS_DELETE_=0 )sua ON sua.USER_ID_ = SUUJ.USER_ID_     
+		<where>
+			<include refid="SQL_SYS_USER_GROUP_WHERE" />
+		</where>
+	</select>
+
+	<!-- According to the id check record -->
+	<select id="getById" parameterType="int" resultType="SysUserGroup">
+		select
+		<include refid="SQL_SYS_USER_GROUP_COLUMN" />
+		from SYS_USER_GROUP SUG
+		<where>
+			SUG.GROUP_ID_ = #{idValue}
+		</where>
+	</select>
+
+	<!-- add -->
+	<insert id="insert" parameterType="SysUserGroup">
+		insert into SYS_USER_GROUP (
+		GROUP_ID_ , DEPART_ID_ , GROUP_NAME_ ,
+		GROUP_CODE_ , DESCR_ , FID_ , IS_DELETE_
+		, IS_FINAL_ , CRT_TIME_ ,
+		UPD_TIME_ , CRT_USERID_ , UPD_USERID_ )
+		VALUES (
+		#{groupId,jdbcType=NUMERIC} , #{departId,jdbcType=NUMERIC} ,
+		#{groupName,jdbcType=VARCHAR} ,
+		#{groupCode,jdbcType=VARCHAR} ,
+		#{descr,jdbcType=VARCHAR} ,
+		#{fid,jdbcType=NUMERIC} ,
+		#{isDelete,jdbcType=NUMERIC} ,
+		#{isFinal,jdbcType=NUMERIC} ,
+		#{crtTime,jdbcType=TIMESTAMP} ,
+		#{updTime,jdbcType=TIMESTAMP} ,
+		#{crtUserid,jdbcType=NUMERIC} ,
+		#{updUserid,jdbcType=NUMERIC} )
+	</insert>
+
+	<!-- update -->
+	<update id="update" parameterType="SysUserGroup">
+		UPDATE SYS_USER_GROUP
+		<set>
+			<if test="departId !=null">
+				DEPART_ID_ = #{departId} ,
+			</if>
+			<if test="groupName !=null">
+				GROUP_NAME_ = #{groupName} ,
+			</if>
+			<if test="groupCode !=null">
+				GROUP_CODE_ = #{groupCode} ,
+			</if>
+			<if test="descr !=null">
+				DESCR_ = #{descr} ,
+			</if>
+			<if test="fid !=null">
+				FID_ = #{fid} ,
+			</if>
+			<if test="isDelete !=null">
+				IS_DELETE_ = #{isDelete} ,
+			</if>
+			<if test="isFinal !=null">
+				IS_FINAL_ = #{isFinal} ,
+			</if>
+			<if test="crtTime !=null">
+				CRT_TIME_ = #{crtTime} ,
+			</if>
+			<if test="updTime !=null">
+				UPD_TIME_ = #{updTime} ,
+			</if>
+			<if test="crtUserid !=null">
+				CRT_USERID_ = #{crtUserid} ,
+			</if>
+			<if test="updUserid !=null">
+				UPD_USERID_ = #{updUserid}
+			</if>
+		</set>
+		WHERE
+		GROUP_ID_=#{groupId} AND IS_DELETE_=0 AND IS_FINAL_=0
+	</update>
+
+	<!-- delete -->
+	<delete id="delete" parameterType="SysUserGroup">
+		DELETE FROM SYS_USER_GROUP
+		WHERE
+		GROUP_ID_=#{groupId}
+	</delete>
+
+	<!-- delete(ids) -->
+	<delete id="deleteById" parameterType="java.lang.Integer">
+		DELETE FROM SYS_USER_GROUP
+		WHERE
+		GROUP_ID_=#{groupId}
+	</delete>
+
+</mapper>

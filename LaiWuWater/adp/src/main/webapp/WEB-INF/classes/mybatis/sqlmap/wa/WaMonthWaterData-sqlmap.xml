@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hongguaninfo.hgdf.wa.mapper.WaMonthWaterDataMapper">
+
+	<resultMap type="WaMonthWaterData" id="WaMonthWaterData">
+		<result property="monthWaterId" column="monthWaterId" />
+		<result property="companyId" column="companyId" />
+		<result property="monthDate" column="monthDate" />
+		<result property="planMonthWater" column="planMonthWater" />
+		<result property="actMonthWater" column="actMonthWater" />
+		<result property="isOverroof" column="isOverroof" />
+		<result property="isDelte" column="isDelte" />
+		<result property="crtTime" column="crtTime" />
+		<result property="updTime" column="updTime" />
+		<association property="waCompanyInfo" column="companyId" select="com.hongguaninfo.hgdf.wa.mapper.WaCompanyInfoMapper.getByCompanyId" />
+	</resultMap>
+
+    <!-- sqlColumn -->
+    <sql id="SQL_WA_MONTH_WATER_DATA_COLUMN">
+        wmwd.MONTH_WATER_ID_ monthWaterId,
+        wmwd.COMPANY_ID_ companyId,
+        wmwd.MONTH_DATE_ monthDate,
+        wmwd.PLAN_MONTH_WATER_ planMonthWater,
+        wmwd.ACT_MONTH_WATER_ actMonthWater,
+        wmwd.IS_OVERROOF_ isOverroof,
+        wmwd.BEYOND_AMOUNT_ beyondAmount,
+        wmwd.FEE_STANDARD_ feeStandard,
+        wmwd.IS_DELTE_ isDelte,
+        wmwd.CRT_TIME_ crtTime,
+        wmwd.UPD_TIME_ updTime
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_WA_MONTH_WATER_DATA_WHERE">
+        	<if test="monthWaterId != null">
+	            AND wmwd.MONTH_WATER_ID_ = #{monthWaterId}
+        </if>
+        		<if test="companyId != null and companyId.length() != 0">
+        		AND wmwd.COMPANY_ID_ like '%${companyId}%'
+        </if>
+        	<if test="monthDate != null">
+	            AND wmwd.MONTH_DATE_ = #{monthDate}
+        </if>
+        		<if test="planMonthWater != null and planMonthWater.length() != 0">
+        		AND wmwd.PLAN_MONTH_WATER_ like '%${planMonthWater}%'
+        </if>
+        		<if test="actMonthWater != null and actMonthWater.length() != 0">
+        		AND wmwd.ACT_MONTH_WATER_ like '%${actMonthWater}%'
+        </if>
+        	<if test="isOverroof != null">
+	            AND wmwd.IS_OVERROOF_ = #{isOverroof}
+        </if>
+        	<if test="isDelte != null">
+	            AND wmwd.IS_DELTE_ = #{isDelte}
+        </if>
+        	<if test="crtTime != null">
+	            AND wmwd.CRT_TIME_ = #{crtTime}
+        </if>
+        	<if test="updTime != null">
+	            AND wmwd.UPD_TIME_ = #{updTime}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long"  resultMap="WaMonthWaterData">
+        select <include  refid="SQL_WA_MONTH_WATER_DATA_COLUMN" />
+		,com.COMPANY_NAME_ companyName, com.EMAIL_ email
+		from WA_MONTH_WATER_DATA wmwd, WA_COMPANY_INFO com
+		where com.COMPANY_ID_ = wmwd.COMPANY_ID_
+        and wmwd.MONTH_WATER_ID_ = #{monthWaterId}
+		<if test="isDelte != null">
+			AND  wmwd.IS_DELTE_ =  #{isDelte}
+		</if>
+    </select>
+
+
+	<select id="getWaListByEntity" parameterType="WaMonthWaterData"  resultMap="WaMonthWaterData">
+		select <include  refid="SQL_WA_MONTH_WATER_DATA_COLUMN" />, com.COMPANY_NAME_ companyName, com.EMAIL_ email
+		from WA_MONTH_WATER_DATA wmwd, WA_COMPANY_INFO com
+		where com.COMPANY_ID_ = wmwd.COMPANY_ID_
+		<if test="companyId != null and companyId.length() != 0">
+			AND  wmwd.COMPANY_ID_ =  #{companyId}
+		</if>
+		<if test="isDelte != null">
+			AND  wmwd.IS_DELTE_ =  #{isDelte}
+		</if>
+		<if test="monthDate != null">
+			AND wmwd.MONTH_DATE_ = #{monthDate}
+		</if>
+		<if test="monthWaterId != null">
+			AND wmwd.MONTH_WATER_ID_ = #{monthWaterId}
+		</if>
+
+	</select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="WaMonthWaterData"   resultMap="WaMonthWaterData">
+        select <include  refid="SQL_WA_MONTH_WATER_DATA_COLUMN"/>
+		,com.COMPANY_CODE_ companyCode, com.COMPANY_NAME_ companyName, com.EMAIL_ email, com.IS_IMPORT_ isImport
+        from WA_MONTH_WATER_DATA wmwd JOIN WA_COMPANY_INFO com
+		on com.COMPANY_ID_ = wmwd.COMPANY_ID_
+		<if test="companyId != null and companyId.length() != 0">
+			AND  wmwd.COMPANY_ID_ =  #{companyId}
+		</if>
+		<if test="isDelte != null">
+			AND  wmwd.IS_DELTE_ =  #{isDelte}
+		</if>
+		<if test="companyName != null and companyName.length() != 0">
+			AND  com.COMPANY_NAME_ like '%${companyName}%'
+		</if>
+		<if test="companyCode != null and companyCode.length() != 0">
+			AND  com.COMPANY_CODE_ like '%${companyCode}%'
+		</if>
+		<if test="monthDate != null and monthDate.length() != 0">
+			AND  wmwd.MONTH_DATE_ like '%${monthDate}%'
+		</if>
+		<if test="isOverroof != null and isOverroof.length() != 0">
+			AND  wmwd.IS_OVERROOF_ = #{isOverroof}
+		</if>
+		<if test="isImport != null and isImport.length() != 0">
+			AND  com.IS_IMPORT_ = #{isImport}
+		</if>
+		<if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                wmwd.MONTH_DATE_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="WaMonthWaterData" resultType="int">
+        select count(
+            wmwd.MONTH_WATER_ID_
+        ) as counts
+		from WA_MONTH_WATER_DATA wmwd JOIN WA_COMPANY_INFO com
+		on com.COMPANY_ID_ = wmwd.COMPANY_ID_
+		<if test="companyId != null and companyId.length() != 0">
+			AND  wmwd.COMPANY_ID_ =  #{companyId}
+		</if>
+		<if test="companyCode != null and companyCode.length() != 0">
+			AND  com.COMPANY_CODE_ =  #{companyCode}
+		</if>
+		<if test="isDelte != null">
+			AND  wmwd.IS_DELTE_ =  #{isDelte}
+		</if>
+		<if test="companyName != null and companyName.length() != 0">
+			AND  com.COMPANY_NAME_ like '%${companyName}%'
+		</if>
+		<if test="monthDate != null and monthDate.length() != 0">
+			AND  wmwd.MONTH_DATE_ like '%${monthDate}%'
+		</if>
+		<if test="isOverroof != null and isOverroof.length() != 0">
+			AND  wmwd.IS_OVERROOF_ = #{isOverroof}
+		</if>
+		<if test="isImport != null and isImport.length() != 0">
+			AND  com.IS_IMPORT_ = #{isImport}
+		</if>
+    </select>
+
+
+	<!--月实际用水begin -->
+	<!-- Query All  -->
+	<select id="getActList" parameterType="WaMonthWaterData"   resultMap="WaMonthWaterData">
+		select <include  refid="SQL_WA_MONTH_WATER_DATA_COLUMN"/>
+		,com.COMPANY_CODE_ companyCode, com.COMPANY_NAME_ companyName, com.EMAIL_ email, com.IS_IMPORT_ isImport
+		from WA_MONTH_WATER_DATA wmwd JOIN WA_COMPANY_INFO com
+		on com.COMPANY_ID_ = wmwd.COMPANY_ID_ AND wmwd.ACT_MONTH_WATER_ != ""
+		<if test="companyId != null and companyId.length() != 0">
+			AND  wmwd.COMPANY_ID_ =  #{companyId}
+		</if>
+		<if test="isDelte != null">
+			AND  wmwd.IS_DELTE_ =  #{isDelte}
+		</if>
+		<if test="companyName != null and companyName.length() != 0">
+			AND  com.COMPANY_NAME_ like '%${companyName}%'
+		</if>
+		<if test="companyCode != null and companyCode.length() != 0">
+			AND  com.COMPANY_CODE_ like '%${companyCode}%'
+		</if>
+		<if test="monthDate != null and monthDate.length() != 0">
+			AND  wmwd.MONTH_DATE_ like '%${monthDate}%'
+		</if>
+		<if test="isOverroof != null and isOverroof.length() != 0">
+			AND  wmwd.IS_OVERROOF_ = #{isOverroof}
+		</if>
+		<if test="isImport != null and isImport.length() != 0">
+			AND  com.IS_IMPORT_ = #{isImport}
+		</if>
+		<if test="orderStr != null and orderStr.length() != 0">
+			ORDER BY ${orderStr}
+		</if>
+		<if test="orderStr == null or orderStr.length() == 0">
+			ORDER BY
+			wmwd.MONTH_DATE_ desc
+		</if>
+	</select>
+
+	<!-- Statistical line   -->
+	<select id="getActListCount" parameterType="WaMonthWaterData" resultType="int">
+		select count(
+		wmwd.MONTH_WATER_ID_
+		) as counts
+		from WA_MONTH_WATER_DATA wmwd JOIN WA_COMPANY_INFO com
+		on com.COMPANY_ID_ = wmwd.COMPANY_ID_ AND wmwd.ACT_MONTH_WATER_ != ""
+		<if test="companyId != null and companyId.length() != 0">
+			AND  wmwd.COMPANY_ID_ =  #{companyId}
+		</if>
+		<if test="companyCode != null and companyCode.length() != 0">
+			AND  com.COMPANY_CODE_ =  #{companyCode}
+		</if>
+		<if test="isDelte != null">
+			AND  wmwd.IS_DELTE_ =  #{isDelte}
+		</if>
+		<if test="companyName != null and companyName.length() != 0">
+			AND  com.COMPANY_NAME_ like '%${companyName}%'
+		</if>
+		<if test="monthDate != null and monthDate.length() != 0">
+			AND  wmwd.MONTH_DATE_ like '%${monthDate}%'
+		</if>
+		<if test="isOverroof != null and isOverroof.length() != 0">
+			AND  wmwd.IS_OVERROOF_ = #{isOverroof}
+		</if>
+		<if test="isImport != null and isImport.length() != 0">
+			AND  com.IS_IMPORT_ = #{isImport}
+		</if>
+	</select>
+	<!--月实际用水end -->
+
+	<!--月计划用水begin -->
+	<!-- Query All  -->
+	<select id="getPlanList" parameterType="WaMonthWaterData"   resultMap="WaMonthWaterData">
+		select <include  refid="SQL_WA_MONTH_WATER_DATA_COLUMN"/>
+		,com.COMPANY_CODE_ companyCode, com.COMPANY_NAME_ companyName, com.EMAIL_ email, com.IS_IMPORT_ isImport
+		from WA_MONTH_WATER_DATA wmwd JOIN WA_COMPANY_INFO com
+		on com.COMPANY_ID_ = wmwd.COMPANY_ID_ AND wmwd.PLAN_MONTH_WATER_ != ""
+		<if test="companyId != null and companyId.length() != 0">
+			AND  wmwd.COMPANY_ID_ =  #{companyId}
+		</if>
+		<if test="isDelte != null">
+			AND  wmwd.IS_DELTE_ =  #{isDelte}
+		</if>
+		<if test="companyName != null and companyName.length() != 0">
+			AND  com.COMPANY_NAME_ like '%${companyName}%'
+		</if>
+		<if test="companyCode != null and companyCode.length() != 0">
+			AND  com.COMPANY_CODE_ like '%${companyCode}%'
+		</if>
+		<if test="monthDate != null and monthDate.length() != 0">
+			AND  wmwd.MONTH_DATE_ like '%${monthDate}%'
+		</if>
+		<if test="isOverroof != null and isOverroof.length() != 0">
+			AND  wmwd.IS_OVERROOF_ = #{isOverroof}
+		</if>
+		<if test="isImport != null and isImport.length() != 0">
+			AND  com.IS_IMPORT_ = #{isImport}
+		</if>
+		<if test="orderStr != null and orderStr.length() != 0">
+			ORDER BY ${orderStr}
+		</if>
+		<if test="orderStr == null or orderStr.length() == 0">
+			ORDER BY
+			wmwd.MONTH_DATE_ desc
+		</if>
+	</select>
+
+	<!-- Statistical line   -->
+	<select id="getPlanListCount" parameterType="WaMonthWaterData" resultType="int">
+		select count(
+		wmwd.MONTH_WATER_ID_
+		) as counts
+		from WA_MONTH_WATER_DATA wmwd JOIN WA_COMPANY_INFO com
+		on com.COMPANY_ID_ = wmwd.COMPANY_ID_ AND wmwd.PLAN_MONTH_WATER_ != ""
+		<if test="companyId != null and companyId.length() != 0">
+			AND  wmwd.COMPANY_ID_ =  #{companyId}
+		</if>
+		<if test="companyCode != null and companyCode.length() != 0">
+			AND  com.COMPANY_CODE_ =  #{companyCode}
+		</if>
+		<if test="isDelte != null">
+			AND  wmwd.IS_DELTE_ =  #{isDelte}
+		</if>
+		<if test="companyName != null and companyName.length() != 0">
+			AND  com.COMPANY_NAME_ like '%${companyName}%'
+		</if>
+		<if test="monthDate != null and monthDate.length() != 0">
+			AND  wmwd.MONTH_DATE_ like '%${monthDate}%'
+		</if>
+		<if test="isOverroof != null and isOverroof.length() != 0">
+			AND  wmwd.IS_OVERROOF_ = #{isOverroof}
+		</if>
+		<if test="isImport != null and isImport.length() != 0">
+			AND  com.IS_IMPORT_ = #{isImport}
+		</if>
+	</select>
+	<!--月计划用水end -->
+
+
+	<!-- add 默认使用全局ID -->
+	<insert id="insert" parameterType="WaMonthWaterData" >
+		insert into WA_MONTH_WATER_DATA 
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+		  	<if test="monthWaterId != null">
+        		MONTH_WATER_ID_,
+      		</if>
+		  	<if test="companyId != null">
+        		COMPANY_ID_,
+      		</if>
+		  	<if test="monthDate != null">
+        		MONTH_DATE_,
+      		</if>
+		  	<if test="planMonthWater != null">
+        		PLAN_MONTH_WATER_,
+      		</if>
+		  	<if test="actMonthWater != null">
+        		ACT_MONTH_WATER_,
+      		</if>
+		  	<if test="isOverroof != null">
+        		IS_OVERROOF_,
+      		</if>
+		  	<if test="isDelte != null">
+        		IS_DELTE_,
+      		</if>
+		  	<if test="crtTime != null">
+        		CRT_TIME_,
+      		</if>
+		  	<if test="updTime != null">
+        		UPD_TIME_,
+      		</if>
+			<if test="beyondAmount != null">
+				BEYOND_AMOUNT_,
+			</if>
+			<if test="feeStandard != null">
+				FEE_STANDARD_,
+			</if>
+		</trim> 
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			  	<if test="monthWaterId != null">
+			  	  	   #{monthWaterId,jdbcType=NUMERIC},
+			  	</if>  
+			  	<if test="companyId != null">
+			  	  	   #{companyId,jdbcType=VARCHAR},
+			  	</if>
+				<if test="monthDate != null">
+					   #{monthDate,jdbcType=VARCHAR},
+				</if>
+				<if test="planMonthWater != null">
+			  	  	   #{planMonthWater,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="actMonthWater != null">
+			  	  	   #{actMonthWater,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="isOverroof != null">
+			  	  	   #{isOverroof,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="isDelte != null">
+			  	  	   #{isDelte,jdbcType=NUMERIC},
+			  	</if>  
+			  	<if test="crtTime != null">
+			  	  	   #{crtTime,jdbcType=TIMESTAMP},
+			  	</if>  
+			  	<if test="updTime != null">
+			  	  	   #{updTime,jdbcType=TIMESTAMP},
+			  	</if>
+				<if test="beyondAmount != null">
+						#{beyondAmount,jdbcType=VARCHAR},
+				</if>
+				<if test="feeStandard != null">
+						#{feeStandard,jdbcType=VARCHAR},
+				</if>
+		</trim>
+    </insert>
+
+	<!-- update  -->
+	<update id="update" parameterType="WaMonthWaterData">
+		UPDATE WA_MONTH_WATER_DATA wmwd
+		<set>
+		  	<if test="monthWaterId != null">
+        		MONTH_WATER_ID_ = #{monthWaterId} ,
+      		</if>
+		  	<if test="companyId != null">
+        		COMPANY_ID_ = #{companyId} ,
+      		</if>
+		  	<if test="monthDate != null">
+        		MONTH_DATE_ = #{monthDate} ,
+      		</if>
+		  	<if test="planMonthWater != null">
+        		PLAN_MONTH_WATER_ = #{planMonthWater} ,
+      		</if>
+		  	<if test="actMonthWater != null">
+        		ACT_MONTH_WATER_ = #{actMonthWater} ,
+      		</if>
+		  	<if test="isOverroof != null">
+        		IS_OVERROOF_ = #{isOverroof} ,
+      		</if>
+		  	<if test="isDelte != null">
+        		IS_DELTE_ = #{isDelte} ,
+      		</if>
+		  	<if test="crtTime != null">
+        		CRT_TIME_ = #{crtTime} ,
+      		</if>
+		  	<if test="updTime != null">
+        		UPD_TIME_ = #{updTime},
+      		</if>
+			<if test="beyondAmount != null">
+				BEYOND_AMOUNT_ = #{beyondAmount},
+			</if>
+			<if test="feeStandard != null">
+				FEE_STANDARD_ = #{feeStandard}
+			</if>
+		 
+		</set>
+		WHERE
+            wmwd.MONTH_WATER_ID_ = #{monthWaterId}
+	</update>
+
+	<!-- delete  -->
+	<delete id="delete" parameterType="WaMonthWaterData">
+		DELETE FROM WA_MONTH_WATER_DATA
+		WHERE
+            MONTH_WATER_ID_ = #{monthWaterId}
+	</delete>
+ 
+</mapper>

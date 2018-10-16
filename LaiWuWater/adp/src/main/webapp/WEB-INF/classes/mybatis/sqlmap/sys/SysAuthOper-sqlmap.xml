@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hongguaninfo.hgdf.adp.mapper.sys.SysAuthOperMapper">
+
+	<!-- The corresponding field and type -->
+	<resultMap type="SysAuthOper" id="ResultMap">
+		<result column="operId" javaType="java.math.BigDecimal"
+			property="operId" />
+		<result column="operCode" javaType="String" property="operCode" />
+		<result column="operName" javaType="String" property="operName" />
+		<result column="operEnname" javaType="String" property="operEnname" />
+		<result column="operIcon" javaType="String" property="operIcon" />
+		<result column="orderId" javaType="Integer" property="orderId" />
+		<result column="descr" javaType="String" property="descr" />
+		<result column="isDelete" javaType="Integer" property="isDelete" />
+		<result column="isFinal" javaType="Integer" property="isFinal" />
+		<result column="crtTime" jdbcType="TIMESTAMP" property="crtTime" />
+		<result column="updTime" jdbcType="TIMESTAMP" property="updTime" />
+		<result column="crtUserid" javaType="java.math.BigDecimal"
+			property="crtUserid" />
+		<result column="updUserid" javaType="java.math.BigDecimal"
+			property="updUserid" />
+	</resultMap>
+
+	<!-- Each field corresponding alias, convenient call -->
+	<sql id="SQL_SYS_AUTH_OPER_COLUMN">
+		SAO.OPER_ID_ operId,SAO.OPER_CODE_ operCode,SAO.OPER_NAME_
+		operName,SAO.OPER_ENNAME_ operEnname,
+		SAO.OPER_ICON_
+		operIcon,SAO.ORDER_ID_ orderId,SAO.DESCR_ descr,SAO.IS_DELETE_
+		isDelete,
+		SAO.IS_FINAL_ isFinal,SAO.CRT_TIME_ crtTime,SAO.UPD_TIME_
+		updTime,SAO.CRT_USERID_
+		crtUserid,SAO.UPD_USERID_ updUserid
+	</sql>
+
+	<!-- whether multiple fields is empty -->
+	<sql id="SQL_SYS_AUTH_OPER_WHERE">
+		<if test="operId !=null ">
+			AND SAO.OPER_ID_=#{operId}
+		</if>
+		<if test="operCode !=null and operCode.length()!=0 ">
+			AND SAO.OPER_CODE_=#{operCode}
+		</if>
+		<if test="operName !=null and operName.length()!=0 ">
+			AND SAO.OPER_NAME_=#{operName}
+		</if>
+		<if test="operEnname !=null and operEnname.length()!=0 ">
+			AND SAO.OPER_ENNAME_=#{operEnname}
+		</if>
+		<if test="operIcon !=null and operIcon.length()!=0 ">
+			AND SAO.OPER_ICON_=#{operIcon}
+		</if>
+		<if test="orderId !=null ">
+			AND SAO.ORDER_ID_=#{orderId}
+		</if>
+		<if test="descr !=null and descr.length()!=0 ">
+			AND SAO.DESCR_=#{descr}
+		</if>
+		<if test="isDelete !=null ">
+			AND SAO.IS_DELETE_=#{isDelete}
+		</if>
+		<if test="isFinal !=null ">
+			AND SAO.IS_FINAL_=#{isFinal}
+		</if>
+		<if test="crtTime !=null ">
+			AND SAO.CRT_TIME_=#{crtTime}
+		</if>
+		<if test="updTime !=null ">
+			AND SAO.UPD_TIME_=#{updTime}
+		</if>
+		<if test="crtUserid !=null ">
+			AND SAO.CRT_USERID_=#{crtUserid}
+		</if>
+		<if test="updUserid !=null ">
+			AND SAO.UPD_USERID_=#{updUserid}
+		</if>
+	</sql>
+
+	<!-- Query All -->
+	<select id="getList" parameterType="SysAuthOper" resultType="SysAuthOper">
+		select
+		<include refid="SQL_SYS_AUTH_OPER_COLUMN" />
+		from SYS_AUTH_OPER SAO
+		<where>
+			<include refid="SQL_SYS_AUTH_OPER_WHERE" />
+		</where>
+		<if test="orderStr != null and orderStr.length() != 0">
+			ORDER BY ${orderStr}
+		</if>
+		<if test="orderStr == null or orderStr.length() == 0">
+			ORDER BY SAO.ORDER_ID_ asc ,SAO.OPER_ID_ desc
+		</if>
+	</select>
+
+	<!-- Statistical line -->
+	<select id="getListCount" parameterType="SysAuthOper"
+		resultType="int">
+		select count(*) as counts
+		from SYS_AUTH_OPER SAO
+		<where>
+			<include refid="SQL_SYS_AUTH_OPER_WHERE" />
+		</where>
+	</select>
+
+	<!-- According to the id check record -->
+	<select id="getById" parameterType="int" resultType="SysAuthOper">
+		select
+		<include refid="SQL_SYS_AUTH_OPER_COLUMN" />
+		from SYS_AUTH_OPER SAO
+		<where>
+			SAO.OPER_ID_ = #{idValue}
+		</where>
+	</select>
+
+	<!-- add -->
+	<insert id="insert" parameterType="SysAuthOper">
+		insert into
+		SYS_AUTH_OPER (
+		OPER_ID_ ,OPER_CODE_ ,OPER_NAME_ ,OPER_ENNAME_ ,
+		OPER_ICON_ ,
+		ORDER_ID_ ,
+		DESCR_ ,IS_DELETE_ ,IS_FINAL_ , CRT_TIME_ ,
+		UPD_TIME_ , CRT_USERID_
+		,UPD_USERID_ ) VALUES (
+		#{operId,jdbcType=NUMERIC}
+		,#{operCode,jdbcType=VARCHAR}
+		,#{operName,jdbcType=VARCHAR} ,
+		#{operEnname,jdbcType=VARCHAR}
+		,#{operIcon,jdbcType=VARCHAR}
+		,#{orderId,jdbcType=NUMERIC} ,
+		#{descr,jdbcType=VARCHAR} ,
+		#{isDelete,jdbcType=NUMERIC}
+		,#{isFinal,jdbcType=NUMERIC} ,
+		#{crtTime,jdbcType=TIMESTAMP}
+		,#{updTime,jdbcType=TIMESTAMP}
+		,#{crtUserid,jdbcType=NUMERIC} ,
+		#{updUserid,jdbcType=NUMERIC} )
+	</insert>
+
+	<!-- update -->
+	<update id="update" parameterType="SysAuthOper">
+		UPDATE SYS_AUTH_OPER
+		<set>
+			<if test="operCode !=null">
+				OPER_CODE_ = #{operCode} ,
+			</if>
+			<if test="operName !=null">
+				OPER_NAME_ = #{operName} ,
+			</if>
+			<if test="operEnname !=null">
+				OPER_ENNAME_= #{operEnname} ,
+			</if>
+			<if test="operIcon !=null">
+				OPER_ICON_ = #{operIcon} ,
+			</if>
+			<if test="orderId !=null">
+				ORDER_ID_ = #{orderId} ,
+			</if>
+			<if test="descr !=null">
+				DESCR_ = #{descr} ,
+			</if>
+			<if test="isDelete !=null">
+				IS_DELETE_ = #{isDelete} ,
+			</if>
+			<if test="isFinal !=null">
+				IS_FINAL_ = #{isFinal} ,
+			</if>
+			<if test="crtTime !=null">
+				CRT_TIME_ = #{crtTime} ,
+			</if>
+			<if test="updTime !=null">
+				UPD_TIME_ = #{updTime} ,
+			</if>
+			<if test="crtUserid !=null">
+				CRT_USERID_ = #{crtUserid} ,
+			</if>
+			<if test="updUserid !=null">
+				UPD_USERID_ = #{updUserid}
+			</if>
+		</set>
+		WHERE OPER_ID_=#{operId} and IS_FINAL_=0
+	</update>
+
+	<!-- delete -->
+	<delete id="delete" parameterType="SysAuthOper">
+		DELETE FROM SYS_AUTH_OPER
+		WHERE
+		OPER_ID_=#{operId}
+	</delete>
+
+	<!-- delete(ids) -->
+	<delete id="deleteById" parameterType="java.lang.Integer">
+		DELETE FROM SYS_AUTH_OPER
+		WHERE
+		OPER_ID_=#{operId}
+	</delete>
+
+</mapper>

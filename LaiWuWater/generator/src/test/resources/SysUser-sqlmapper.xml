@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hongguaninfo.hgdf.generator.mapper.SysUserMapper">
+
+	<!-- The corresponding field and type -->
+	<resultMap type="SysUser" id="ResultMap">
+		<result column="userId" jdbcType="Integer" property="userId" />
+		<result column="userName" jdbcType="String" property="userName" />
+		<result column="engName" jdbcType="String" property="engName" />
+		<result column="loginName" jdbcType="String" property="loginName" />
+		<result column="loginPwd" jdbcType="String" property="loginPwd" />
+		<result column="sex" jdbcType="Integer" property="sex" />
+		<result column="birthday" jdbcType="String" property="birthday" />
+		<result column="mobile" jdbcType="String" property="mobile" />
+		<result column="email" jdbcType="String" property="email" />
+		<result column="address" jdbcType="String" property="address" />
+		<result column="telephone" jdbcType="String" property="telephone" />
+		<result column="descr" jdbcType="String" property="descr" />
+		<result column="isValid" jdbcType="Integer" property="isValid" />
+		<result column="isLock" jdbcType="Integer" property="isLock" />
+		<result column="lastLoginIp" jdbcType="String" property="lastLoginIp" />
+		<result column="lastLoginTime" jdbcType="TIMESTAMP" property="lastLoginTime" />
+		<result column="isDelete" jdbcType="Integer" property="isDelete" />
+		<result column="isFinal" jdbcType="Integer" property="isFinal" />
+		<result column="crtTime" jdbcType="TIMESTAMP" property="crtTime" />
+		<result column="updTime" jdbcType="TIMESTAMP" property="updTime" />
+		<result column="crtUserid" jdbcType="Integer" property="crtUserid" />
+		<result column="updUserid" jdbcType="Integer" property="updUserid" />
+	</resultMap>
+
+	<!-- Each field corresponding alias, convenient call -->
+	<sql id="SQL_SYS_USER_COLUMN">
+		su.USER_ID_ userId, su.USER_NAME_ userName, su.ENG_NAME_ engName, su.LOGIN_NAME_
+		loginName, su.LOGIN_PWD_ loginPwd, su.SEX_ sex, su.BIRTHDAY_ birthday,
+		su.MOBILE_ mobile, su.EMAIL_ email, su.ADDRESS_ address, su.TELEPHONE_
+		telephone, su.DESCR_ descr, su.IS_VALID_ isValid, su.IS_LOCK_ isLock,
+		su.LAST_LOGIN_IP_ lastLoginIp, su.LAST_LOGIN_TIME_ lastLoginTime,
+		su.IS_DELETE_ isDelete, su.IS_FINAL_ isFinal, su.CRT_TIME_ crtTime,
+		su.UPD_TIME_ updTime, su.CRT_USERID_ crtUserid, su.UPD_USERID_
+		updUserid
+	</sql>
+
+	<!-- whether multiple fields is empty -->
+	<sql id="SQL_SYS_USER_WHERE">
+		<if test="userId !=null ">
+			AND su.USER_ID_=#{userId}
+		</if>
+		<if test="userName !=null and userName.length()!=0 ">
+			AND su.USER_NAME_=#{userName}
+		</if>
+		<if test="engName !=null and engName.length()!=0 ">
+			AND su.ENG_NAME_=#{engName}
+		</if>
+		<if test="loginName !=null and loginName.length()!=0 ">
+			AND su.LOGIN_NAME_=#{loginName}
+		</if>
+		<if test="loginPwd !=null and loginPwd.length()!=0 ">
+			AND su.LOGIN_PWD_=#{loginPwd}
+		</if>
+		<if test="sex !=null ">
+			AND su.SEX_=#{sex}
+		</if>
+		<if test="birthday !=null and birthday.length()!=0 ">
+			AND su.BIRTHDAY_=#{birthday}
+		</if>
+		<if test="mobile !=null and mobile.length()!=0 ">
+			AND su.MOBILE_=#{mobile}
+		</if>
+		<if test="email !=null and email.length()!=0 ">
+			AND su.EMAIL_=#{email}
+		</if>
+		<if test="address !=null and address.length()!=0 ">
+			AND su.ADDRESS_=#{address}
+		</if>
+		<if test="telephone !=null and telephone.length()!=0 ">
+			AND su.TELEPHONE_=#{telephone}
+		</if>
+		<if test="descr !=null and descr.length()!=0 ">
+			AND su.DESCR_=#{descr}
+		</if>
+		<if test="isValid !=null ">
+			AND su.IS_VALID_=#{isValid}
+		</if>
+		<if test="isLock !=null ">
+			AND su.IS_LOCK_=#{isLock}
+		</if>
+		<if test="lastLoginIp !=null and lastLoginIp.length()!=0 ">
+			AND su.LAST_LOGIN_IP_=#{lastLoginIp}
+		</if>
+		<if test="lastLoginTime !=null ">
+			AND su.LAST_LOGIN_TIME_=#{lastLoginTime}
+		</if>
+		<if test="isDelete !=null ">
+			AND su.IS_DELETE_=#{isDelete}
+		</if>
+		<if test="isFinal !=null ">
+			AND su.IS_FINAL_=#{isFinal}
+		</if>
+		<if test="crtTime !=null ">
+			AND su.CRT_TIME_=#{crtTime}
+		</if>
+		<if test="updTime !=null ">
+			AND su.UPD_TIME_=#{updTime}
+		</if>
+		<if test="crtUserid !=null ">
+			AND su.CRT_USERID_=#{crtUserid}
+		</if>
+		<if test="updUserid !=null ">
+			AND su.UPD_USERID_=#{updUserid}
+		</if>
+	</sql>
+
+	<!-- Query All -->
+	<select id="getList" parameterType="SysUser" resultType="SysUser">
+		select
+		<include refid="SQL_SYS_USER_COLUMN" />
+		from SYS_USER su
+		<where>
+			<include refid="SQL_SYS_USER_WHERE" />
+		</where>
+		<if test="orderStr != null and orderStr.length() != 0">
+			ORDER BY ${orderStr}
+		</if>
+		<if test="orderStr == null or orderStr.length() == 0">
+			ORDER BY
+			su.USER_ID_ desc
+		</if>
+	</select>
+
+	<!-- Statistical line -->
+	<select id="getListCount" parameterType="SysUser" resultType="int">
+		select count(*) as counts
+		from SYS_USER su
+		<where>
+			<include refid="SQL_SYS_USER_WHERE" />
+		</where>
+	</select>
+
+	<!-- According to the id check record -->
+	<select id="getById" parameterType="int" resultType="SysUser">
+		select
+		<include refid="SQL_SYS_USER_COLUMN" />
+		from SYS_USER su
+		<where>
+			su.USER_ID_ = #{idValue}
+		</where>
+	</select>
+
+	<!-- add -->
+	<insert id="insert" parameterType="SysUser">
+		insert into SYS_USER
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="userId != null">
+				USER_ID_,
+			</if>
+			<if test="userName != null">
+				USER_NAME_,
+			</if>
+			<if test="engName != null">
+				ENG_NAME_,
+			</if>
+			<if test="loginName != null">
+				LOGIN_NAME_,
+			</if>
+			<if test="loginPwd != null">
+				LOGIN_PWD_,
+			</if>
+			<if test="sex != null">
+				SEX_,
+			</if>
+			<if test="birthday != null">
+				BIRTHDAY_,
+			</if>
+			<if test="mobile != null">
+				MOBILE_,
+			</if>
+			<if test="email != null">
+				EMAIL_,
+			</if>
+			<if test="address != null">
+				ADDRESS_,
+			</if>
+			<if test="telephone != null">
+				TELEPHONE_,
+			</if>
+			<if test="descr != null">
+				DESCR_,
+			</if>
+			<if test="isValid != null">
+				IS_VALID_,
+			</if>
+			<if test="isLock != null">
+				IS_LOCK_,
+			</if>
+			<if test="lastLoginIp != null">
+				LAST_LOGIN_IP_,
+			</if>
+			<if test="lastLoginTime != null">
+				LAST_LOGIN_TIME_,
+			</if>
+			<if test="isDelete != null">
+				IS_DELETE_,
+			</if>
+			<if test="isFinal != null">
+				IS_FINAL_,
+			</if>
+			<if test="crtTime != null">
+				CRT_TIME_,
+			</if>
+			<if test="updTime != null">
+				UPD_TIME_,
+			</if>
+			<if test="crtUserid != null">
+				CRT_USERID_,
+			</if>
+			<if test="updUserid != null">
+				UPD_USERID_,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="userId != null">
+				#{userId,jdbcType=NUMERIC},
+			</if>
+			<if test="userName != null">
+				#{userName,jdbcType=VARCHAR},
+			</if>
+			<if test="engName != null">
+				#{engName,jdbcType=VARCHAR},
+			</if>
+			<if test="loginName != null">
+				#{loginName,jdbcType=VARCHAR},
+			</if>
+			<if test="loginPwd != null">
+				#{loginPwd,jdbcType=VARCHAR},
+			</if>
+			<if test="sex != null">
+				#{sex,jdbcType=NUMERIC},
+			</if>
+			<if test="birthday != null">
+				#{birthday,jdbcType=VARCHAR},
+			</if>
+			<if test="mobile != null">
+				#{mobile,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				#{email,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				#{address,jdbcType=VARCHAR},
+			</if>
+			<if test="telephone != null">
+				#{telephone,jdbcType=VARCHAR},
+			</if>
+			<if test="descr != null">
+				#{descr,jdbcType=VARCHAR},
+			</if>
+			<if test="isValid != null">
+				#{isValid,jdbcType=NUMERIC},
+			</if>
+			<if test="isLock != null">
+				#{isLock,jdbcType=NUMERIC},
+			</if>
+			<if test="lastLoginIp != null">
+				#{lastLoginIp,jdbcType=VARCHAR},
+			</if>
+			<if test="lastLoginTime != null">
+				#{lastLoginTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="isDelete != null">
+				#{isDelete,jdbcType=NUMERIC},
+			</if>
+			<if test="isFinal != null">
+				#{isFinal,jdbcType=NUMERIC},
+			</if>
+			<if test="crtTime != null">
+				#{crtTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updTime != null">
+				#{updTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="crtUserid != null">
+				#{crtUserid,jdbcType=NUMERIC},
+			</if>
+			<if test="updUserid != null">
+				#{updUserid,jdbcType=NUMERIC},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- update -->
+	<update id="update" parameterType="SysUser">
+		UPDATE SYS_USER
+		<set>
+			<if test="userId !=null">
+				USER_ID_ = #{userId} ,
+			</if>
+			<if test="userName !=null">
+				USER_NAME_ = #{userName} ,
+			</if>
+			<if test="engName !=null">
+				ENG_NAME_ = #{engName} ,
+			</if>
+			<if test="loginName !=null">
+				LOGIN_NAME_ = #{loginName} ,
+			</if>
+			<if test="loginPwd !=null">
+				LOGIN_PWD_ = #{loginPwd} ,
+			</if>
+			<if test="sex !=null">
+				SEX_ = #{sex} ,
+			</if>
+			<if test="birthday !=null">
+				BIRTHDAY_ = #{birthday} ,
+			</if>
+			<if test="mobile !=null">
+				MOBILE_ = #{mobile} ,
+			</if>
+			<if test="email !=null">
+				EMAIL_ = #{email} ,
+			</if>
+			<if test="address !=null">
+				ADDRESS_ = #{address} ,
+			</if>
+			<if test="telephone !=null">
+				TELEPHONE_ = #{telephone} ,
+			</if>
+			<if test="descr !=null">
+				DESCR_ = #{descr} ,
+			</if>
+			<if test="isValid !=null">
+				IS_VALID_ = #{isValid} ,
+			</if>
+			<if test="isLock !=null">
+				IS_LOCK_ = #{isLock} ,
+			</if>
+			<if test="lastLoginIp !=null">
+				LAST_LOGIN_IP_ = #{lastLoginIp} ,
+			</if>
+			<if test="lastLoginTime !=null">
+				LAST_LOGIN_TIME_ = #{lastLoginTime} ,
+			</if>
+			<if test="isDelete !=null">
+				IS_DELETE_ = #{isDelete} ,
+			</if>
+			<if test="isFinal !=null">
+				IS_FINAL_ = #{isFinal} ,
+			</if>
+			<if test="crtTime !=null">
+				CRT_TIME_ = #{crtTime} ,
+			</if>
+			<if test="updTime !=null">
+				UPD_TIME_ = #{updTime} ,
+			</if>
+			<if test="crtUserid !=null">
+				CRT_USERID_ = #{crtUserid} ,
+			</if>
+			<if test="updUserid !=null">
+				UPD_USERID_ = #{updUserid}
+			</if>
+		</set>
+		WHERE
+		USER_ID_=#{userId}
+	</update>
+
+	<!-- delete -->
+	<delete id="delete" parameterType="SysUser">
+		DELETE FROM SYS_USER
+		WHERE
+		USER_ID_=#{userId}
+	</delete>
+
+	<!-- delete(ids) -->
+	<delete id="deleteById" parameterType="java.lang.Integer">
+		DELETE FROM sys_user
+		WHERE
+		USER_ID_=#{userId}
+	</delete>
+
+</mapper>

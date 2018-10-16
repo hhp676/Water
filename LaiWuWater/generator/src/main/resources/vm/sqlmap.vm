@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+##前后缀
+#set($MapperSuffix="Mapper")
+#set($MapperFolder="mapper")
+#set($resultMapSuffix="ResultMap")
+#set($sqlColumnSuffix="_COLUMN")
+#set($sqlWhereSuffix="_WHERE")
+#set($lengthSuffix=".length()")
+#set($idValue="idValue")
+#set($nextValSuffix="nextVal")
+##开始
+<!-- sqlmapper $meta.sLayer -->
+<mapper namespace="$meta.pkgName.$MapperFolder.$meta.className$MapperSuffix">
+	##resultMap
+
+	<!-- The corresponding field and type -->
+	<resultMap type="$meta.className" id="$resultMapSuffix">
+		#foreach( $col in $meta.cols )
+			#if($col.colType != "TIMESTAMP" )
+				<result column="$col.fieldName" javaType="$col.colType" property="$col.fieldName" />
+			#else
+				<result column="$col.fieldName" jdbcType="$col.colType" property="$col.fieldName" />
+			#end
+		#end
+	</resultMap>
+
+	##sqlColumn
+	<!-- Each field corresponding alias, convenient call -->
+	<sql id="SQL_$meta.tableNameUC$sqlColumnSuffix">
+		#foreach( $col in $meta.cols )
+			$meta.tableAlias.$col.colName $col.fieldName#if($velocityCount < $meta.cols.size()),#end
+		#end
+	</sql>
+
+	##sqlWhere
+	<!-- whether multiple fields is empty -->
+    <sql id="SQL_$meta.tableNameUC$sqlWhereSuffix">
+   		#foreach( $col in $meta.cols )
+	        #if($col.colType == "String" )
+				<if test="$col.fieldName !=null and $col.fieldName$lengthSuffix!=0 ">
+			#elseif ( $col.colType == "Integer")
+				<if test="$col.fieldName !=null ">
+			#else
+				<if test="$col.fieldName !=null ">
+			#end
+					AND $meta.tableAlias.$col.colName=#{$col.fieldName}
+				</if>
+		#end
+	</sql>
+
+	##getList
+	<!-- Query All  -->
+	<select id="getList" parameterType="$meta.className" resultType="$meta.className">
+		select <include  refid="SQL_$meta.tableNameUC$sqlColumnSuffix"/>
+		from $meta.tableNameUC $meta.tableAlias
+		<where>
+			<include  refid="SQL_$meta.tableNameUC$sqlWhereSuffix"/>
+		</where>
+		<if test="orderStr != null and orderStr.length() != 0">
+			ORDER BY ${orderStr}
+		</if>
+		<if test="orderStr == null or orderStr.length() == 0">
+			ORDER BY
+			#foreach( $col in $meta.pkCols )
+				$meta.tableAlias.$col.colName desc
+			#end
+		</if>
+	</select>
+
+	##getListCount
+	<!-- Statistical line   -->
+	<select id="getListCount" parameterType="$meta.className" resultType="int">
+		select count(*) as counts
+		from $meta.tableNameUC $meta.tableAlias
+		<where>
+			<include  refid="SQL_$meta.tableNameUC$sqlWhereSuffix"/>
+		</where>
+	</select>
+
+	##getById
+	<!-- According to the id check record  -->
+	<select id="getById" parameterType="int" resultType="$meta.className">
+		select <include  refid="SQL_$meta.tableNameUC$sqlColumnSuffix"/>
+		from $meta.tableNameUC $meta.tableAlias
+		<where>
+			#foreach( $col in $meta.pkCols )
+				$meta.tableAlias.$col.colName = #{$idValue}
+			#end
+		</where>
+	</select>
+
+	##insert
+	<!-- add 默认使用全局ID -->
+	<!-- FOR ORACLE DEMO <selectKey resultType="java.math.BigDecimal" keyProperty="varId" 
+			order="BEFORE"> select SEQ_SYS_VARIABLE.nextVal as varId from dual </selectKey> -->
+	<!-- FOR MYSQL KEY DEMO
+	<selectKey keyProperty="varId" resultType="java.math.BigDecimal" order="AFTER">
+			select LAST_INSERT_ID()
+	</selectKey>-->
+	<insert id="insert" parameterType="$meta.className" >
+	##selectKey
+		insert into $meta.tableNameUC 
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+		#foreach( $col in $meta.cols )
+			<if test="$col.fieldName != null">
+        		$col.colName,
+      		</if>
+      		 #if( $velocityCount<$meta.cols.size() )#end
+		#end
+		</trim> 
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+		#foreach( $col in $meta.cols )
+			<if test="$col.fieldName != null">
+				#{$col.fieldName,jdbcType=#if( $col.colType == "String" )VARCHAR#end#if( $col.colType == "Integer" )NUMERIC#end#if( $col.colType == "TIMESTAMP" )TIMESTAMP#end#if( $col.colType == "java.math.BigDecimal" )NUMERIC#end}, 
+			</if>
+			#if( $velocityCount<$meta.cols.size() )#end
+		#end
+		</trim>
+    </insert>
+
+	##update
+	<!-- update  -->
+	<update id="update" parameterType="$meta.className">
+		UPDATE $meta.tableNameUC
+		<set>
+		#foreach( $col in $meta.cols )
+			<if test="$col.fieldName !=null">
+				$col.colName = #{$col.fieldName}  #if( $velocityCount<$meta.cols.size() ),#end
+			</if>
+		#end
+		</set>
+		WHERE
+		#foreach( $col in $meta.pkCols )
+			$col.colName=#{$col.fieldName} #if( $velocityCount<$meta.pkCols.size() ) and #end
+		#end
+	</update>
+
+	##delete
+	<!-- delete  -->
+	<delete id="delete" parameterType="$meta.className">
+		DELETE FROM $meta.tableNameUC
+		WHERE
+		#foreach( $col in $meta.pkCols )
+			$col.colName=#{$col.fieldName} #if($velocityCount<$meta.pkCols.size()) and #end
+		#end
+	</delete>
+
+	##delete(id)
+	<!-- delete(ids)  -->
+	<delete id="deleteById" parameterType="java.lang.Integer">
+		DELETE FROM $meta.tableName
+		WHERE
+		#foreach( $col in $meta.pkCols )
+			$col.colName=#{$col.fieldName} #if($velocityCount<$meta.pkCols.size()) and #end
+		#end
+	</delete>
+
+</mapper>

@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hongguaninfo.hgdf.wa.mapper.WaUploadfileDataMapper">
+
+
+    <!-- sqlColumn -->
+    <sql id="SQL_WA_UPLOADFILE_DATA_COLUMN">
+        wud.FILEID fileid,
+        wud.COMPANY_ID_ companyId,
+        wud.FILE_NAME_ fileName,
+        wud.DIRS_ dirs,
+        wud.FLAG_ flag,
+        wud.IS_DELTE_ isDelte,
+        wud.CRT_TIME_ crtTime,
+        wud.UPD_TIME_ updTime
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_WA_UPLOADFILE_DATA_WHERE">
+        	<if test="fileid != null">
+	            AND wud.FILEID = #{fileid}
+        </if>
+        		<if test="companyId != null and companyId.length() != 0">
+        		AND wud.COMPANY_ID_ like '%${companyId}%'
+        </if>
+        		<if test="fileName != null and fileName.length() != 0">
+        		AND wud.FILE_NAME_ like '%${fileName}%'
+        </if>
+        		<if test="dirs != null and dirs.length() != 0">
+        		AND wud.DIRS_ like '%${dirs}%'
+        </if>
+        		<if test="flag != null and flag.length() != 0">
+        		AND wud.FLAG_ like '%${flag}%'
+        </if>
+        	<if test="isDelte != null">
+	            AND wud.IS_DELTE_ = #{isDelte}
+        </if>
+        	<if test="crtTime != null">
+	            AND wud.CRT_TIME_ = #{crtTime}
+        </if>
+        	<if test="updTime != null">
+	            AND wud.UPD_TIME_ = #{updTime}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultType="WaUploadfileData">
+        select <include  refid="SQL_WA_UPLOADFILE_DATA_COLUMN" />
+        from WA_UPLOADFILE_DATA wud
+        <where>
+            wud.FILEID = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="WaUploadfileData" resultType="WaUploadfileData">
+        select <include  refid="SQL_WA_UPLOADFILE_DATA_COLUMN"/>
+        from WA_UPLOADFILE_DATA wud
+        <where>
+            <include  refid="SQL_WA_UPLOADFILE_DATA_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                wud.FILEID desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="WaUploadfileData" resultType="int">
+        select count(
+            wud.FILEID
+        ) as counts
+        from WA_UPLOADFILE_DATA wud
+        <where>
+            <include  refid="SQL_WA_UPLOADFILE_DATA_WHERE"/>
+        </where>
+    </select>
+    
+	<!-- add 默认使用全局ID -->
+	<insert id="insert" parameterType="WaUploadfileData" >
+		insert into WA_UPLOADFILE_DATA 
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+		  	<if test="fileid != null">
+        		FILEID,
+      		</if>
+		  	<if test="companyId != null">
+        		COMPANY_ID_,
+      		</if>
+		  	<if test="fileName != null">
+        		FILE_NAME_,
+      		</if>
+		  	<if test="dirs != null">
+        		DIRS_,
+      		</if>
+		  	<if test="flag != null">
+        		FLAG_,
+      		</if>
+		  	<if test="isDelte != null">
+        		IS_DELTE_,
+      		</if>
+		  	<if test="crtTime != null">
+        		CRT_TIME_,
+      		</if>
+		  	<if test="updTime != null">
+        		UPD_TIME_,
+      		</if>
+		</trim> 
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			  	<if test="fileid != null">
+			  	  	   #{fileid,jdbcType=NUMERIC},
+			  	</if>  
+			  	<if test="companyId != null">
+			  	  	   #{companyId,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="fileName != null">
+			  	  	   #{fileName,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="dirs != null">
+			  	  	   #{dirs,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="flag != null">
+			  	  	   #{flag,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="isDelte != null">
+			  	  	   #{isDelte,jdbcType=NUMERIC},
+			  	</if>  
+			  	<if test="crtTime != null">
+			  	  	   #{crtTime,jdbcType=TIMESTAMP},
+			  	</if>  
+			  	<if test="updTime != null">
+			  	  	   #{updTime,jdbcType=TIMESTAMP},
+			  	</if>  
+		</trim>
+    </insert>
+
+	<!-- update  -->
+	<update id="update" parameterType="WaUploadfileData">
+		UPDATE WA_UPLOADFILE_DATA
+		<set>
+		  	<if test="fileid != null">
+        		FILEID = #{fileid} ,
+      		</if>
+		  	<if test="companyId != null">
+        		COMPANY_ID_ = #{companyId} ,
+      		</if>
+		  	<if test="fileName != null">
+        		FILE_NAME_ = #{fileName} ,
+      		</if>
+		  	<if test="dirs != null">
+        		DIRS_ = #{dirs} ,
+      		</if>
+		  	<if test="flag != null">
+        		FLAG_ = #{flag} ,
+      		</if>
+		  	<if test="isDelte != null">
+        		IS_DELTE_ = #{isDelte} ,
+      		</if>
+		  	<if test="crtTime != null">
+        		CRT_TIME_ = #{crtTime} ,
+      		</if>
+		  	<if test="updTime != null">
+        		UPD_TIME_ = #{updTime} 
+      		</if>
+		 
+		</set>
+		WHERE
+            FILEID = #{fileid}
+	</update>
+
+	<!-- delete  -->
+	<delete id="delete" parameterType="WaUploadfileData">
+		DELETE FROM WA_UPLOADFILE_DATA
+		WHERE
+            wud.FILEID = #{fileid}
+	</delete>
+ 
+</mapper>

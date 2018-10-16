@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hongguaninfo.hgdf.wadp.mapper.sys.SysUserLogMapper">
+	<!-- The corresponding field and type -->
+	<resultMap type="SysUserLog" id="ResultMap">
+		<result column="logId" javaType="java.math.BigDecimal"
+			property="logId" />
+		<result column="logType" javaType="Integer" property="logType" />
+		<result column="userId" javaType="Integer" property="userId" />
+		<result column="operCode" javaType="String" property="operCode" />
+		<result column="operName" javaType="String" property="operName" />
+		<result column="operIP" javaType="String" property="operIP" />
+		<result column="remark" javaType="String" property="remark" />
+		<result column="crtTime" jdbcType="TIMESTAMP" property="crtTime" />
+	</resultMap>
+
+	<!-- Each field corresponding alias, convenient call -->
+	<sql id="SQL_SYS_USERGROUP_COLUMN">
+		SU.LOG_ID_ logId, SU.LOG_TYPE_ logType, SU.USER_ID_ userId,
+		SU.OPER_CODE_ operCode, SU.OPER_NAME_ operName,
+		SU.OPER_IP_ operIP,
+		SU.REMARK_ remark,SU.CRT_TIME_ crtTime
+	</sql>
+
+	<!-- whether multiple fields is empty -->
+	<sql id="SQL_SYS_USERGROUP_WHERE">
+		<if test="logId !=null ">
+			AND SU.LOG_ID_=#{logId}
+		</if>
+		<if test="userName !=null and userName.length()!=0">
+			AND U.LOGIN_NAME_ like '%'||#{userName}||'%'
+		</if>
+		<if test="logType !=null ">
+			AND SU.LOG_TYPE_=#{logType}
+		</if>
+		<if test="userId !=null ">
+			AND SU.USER_ID_=#{userId}
+		</if>
+		<if test="operCode !=null and operCode.length()!=0 ">
+			AND SU.OPER_CODE_=#{operCode}
+		</if>
+		<if test="operName !=null and operName.length()!=0 ">
+			AND SU.OPER_NAME_ like '%'||#{operName}||'%'
+		</if>
+		<if test="operIP !=null and operIP.length()!=0 ">
+			AND SU.OPER_IP_=#{operIP}
+		</if>
+		<if test="remark !=null and remark.length()!=0 ">
+			AND SU.REMARK_=#{Remark}
+		</if>
+		<if test="crtTime !=null ">
+			AND SU.CRT_TIME_=#{crtTime}
+		</if>
+	</sql>
+
+	<!-- Query All -->
+	<select id="getList" parameterType="SysUserLog" resultType="SysUserLog">
+		select U.LOGIN_NAME_ userName,
+		<include refid="SQL_SYS_USERGROUP_COLUMN" />
+		from SYS_USER_LOG SU,SYS_USER U
+		<where>
+			SU.USER_ID_ = U.USER_ID_
+			<include refid="SQL_SYS_USERGROUP_WHERE" />
+		</where>
+		order by SU.CRT_TIME_ desc
+	</select>
+
+	<!-- Statistical line -->
+	<select id="getListCount" parameterType="SysUserLog" resultType="int">
+		select count(*) as counts
+		from SYS_USER_LOG SU,SYS_USER U
+		<where>
+			SU.USER_ID_ = U.USER_ID_
+			<include refid="SQL_SYS_USERGROUP_WHERE" />
+		</where>
+	</select>
+	
+	<!-- According to the id check record -->
+	<select id="getById" parameterType="int" resultType="SysUserLog">
+		select
+		<include refid="SQL_SYS_USERGROUP_COLUMN" />
+		from SYS_USER_LOG SU
+		<where>
+			SU.LOG_ID_ = #{logId}
+		</where>
+	</select>
+
+	<!-- add -->
+	<insert id="insert" parameterType="SysUserLog">
+		insert into SYS_USER_LOG
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="logId != null">
+				LOG_ID_,
+			</if>
+			<if test="logType != null">
+				LOG_TYPE_,
+			</if>
+			<if test="userId != null">
+				USER_ID_,
+			</if>
+			<if test="operCode != null">
+				OPER_CODE_,
+			</if>
+			<if test="operName != null">
+				OPER_NAME_,
+			</if>
+			<if test="operIP != null">
+				OPER_IP_,
+			</if>
+			<if test="remark != null">
+				REMARK_,
+			</if>
+			<if test="crtTime != null">
+				CRT_TIME_,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="logId != null">
+				#{logId,jdbcType=NUMERIC},
+			</if>
+			<if test="logType != null">
+				#{logType,jdbcType=NUMERIC},
+			</if>
+			<if test="userId != null">
+				#{userId,jdbcType=NUMERIC},
+			</if>
+			<if test="operCode != null">
+				#{operCode,jdbcType=VARCHAR},
+			</if>
+			<if test="operName != null">
+				#{operName,jdbcType=VARCHAR},
+			</if>
+			<if test="operIP != null">
+				#{operIP,jdbcType=VARCHAR},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="crtTime != null">
+				#{crtTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+
+</mapper>

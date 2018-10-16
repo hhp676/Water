@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hongguaninfo.hgdf.wa.mapper.totalinfo.WaCommFacilitiesWaterDataMapper">
+
+
+    <!-- sqlColumn -->
+    <sql id="SQL_WA_COMM_FACILITIES_WATER_DATA_COLUMN">
+        wcfwd.COMM_FACTILITIES_ID_ commFactilitiesId,
+        wcfwd.COMPANY_ID_ companyId,
+        wcfwd.MONTH_DATE_ monthDate,
+        wcfwd.NEW_WATER_AMOUNT_ newWaterAmount,
+        wcfwd.COLD_NEW_WATER_AMOUNT_ coldNewWaterAmount,
+        wcfwd.MANAGER_NEW_WATER_AMOUNT_ managerNewWaterAmount,
+        wcfwd.REUSE_WATER_AMOUNT_ reuseWaterAmount,
+        wcfwd.COLD_LOOP_WATER_AMOUNT_ coldLoopWaterAmount,
+        wcfwd.IS_DELTE_ isDelte,
+        wcfwd.CRT_TIME_ crtTime,
+        wcfwd.UPD_TIME_ updTime
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_WA_COMM_FACILITIES_WATER_DATA_WHERE">
+        	<if test="commFactilitiesId != null">
+	            AND wcfwd.COMM_FACTILITIES_ID_ = #{commFactilitiesId}
+        </if>
+        	<if test="companyId != null">
+	            AND wcfwd.COMPANY_ID_ = #{companyId}
+        </if>
+        		<if test="monthDate != null and monthDate.length() != 0">
+        		AND wcfwd.MONTH_DATE_ like '%${monthDate}%'
+        </if>
+        		<if test="newWaterAmount != null and newWaterAmount.length() != 0">
+        		AND wcfwd.NEW_WATER_AMOUNT_ like '%${newWaterAmount}%'
+        </if>
+        		<if test="coldNewWaterAmount != null and coldNewWaterAmount.length() != 0">
+        		AND wcfwd.COLD_NEW_WATER_AMOUNT_ like '%${coldNewWaterAmount}%'
+        </if>
+        		<if test="managerNewWaterAmount != null and managerNewWaterAmount.length() != 0">
+        		AND wcfwd.MANAGER_NEW_WATER_AMOUNT_ like '%${managerNewWaterAmount}%'
+        </if>
+        		<if test="reuseWaterAmount != null and reuseWaterAmount.length() != 0">
+        		AND wcfwd.REUSE_WATER_AMOUNT_ like '%${reuseWaterAmount}%'
+        </if>
+        		<if test="coldLoopWaterAmount != null and coldLoopWaterAmount.length() != 0">
+        		AND wcfwd.COLD_LOOP_WATER_AMOUNT_ like '%${coldLoopWaterAmount}%'
+        </if>
+        	<if test="isDelte != null">
+	            AND wcfwd.IS_DELTE_ = #{isDelte}
+        </if>
+        	<if test="crtTime != null">
+	            AND wcfwd.CRT_TIME_ = #{crtTime}
+        </if>
+        	<if test="updTime != null">
+	            AND wcfwd.UPD_TIME_ = #{updTime}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultType="WaCommFacilitiesWaterData">
+        select <include  refid="SQL_WA_COMM_FACILITIES_WATER_DATA_COLUMN" />
+        from WA_COMM_FACILITIES_WATER_DATA wcfwd
+        <where>
+            wcfwd.COMM_FACTILITIES_ID_ = #{commFactilitiesId}
+        </where>
+    </select>
+
+	<select id="getWaCommFacDataByCompanyId" parameterType="Integer" resultType="WaCommFacilitiesWaterData">
+		select <include  refid="SQL_WA_COMM_FACILITIES_WATER_DATA_COLUMN" />
+		from WA_COMM_FACILITIES_WATER_DATA wcfwd
+		<where>
+			wcfwd.COMPANY_ID_ = #{companyId}
+		</where>
+	</select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="WaCommFacilitiesWaterData" resultType="WaCommFacilitiesWaterData">
+        select <include  refid="SQL_WA_COMM_FACILITIES_WATER_DATA_COLUMN"/>
+        from WA_COMM_FACILITIES_WATER_DATA wcfwd
+        <where>
+            <include  refid="SQL_WA_COMM_FACILITIES_WATER_DATA_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                wcfwd.COMM_FACTILITIES_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="WaCommFacilitiesWaterData" resultType="int">
+        select count(
+            wcfwd.COMM_FACTILITIES_ID_
+        ) as counts
+        from WA_COMM_FACILITIES_WATER_DATA wcfwd
+        <where>
+            <include  refid="SQL_WA_COMM_FACILITIES_WATER_DATA_WHERE"/>
+        </where>
+    </select>
+    
+	<!-- add 默认使用全局ID -->
+	<insert id="insert" parameterType="WaCommFacilitiesWaterData" >
+		insert into WA_COMM_FACILITIES_WATER_DATA 
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+		  	<if test="commFactilitiesId != null">
+        		COMM_FACTILITIES_ID_,
+      		</if>
+		  	<if test="companyId != null">
+        		COMPANY_ID_,
+      		</if>
+		  	<if test="monthDate != null">
+        		MONTH_DATE_,
+      		</if>
+		  	<if test="newWaterAmount != null">
+        		NEW_WATER_AMOUNT_,
+      		</if>
+		  	<if test="coldNewWaterAmount != null">
+        		COLD_NEW_WATER_AMOUNT_,
+      		</if>
+		  	<if test="managerNewWaterAmount != null">
+        		MANAGER_NEW_WATER_AMOUNT_,
+      		</if>
+		  	<if test="reuseWaterAmount != null">
+        		REUSE_WATER_AMOUNT_,
+      		</if>
+		  	<if test="coldLoopWaterAmount != null">
+        		COLD_LOOP_WATER_AMOUNT_,
+      		</if>
+		  	<if test="isDelte != null">
+        		IS_DELTE_,
+      		</if>
+		  	<if test="crtTime != null">
+        		CRT_TIME_,
+      		</if>
+		  	<if test="updTime != null">
+        		UPD_TIME_,
+      		</if>
+		</trim> 
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			  	<if test="commFactilitiesId != null">
+			  	  	   #{commFactilitiesId,jdbcType=NUMERIC},
+			  	</if>  
+			  	<if test="companyId != null">
+			  	  	   #{companyId,jdbcType=NUMERIC},
+			  	</if>  
+			  	<if test="monthDate != null">
+			  	  	   #{monthDate,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="newWaterAmount != null">
+			  	  	   #{newWaterAmount,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="coldNewWaterAmount != null">
+			  	  	   #{coldNewWaterAmount,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="managerNewWaterAmount != null">
+			  	  	   #{managerNewWaterAmount,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="reuseWaterAmount != null">
+			  	  	   #{reuseWaterAmount,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="coldLoopWaterAmount != null">
+			  	  	   #{coldLoopWaterAmount,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="isDelte != null">
+			  	  	   #{isDelte,jdbcType=NUMERIC},
+			  	</if>  
+			  	<if test="crtTime != null">
+			  	  	   #{crtTime,jdbcType=TIMESTAMP},
+			  	</if>  
+			  	<if test="updTime != null">
+			  	  	   #{updTime,jdbcType=TIMESTAMP},
+			  	</if>  
+		</trim>
+    </insert>
+
+	<!-- update  -->
+	<update id="update" parameterType="WaCommFacilitiesWaterData">
+		UPDATE WA_COMM_FACILITIES_WATER_DATA
+		<set>
+		  	<if test="commFactilitiesId != null">
+        		COMM_FACTILITIES_ID_ = #{commFactilitiesId} ,
+      		</if>
+		  	<if test="companyId != null">
+        		COMPANY_ID_ = #{companyId} ,
+      		</if>
+		  	<if test="monthDate != null">
+        		MONTH_DATE_ = #{monthDate} ,
+      		</if>
+		  	<if test="newWaterAmount != null">
+        		NEW_WATER_AMOUNT_ = #{newWaterAmount} ,
+      		</if>
+		  	<if test="coldNewWaterAmount != null">
+        		COLD_NEW_WATER_AMOUNT_ = #{coldNewWaterAmount} ,
+      		</if>
+		  	<if test="managerNewWaterAmount != null">
+        		MANAGER_NEW_WATER_AMOUNT_ = #{managerNewWaterAmount} ,
+      		</if>
+		  	<if test="reuseWaterAmount != null">
+        		REUSE_WATER_AMOUNT_ = #{reuseWaterAmount} ,
+      		</if>
+		  	<if test="coldLoopWaterAmount != null">
+        		COLD_LOOP_WATER_AMOUNT_ = #{coldLoopWaterAmount} ,
+      		</if>
+		  	<if test="isDelte != null">
+        		IS_DELTE_ = #{isDelte} ,
+      		</if>
+		  	<if test="crtTime != null">
+        		CRT_TIME_ = #{crtTime} ,
+      		</if>
+		  	<if test="updTime != null">
+        		UPD_TIME_ = #{updTime} 
+      		</if>
+		 
+		</set>
+		WHERE
+            COMM_FACTILITIES_ID_ = #{commFactilitiesId}
+	</update>
+
+	<!-- delete  -->
+	<delete id="delete" parameterType="WaCommFacilitiesWaterData">
+		DELETE FROM WA_COMM_FACILITIES_WATER_DATA wcfwd
+		WHERE
+            wcfwd.COMM_FACTILITIES_ID_ = #{commFactilitiesId}
+	</delete>
+ 
+</mapper>

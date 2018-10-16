@@ -1,0 +1,153 @@
+/* css reset */
+body,
+blockquote,
+button,
+dd,
+dl,
+dt,
+fieldset,
+form,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+hr,
+input,
+legend,
+li,
+ol,
+p,
+pre,
+td,
+textarea,
+th,
+ul {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font-size: 100%;
+  background: transparent;
+ 
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+strong {
+  font-weight: normal;
+}
+ol,
+ul {
+  list-style: none;
+}
+blockquote,
+q {
+  quotes: none;
+}
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+  content: '';
+  content: none;
+}
+section,
+article,
+aside,
+header,
+footer,
+nav,
+dialog,
+figure {
+  display: block;
+}
+:focus {
+  outline: 0;
+}
+address,
+cite,
+code,
+dfn,
+em,
+var,
+i,
+em {
+  font-style: normal;
+}
+del {
+  text-decoration: line-through;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  empty-cells: show;
+}
+input {
+  border: none;
+}
+input[type=submit] {
+  cursor: pointer;
+}
+button {
+  cursor: pointer;
+}
+img {
+  vertical-align: top;
+}
+a {
+  text-decoration: none;
+  color: #000;
+}
+a:hover {
+  text-decoration: none;
+}
+label {
+  font-weight: normal;
+}
+.clearfix:before,
+.clearfix:after {
+  content: "";
+  display: table;
+}
+.clearfix:after {
+  clear: both;
+}
+.clearfix {
+  *zoom: 1;
+}
+* html .clearfix {
+  zoom: 1;
+}
+* + html .clearfix {
+  zoom: 1;
+}
+.fl {
+  float: left;
+}
+.fr {
+  float: right;
+}
+.hide {
+  display: none;
+}
+body {
+  background: #fff;
+  color: #333;
+  font-family: 'Microsoft Yahei', Arial, Helvetica, Simsun, sans-serif;
+  line-height: 22px;
+  font-size: 14px;
+}
+input[type=text],
+input[type=password],
+textarea {
+  color: #333;
+  resize: none;
+  padding: 3px 5px;
+  background: #fff;
+}
+input[type=button]{ cursor:pointer;}

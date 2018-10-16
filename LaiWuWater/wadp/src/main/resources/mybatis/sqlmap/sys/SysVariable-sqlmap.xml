@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hongguaninfo.hgdf.wadp.mapper.sys.SysVariableMapper">
+
+	<!-- The corresponding field and type -->
+	<resultMap type="SysVariable" id="ResultMap">
+		<result column="varId" javaType="java.math.BigDecimal"
+			property="varId" />
+		<result column="varType" javaType="String" property="varType" />
+		<result column="varName" javaType="String" property="varName" />
+		<result column="varValue" javaType="String" property="varValue" />
+		<result column="descr" javaType="String" property="descr" />
+		<result column="isDelete" javaType="Integer" property="isDelete" />
+		<result column="isFinal" javaType="Integer" property="isFinal" />
+		<result column="crtTime" jdbcType="TIMESTAMP" property="crtTime" />
+		<result column="updTime" jdbcType="TIMESTAMP" property="updTime" />
+		<result column="crtUserid" javaType="java.math.BigDecimal"
+			property="crtUserid" />
+		<result column="updUserid" javaType="java.math.BigDecimal"
+			property="updUserid" />
+	</resultMap>
+
+	<!-- Each field corresponding alias, convenient call -->
+	<sql id="SQL_SYS_VARIABLE_COLUMN">
+		SV.VAR_ID_ varId, SV.VAR_TYPE_ varType, SV.VAR_NAME_
+		varName, SV.VAR_VALUE_
+		varValue, SV.DESCR_ descr, SV.VAR_CODE_ varCode,SV.IS_DELETE_
+		isDelete, SV.IS_FINAL_
+		isFinal, SV.CRT_TIME_ crtTime, SV.UPD_TIME_
+		updTime, SV.CRT_USERID_
+		crtUserid, SV.UPD_USERID_ updUserid
+	</sql>
+
+	<!-- whether multiple fields is empty -->
+	<sql id="SQL_SYS_VARIABLE_WHERE">
+		<if test="varId !=null ">
+			AND SV.VAR_ID_=#{varId}
+		</if>
+		<if test="varType !=null and varType.length()!=0 ">
+			AND SV.VAR_TYPE_=#{varType}
+		</if>
+		<if test="varName !=null and varName.length()!=0 ">
+			AND SV.VAR_NAME_=#{varName}
+		</if>
+		<if test="varValue !=null and varValue.length()!=0 ">
+			AND SV.VAR_VALUE_=#{varValue}
+		</if>
+		<if test="descr !=null and descr.length()!=0 ">
+			AND SV.DESCR_=#{descr}
+		</if>
+		<if test="isDelete !=null ">
+			AND SV.IS_DELETE_=#{isDelete}
+		</if>
+		<if test="isFinal !=null ">
+			AND SV.IS_FINAL_=#{isFinal}
+		</if>
+		<if test="crtTime !=null ">
+			AND SV.CRT_TIME_=#{crtTime}
+		</if>
+		<if test="updTime !=null ">
+			AND SV.UPD_TIME_=#{updTime}
+		</if>
+		<if test="crtUserid !=null ">
+			AND SV.CRT_USERID_=#{crtUserid}
+		</if>
+		<if test="updUserid !=null ">
+			AND SV.UPD_USERID_=#{updUserid}
+		</if>
+	</sql>
+
+	<sql id="SQL_SYS_VARIABLE_DETAIL">
+		<if test="varId !=null ">
+			AND SV.VAR_ID_ like ('${varId}%')
+		</if>
+		<if test="varName !=null and varName.length()!=0 ">
+			AND SV.VAR_NAME_ like ('${varName}%')
+		</if>
+	</sql>
+
+	<!-- Query All -->
+	<select id="getList" parameterType="SysVariable" resultType="SysVariable">
+		select
+		<include refid="SQL_SYS_VARIABLE_COLUMN" />
+		from SYS_VARIABLE SV
+		<where>
+			<include refid="SQL_SYS_VARIABLE_WHERE" />
+		</where>
+		<if test="orderStr != null and orderStr.length() != 0">
+			ORDER BY ${orderStr}
+		</if>
+		<if test="orderStr == null or orderStr.length() == 0">
+			ORDER BY
+			SV.VAR_ID_ desc
+		</if>
+	</select>
+
+	<!-- Query AllWhereNotDelete -->
+	<select id="getListWhereNotDelete" parameterType="SysVariable"
+		resultType="SysVariable">
+		select
+		<include refid="SQL_SYS_VARIABLE_COLUMN" />
+		from SYS_VARIABLE SV
+		<where>
+			<include refid="SQL_SYS_VARIABLE_DETAIL" />
+		</where>
+		<if test="orderStr != null and orderStr.length() != 0">
+			ORDER BY ${orderStr}
+		</if>
+		<if test="orderStr == null or orderStr.length() == 0">
+			ORDER BY
+			SV.VAR_ID_ desc
+		</if>
+	</select>
+
+	<!-- Statistical line -->
+	<select id="getListCount" parameterType="SysVariable"
+		resultType="int">
+		select count(*) as counts
+		from SYS_VARIABLE SV
+		<where>
+			<include refid="SQL_SYS_VARIABLE_WHERE" />
+		</where>
+	</select>
+
+
+	<select id="getListCountWhereNotDelete" parameterType="SysVariable"
+		resultType="int">
+		select count(*) as counts
+		from SYS_VARIABLE SV
+		<where>
+			SV.IS_DELETE_ = 0
+		</where>
+	</select>
+
+	<!-- According to the id check record -->
+	<select id="getById" parameterType="int" resultType="SysVariable">
+		select
+		<include refid="SQL_SYS_VARIABLE_COLUMN" />
+		from SYS_VARIABLE SV
+		<where>
+			SV.VAR_ID_ = #{idValue}
+		</where>
+	</select>
+
+	<!-- add -->
+	<insert id="insert" parameterType="SysVariable">
+		<!-- FOR ORACLE DEMO <selectKey resultType="java.math.BigDecimal" keyProperty="varId" 
+			order="BEFORE"> select SEQ_SYS_VARIABLE.nextVal as varId from dual </selectKey> -->
+		<!-- FOR MYSQL KEY DEMO
+		<selectKey keyProperty="varId" resultType="java.math.BigDecimal" order="AFTER">
+			select LAST_INSERT_ID()
+		</selectKey>-->
+		insert into SYS_VARIABLE (
+		VAR_ID_ , VAR_TYPE_ , VAR_NAME_ , VAR_VALUE_ , VAR_CODE_
+		, DESCR_ , IS_DELETE_ ,
+		IS_FINAL_ , CRT_TIME_ , UPD_TIME_ , CRT_USERID_
+		, UPD_USERID_ ) VALUES
+		(
+		#{varId,jdbcType=NUMERIC} ,
+		#{varType,jdbcType=VARCHAR} , #{varName,jdbcType=VARCHAR} ,
+		#{varValue,jdbcType=VARCHAR} ,#{varCode,jdbcType=VARCHAR} , #{descr,jdbcType=VARCHAR} ,
+		
+		#{isDelete,jdbcType=NUMERIC} , #{isFinal,jdbcType=NUMERIC} ,
+		#{crtTime,jdbcType=TIMESTAMP} , #{updTime,jdbcType=TIMESTAMP} ,
+		#{crtUserid,jdbcType=NUMERIC} , #{updUserid,jdbcType=NUMERIC} )
+	</insert>
+
+	<!-- update -->
+	<update id="update" parameterType="SysVariable">
+		UPDATE SYS_VARIABLE
+		<set>
+			<if test="varType !=null">
+				VAR_TYPE_ = #{varType} ,
+			</if>
+			<if test="varName !=null">
+				VAR_NAME_ = #{varName} ,
+			</if>
+			<if test="varValue !=null">
+				VAR_VALUE_ = #{varValue} ,
+			</if>
+			<if test="descr !=null">
+				DESCR_ = #{descr} ,
+			</if>
+			<if test="isDelete !=null">
+				IS_DELETE_ = #{isDelete} ,
+			</if>
+			<if test="isFinal !=null">
+				IS_FINAL_ = #{isFinal} ,
+			</if>
+			<if test="crtTime !=null">
+				CRT_TIME_ = #{crtTime, jdbcType=TIMESTAMP} ,
+			</if>
+			<if test="updTime !=null">
+				UPD_TIME_ = #{updTime, jdbcType=TIMESTAMP} ,
+			</if>
+			<if test="crtUserid !=null">
+				CRT_USERID_ = #{crtUserid} ,
+			</if>
+			<if test="updUserid !=null">
+				UPD_USERID_ = #{updUserid}
+			</if>
+		</set>
+		WHERE
+		VAR_ID_=#{varId} AND IS_DELETE_=0 and IS_FINAL_=0
+	</update>
+
+	<!-- delete -->
+	<delete id="delete" parameterType="SysVariable">
+		DELETE FROM SYS_VARIABLE
+		WHERE
+		VAR_ID_=#{varId}
+	</delete>
+
+	<!-- delete(ids) -->
+	<delete id="deleteById" parameterType="java.lang.Integer">
+		DELETE FROM SYS_VARIABLE
+		WHERE
+		VAR_ID_=#{varId}
+	</delete>
+
+</mapper>

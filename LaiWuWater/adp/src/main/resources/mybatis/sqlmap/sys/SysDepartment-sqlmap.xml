@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hongguaninfo.hgdf.adp.mapper.sys.SysDepartmentMapper">
+
+	<!-- The corresponding field and type -->
+	<resultMap type="SysDepartment" id="ResultMap">
+		<result column="departId" javaType="java.math.BigDecimal"
+			property="departId" />
+		<result column="departName" javaType="String" property="departName" />
+		<result column="departFullname" javaType="String" property="departFullname" />
+		<result column="departCode" javaType="String" property="departCode" />
+		<result column="engname" javaType="String" property="engname" />
+		<result column="fid" javaType="java.math.BigDecimal" property="fid" />
+		<result column="isDelete" javaType="Integer" property="isDelete" />
+		<result column="isFinal" javaType="java.math.BigDecimal"
+			property="isFinal" />
+		<result column="crtTime" jdbcType="TIMESTAMP" property="crtTime" />
+		<result column="updTime" jdbcType="TIMESTAMP" property="updTime" />
+		<result column="crtUserid" javaType="java.math.BigDecimal"
+			property="crtUserid" />
+		<result column="updUserid" javaType="java.math.BigDecimal"
+			property="updUserid" />
+	</resultMap>
+
+	<!-- Each field corresponding alias, convenient call -->
+	<sql id="SQL_SYS_DEPARTMENT_COLUMN">
+		SD.DEPART_ID_ departId, SD.DEPART_NAME_ departName, SD.DEPART_FULLNAME_
+		departFullname, SD.DEPART_CODE_ departCode, SD.ENGNAME_ engname,
+		SD.FID_ fid, SD.IS_DELETE_ isDelete, SD.IS_FINAL_ isFinal,
+		SD.CRT_TIME_ crtTime, SD.UPD_TIME_ updTime, SD.CRT_USERID_ crtUserid,
+		SD.UPD_USERID_ updUserid
+	</sql>
+
+	<!-- whether multiple fields is empty -->
+	<sql id="SQL_SYS_DEPARTMENT_WHERE">
+		<if test="departId !=null ">
+			AND SD.DEPART_ID_=#{departId}
+		</if>
+		<if test="departName !=null and departName.length()!=0 ">
+			AND SD.DEPART_NAME_ =#{departName}
+		</if>
+		<if test="departNameForQuery !=null and departNameForQuery.length()!=0 ">
+			AND SD.DEPART_NAME_ like '%${departNameForQuery}%'
+		</if>
+		<if test="departFullname !=null and departFullname.length()!=0 ">
+			AND SD.DEPART_FULLNAME_=#{departFullname}
+		</if>
+		<if test="departCode !=null and departCode.length()!=0 ">
+			AND SD.DEPART_CODE_ = #{departCode}
+		</if>
+		<if test="departCodeForQuery !=null and departCodeForQuery.length()!=0 ">
+			AND SD.DEPART_CODE_ like '%${departCodeForQuery}%'
+		</if>
+		<if test="engname !=null and engname.length()!=0 ">
+			AND SD.ENGNAME_=#{engname}
+		</if>
+		<if test="fid !=null ">
+			AND SD.FID_=#{fid}
+		</if>
+		<if test="isDelete !=null ">
+			AND SD.IS_DELETE_=#{isDelete}
+		</if>
+		<if test="isFinal !=null ">
+			AND SD.IS_FINAL_=#{isFinal}
+		</if>
+		<if test="crtTime !=null ">
+			AND SD.CRT_TIME_=#{crtTime}
+		</if>
+		<if test="updTime !=null ">
+			AND SD.UPD_TIME_=#{updTime}
+		</if>
+		<if test="crtUserid !=null ">
+			AND SD.CRT_USERID_=#{crtUserid}
+		</if>
+		<if test="updUserid !=null ">
+			AND SD.UPD_USERID_=#{updUserid}
+		</if>
+	</sql>
+
+	<!-- Query All -->
+	<select id="getList" parameterType="SysDepartment" resultType="SysDepartment">
+		select
+		<include refid="SQL_SYS_DEPARTMENT_COLUMN" />
+		from SYS_DEPARTMENT SD
+		<where>
+			<include refid="SQL_SYS_DEPARTMENT_WHERE" />
+			AND SD.IS_DELETE_=0
+		</where>
+		<if test="orderStr != null and orderStr.length() != 0">
+			ORDER BY ${orderStr}
+		</if>
+		<if test="orderStr == null or orderStr.length() == 0">
+			ORDER BY
+			SD.DEPART_ID_
+		</if>
+	</select>
+
+	<!-- Statistical line -->
+	<select id="getListCount" parameterType="SysDepartment"
+		resultType="int">
+		select count(*) as counts
+		from SYS_DEPARTMENT SD
+		<where>
+			<include refid="SQL_SYS_DEPARTMENT_WHERE" />
+			AND SD.IS_DELETE_=0
+		</where>
+	</select>
+	
+	<select id="getAllList" parameterType="SysDepartment" resultType="SysDepartment">
+		select
+		<include refid="SQL_SYS_DEPARTMENT_COLUMN" />
+		from SYS_DEPARTMENT SD
+		<where>
+			<include refid="SQL_SYS_DEPARTMENT_WHERE" />
+		</where>
+		<if test="orderStr != null and orderStr.length() != 0">
+			ORDER BY ${orderStr}
+		</if>
+		<if test="orderStr == null or orderStr.length() == 0">
+			ORDER BY
+			SD.DEPART_ID_
+		</if>
+	</select>
+	<select id="getSpecDepartList" parameterType="string" resultType="SysDepartment">
+		select <include refid="SQL_SYS_DEPARTMENT_COLUMN" />
+		from SYS_DEPARTMENT SD 
+		where SD.DEPART_ID_ ${value}
+	</select>
+
+	<!-- According to the id check record -->
+	<select id="getById" parameterType="int" resultType="SysDepartment">
+		select
+		<include refid="SQL_SYS_DEPARTMENT_COLUMN" />
+		from SYS_DEPARTMENT SD
+		<where>
+			SD.DEPART_ID_ = #{idValue}
+		</where>
+	</select>
+
+	<!-- add -->
+	<insert id="insert" parameterType="SysDepartment">
+		<!-- KeyProperty may not be id !! No primary key can't sequence !!! -->
+		<selectKey resultType="int" keyProperty="id" order="BEFORE">
+			select SEQ_SYS_DEPARTMENT
+			.nextVal as id from dual
+		</selectKey>
+		insert into SYS_DEPARTMENT (
+		DEPART_ID_ , DEPART_NAME_ , DEPART_FULLNAME_ , DEPART_CODE_ , ENGNAME_ , FID_ ,
+		IS_DELETE_ , IS_FINAL_ , CRT_TIME_ , UPD_TIME_ , CRT_USERID_ ,
+		UPD_USERID_ ) VALUES (
+		#{departId,jdbcType=NUMERIC} , #{departName,jdbcType=VARCHAR} , #{departFullname,jdbcType=VARCHAR}
+		, #{departCode,jdbcType=VARCHAR} , #{engname,jdbcType=VARCHAR} ,
+		#{fid,jdbcType=NUMERIC} , #{isDelete,jdbcType=NUMERIC} ,
+		#{isFinal,jdbcType=NUMERIC} , #{crtTime,jdbcType=TIMESTAMP} ,
+		#{updTime,jdbcType=TIMESTAMP} , #{crtUserid,jdbcType=NUMERIC} ,
+		#{updUserid,jdbcType=NUMERIC} )
+	</insert>
+
+	<!-- update -->
+	<update id="update" parameterType="SysDepartment">
+		UPDATE SYS_DEPARTMENT
+		<set>
+			<if test="departId !=null">
+				DEPART_ID_ = #{departId} ,
+			</if>
+			<if test="departName !=null">
+				DEPART_NAME_ = #{departName} ,
+			</if>
+			<if test="departFullname !=null">
+				DEPART_FULLNAME_ = #{departFullname} ,
+			</if>
+			<if test="departCode !=null">
+				DEPART_CODE_ = #{departCode} ,
+			</if>
+			<if test="engname !=null">
+				ENGNAME_ = #{engname} ,
+			</if>
+			<if test="fid !=null">
+				FID_ = #{fid} ,
+			</if>
+			<if test="isDelete !=null">
+				IS_DELETE_ = #{isDelete} ,
+			</if>
+			<if test="isFinal !=null">
+				IS_FINAL_ = #{isFinal} ,
+			</if>
+			<if test="crtTime !=null">
+				CRT_TIME_ = #{crtTime} ,
+			</if>
+			<if test="updTime !=null">
+				UPD_TIME_ = #{updTime} ,
+			</if>
+			<if test="crtUserid !=null">
+				CRT_USERID_ = #{crtUserid} ,
+			</if>
+			<if test="updUserid !=null">
+				UPD_USERID_ = #{updUserid}
+			</if>
+		</set>
+		WHERE
+		DEPART_ID_=#{departId} AND IS_DELETE_=0 AND  IS_FINAL_=0
+	</update>
+
+	<!-- delete -->
+	<delete id="delete" parameterType="SysDepartment">
+		DELETE FROM SYS_DEPARTMENT
+		WHERE
+		DEPART_ID_=#{departId}
+	</delete>
+
+	<!-- delete(ids) -->
+	<delete id="deleteById" parameterType="java.lang.Integer">
+		DELETE FROM SYS_DEPARTMENT
+		WHERE
+		DEPART_ID_=#{departId}
+	</delete>
+
+</mapper>

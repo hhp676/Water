@@ -1,0 +1,330 @@
+.tt-inner{ display:inline-block; line-height:10px;padding-top:5px;}
+.tt-inner img{border:0;}
+.hgtable td{
+
+	
+}
+.hgtable font{
+	color: red;
+	font-weight: bold;
+}
+.hgform label.error{ background: url(../images/icons/error.png) no-repeat 0px 0px;color: Red;padding-left: 20px;font-weight: bold;}        
+.hgform input.error{ border: dashed 1px red;}
+
+.sysVarbar{
+	background-color:#F5F5F5;
+}
+
+.gridSearchBar {
+	padding-top:5px;
+	padding-bottom:5px;
+	border: 5px solid #ddd;
+	border-bottom: 2px solid #ddd;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	background-color: #FaFaFa;
+}
+
+.gridSearchBar input{
+	border: 1px solid #ccc;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	
+}
+
+
+.gridSearchBar1 input{
+	border: 1px solid #ccc;
+}
+.gridSearchBar1 fieldset{
+	height: 100px;
+}
+
+.gridSearchBar80 input{
+	border: 1px solid #ccc;
+}
+.gridSearchBar80 fieldset{
+	height: 80px;
+}
+
+#centerpage_authTable td{
+	border: 1px dashed #aaa;
+}
+
+#centerpage_authTable td.td1{
+	background-color: #ccc;
+}
+
+.m-icon-search{
+	background:url('../images/icons/search.png') no-repeat center center;
+}
+.m-icon-clear{
+	background:url('../images/icons/clear.png') no-repeat center center;
+}
+
+.icon-ok{
+	background:url('../images/icons/accept.gif') no-repeat center center;
+}
+.icon-cancel{
+	background:url('../images/icons/cancel.gif') no-repeat center center;
+}
+.icon-reset{
+	background:url('../images/icons/reset.png') no-repeat center center;
+}
+
+.m-icon-win{
+	background:url('../images/icons/window.png') no-repeat center center;
+}
+.m-icon-drive{
+	background:url('../images/icons/drive.gif') no-repeat center center;
+}
+.m-icon-group{
+	background:url('../images/icons/group.gif') no-repeat center center;
+}
+.m-icon-group2{
+	background:url('../images/icons/group.png') no-repeat center center;
+}
+.m-icon-group-add{
+	background:url('../images/icons/group_add.png') no-repeat center center;
+}
+.m-icon-group-edit{
+	background:url('../images/icons/group_edit.png') no-repeat center center;
+}
+.m-icon-group-del{
+	background:url('../images/icons/group_del.png') no-repeat center center;
+}
+.m-icon-user-red{
+	background:url('../images/icons/user_red.gif') no-repeat center center;
+}
+.m-icon-user-orange{
+	background:url('../images/icons/user_orange.gif') no-repeat center center;
+}
+.m-icon-user-add{
+	background:url('../images/icons/user_add.gif') no-repeat center center;
+}
+.m-icon-tag-parentDept{
+	background:url('../images/icons/parentDept.png') no-repeat center center;
+}
+.m-icon-tag-dept{
+	background:url('../images/icons/dept.png') no-repeat center center;
+}
+.m-icon-tag-green{
+	background:url('../images/icons/tag_green.gif') no-repeat center center;
+}
+.m-icon-tag-purple{
+	background:url('../images/icons/tag_purple.gif') no-repeat center center;
+}
+.m-icon-star{
+	background:url('../images/icons/star.gif') no-repeat center center;
+}
+.m-icon-star-add{
+	background:url('../images/icons/star_add.png') no-repeat center center;
+}
+.m-icon-star-edit{
+	background:url('../images/icons/star_edit.png') no-repeat center center;
+}
+.m-icon-star-del{
+	background:url('../images/icons/star_del.png') no-repeat center center;
+}
+
+.m-icon-tag-add{
+	background:url('../images/icons/tag_blue_add.gif') no-repeat center center;
+}
+.m-icon-tag-edit{
+	background:url('../images/icons/tag_blue_edit.gif') no-repeat center center;
+}
+.m-icon-tag-edit2{
+	background:url('../images/icons/edit.gif') no-repeat center center;
+}
+.m-icon-tag-del{
+	background:url('../images/icons/tag_blue_delete.gif') no-repeat center center;
+}
+.m-icon-tag-red{
+	background:url('../images/icons/tag_red.gif') no-repeat center center;
+}
+.m-icon-pkg{
+	background:url('../images/icons/pkg.gif') no-repeat center center;
+}
+.m-icon-person{
+	background:url('../images/icons/person1.png') no-repeat center center;
+}
+.m-icon-person-add{
+	background:url('../images/icons/person_add.png') no-repeat center center;
+}
+.m-icon-person-edit{
+	background:url('../images/icons/person_edit.png') no-repeat center center;
+}
+.m-icon-person-del{
+	background:url('../images/icons/person_del.png') no-repeat center center;
+}
+
+.m-icon-app{
+	background:url('../images/icons/application_form.gif') no-repeat center center;
+}
+.m-icon-app-add{
+	background:url('../images/icons/application_form_add.gif') no-repeat center center;
+}
+.m-icon-app-edit{
+	background:url('../images/icons/application_form_edit.gif') no-repeat center center;
+}
+.m-icon-app-del{
+	background:url('../images/icons/application_form_delete.gif') no-repeat center center;
+}
+.m-icon-personal{
+	background:url('../images/icons/personal.png') no-repeat center center;
+}
+
+.m-icon-key{
+	background:url('../images/icons/key16.png') no-repeat center center;
+}
+.m-icon-edit{
+	background:url('../images/icons/edit16.png') no-repeat center center;
+}
+.m-icon-oper16{
+	background:url('../images/icons/oper16.png') no-repeat center center;
+}
+
+.m-icon-list{
+	background:url('../images/icons/listview.png') no-repeat center center;
+}
+
+.m-icon-key-y{
+	background:url('../images/icons/key_y_16.png') no-repeat center center;
+}
+.m-icon-arrow_branch{
+	background:url('../images/icons/arrow_branch.gif') no-repeat center center;
+}
+.m-icon-chart_bar{
+	background:url('../images/icons/chart_bar.gif') no-repeat center center;
+}
+.m-icon-door{
+	background:url('../images/icons/door.gif') no-repeat center center;
+}
+.m-icon-control-play-blue{
+	background:url('../images/icons/control_play_blue.gif') no-repeat center center;
+}
+
+.m-icon-computer{
+	background:url('../images/icons/computer.gif') no-repeat center center;
+}
+.m-icon-publish{
+	background:url('../images/icons/publish.png') no-repeat center center;
+}
+
+.m-icon-cancel-blue{
+	background:url('../images/icons/cancel-blue.png') no-repeat center center;
+}
+
+.m-icon-flag-white{
+	background:url('../images/icons/flag_white.png') no-repeat center center;
+}
+
+.m-icon-flag-red{
+	background:url('../images/icons/flag_red.png') no-repeat center center;
+}
+
+.m-icon-extension{
+	background:url('../images/icons/extension.png') no-repeat center center;
+}
+.m-icon-setting2{
+	background:url('../images/icons/setting2.png') no-repeat center center;
+}
+.m-icon-del2{
+	background:url('../images/icons/del2.png') no-repeat center center;
+}
+
+.m-icon-clock{
+	background:url('../images/icons/clock.png') no-repeat center center;
+}
+
+.m-icon-calendar{
+	background:url('../images/icons/calendar.png') no-repeat center center;
+}
+
+.m-icon-handbook{
+	background:url('../images/icons/handbook.png') no-repeat center center;
+}
+
+.m-icon-weather{
+	background:url('../images/icons/weather.png') no-repeat center center;
+}
+
+.m-icon-link{
+	background:url('../images/icons/link.png') no-repeat center center;
+}
+
+.m-icon-shortcut{
+	background:url('../images/icons/shortcut.png') no-repeat center center;
+}
+
+.m-icon-arrow{
+	background:url('../images/icons/arrow.png') no-repeat center center;
+}
+.m-icon-lookup{
+	background:url('../images/icons/lookup.png') no-repeat center center;
+}
+.m-icon-export{
+	background:url('../images/icons/export.png') no-repeat center center;
+}
+.m-icon-hand{
+	background:url('../images/icons/hand.png') no-repeat center center;
+}
+.m-icon-agree16{
+	background:url('../images/icons/agree.png') no-repeat center center;
+}
+.m-icon-notagree16{
+	background:url('../images/icons/notagree.png') no-repeat center center;
+}
+.m-icon-import{
+	background:url('../images/icons/import.png') no-repeat center center;
+}
+/**数据截取*/
+.datagrid-cell{text-overflow: ellipsis;}
+.datagrid-cell .tree-title{
+	overflow:hidden;
+	text-overflow: ellipsis;
+	 display: inline !important;
+	 vertical-align: text-top !important;
+/* 	width:220px; */
+}
+
+
+/* -----------------以下是：解决浏览器不兼容的各种问题 ---------------------------------*/
+
+/* 改变easyui 下拉框的边框色 */
+.combo{
+	border-color: #A9A9A9;
+}
+/* echart图片保存后，图片弹出的位置 */
+#__echarts_download_wrap__ img{
+	margin-top:100px;
+}
+/* 去掉IE8+中，输入框中出现的叉号和密码框中的小眼睛 */
+ ::-ms-clear, ::-ms-reveal{display: none;}
+ input:-webkit-autofill {-webkit-box-shadow: 0 0 0px 1000px white inset;}
+ 
+/* 去掉按钮的虚框 */
+ a.l-btn span span.l-btn-text {
+     outline:none;
+ }
+/*  解决浏览器中，首页tab的title=“首页”，首页两个字不垂直居中（不居中原因：一刷新页面时，a.tabs-inner的样式就会变） */
+ .tabs li.tabs-selected a.tabs-inner{
+    /* height: 25px !important; */
+    line-height: 25px !important;
+ }
+ /* datagrid中的rownumbers=true时，出现的序号，超过3位就会被遮挡，设置内容距右边的距离为3px */
+ .datagrid-header-rownumber, .datagrid-cell-rownumber{
+  padding-right:3px;
+ }
+/*  将个人中心中的竖直滚动条改为自动显示 */
+#personalCenterTab .tabs-panels{
+    overflow-y:auto;
+}
+/* 解决在IE8中上边框和左边框太粗 */
+body input,textarea{border:1px solid #A9A9A9;}
+/* 去掉复选框的外边框*/
+body input[type="checkbox"]{border:0;}
+/* 去掉单选按钮的外边框*/
+body input[type="radio"]{border:0;}

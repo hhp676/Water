@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hongguaninfo.hgdf.wadp.mapper.sys.SysDatadicGroupMapper">
+
+	<!-- The corresponding field and type -->
+	<resultMap type="SysDatadicGroup" id="ResultMap">
+		<result column="groupId" javaType="Integer" property="groupId" />
+		<result column="groupCode" javaType="String" property="groupCode" />
+		<result column="groupName" javaType="String" property="groupName" />
+		<result column="groupDesc" javaType="String" property="groupDesc" />
+		<result column="orderId" javaType="Integer" property="orderId" />
+		<result column="isDelete" javaType="Integer" property="isDelete" />
+		<result column="isFinal" javaType="Integer" property="isFinal" />
+		<result column="crtTime" jdbcType="TIMESTAMP" property="crtTime" />
+		<result column="updTime" jdbcType="TIMESTAMP" property="updTime" />
+		<result column="crtUserid" javaType="Integer" property="crtUserid" />
+		<result column="updUserid" javaType="Integer" property="updUserid" />
+	</resultMap>
+
+	<!-- Each field corresponding alias, convenient call -->
+	<sql id="SQL_SYS_DATADIC_GROUP_COLUMN">
+		SDG.GROUP_ID_ groupId, SDG.GROUP_CODE_ groupCode,
+		SDG.GROUP_NAME_ groupName, SDG.GROUP_DESC_ groupDesc, SDG.ORDER_ID_
+		orderId, SDG.IS_DELETE_ isDelete, SDG.IS_FINAL_ isFinal, SDG.CRT_TIME_
+		crtTime, SDG.UPD_TIME_ updTime, SDG.CRT_USERID_ crtUserid,
+		SDG.UPD_USERID_ updUserid
+	</sql>
+
+	<!-- whether multiple fields is empty -->
+	<sql id="SQL_SYS_DATADIC_GROUP_WHERE">
+		<if test="groupId !=null ">
+			AND SDG.GROUP_ID_=#{groupId}
+		</if>
+		<if test="groupCode !=null and groupCode.length()!=0 ">
+			AND SDG.GROUP_CODE_ like '%'||#{groupCode}||'%'
+		</if>
+		<if test="groupName !=null and groupName.length()!=0 ">
+			AND SDG.GROUP_NAME_ like '%'||#{groupName}||'%'
+		</if>
+		<if test="groupDesc !=null and groupDesc.length()!=0 ">
+			AND SDG.GROUP_DESC_=#{groupDesc}
+		</if>
+		<if test="orderId !=null ">
+			AND SDG.ORDER_ID_=#{orderId}
+		</if>
+		<if test="isDelete !=null ">
+			AND SDG.IS_DELETE_=#{isDelete}
+		</if>
+		<if test="isFinal !=null ">
+			AND SDG.IS_FINAL_=#{isFinal}
+		</if>
+		<if test="crtTime !=null ">
+			AND SDG.CRT_TIME_=#{crtTime}
+		</if>
+		<if test="updTime !=null ">
+			AND SDG.UPD_TIME_=#{updTime}
+		</if>
+		<if test="crtUserid !=null ">
+			AND SDG.CRT_USERID_=#{crtUserid}
+		</if>
+		<if test="updUserid !=null ">
+			AND SDG.UPD_USERID_=#{updUserid}
+		</if>
+	</sql>
+
+	<!-- Query All -->
+	<select id="getList" parameterType="SysDatadicGroup" resultType="SysDatadicGroup">
+		select
+		<include refid="SQL_SYS_DATADIC_GROUP_COLUMN" />
+		from SYS_DATADIC_GROUP SDG
+		<where>
+			<include refid="SQL_SYS_DATADIC_GROUP_WHERE" />
+		</where>
+		<if test="orderStr != null and orderStr.length() != 0">
+			ORDER BY ${orderStr}
+		</if>
+		<if test="orderStr == null or orderStr.length() == 0">
+			ORDER BY SDG.GROUP_ID_ desc
+		</if>
+	</select>
+
+	<!-- Statistical line -->
+	<select id="getListCount" parameterType="SysDatadicGroup"
+		resultType="int">
+		select count(*) as counts
+		from SYS_DATADIC_GROUP SDG
+		<where>
+			<include refid="SQL_SYS_DATADIC_GROUP_WHERE" />
+		</where>
+	</select>
+
+	<!-- According to the id check record -->
+	<select id="getById" parameterType="int" resultType="SysDatadicGroup">
+		select
+		<include refid="SQL_SYS_DATADIC_GROUP_COLUMN" />
+		from SYS_DATADIC_GROUP SDG
+		<where>
+			SDG.GROUP_ID_ = #{idValue}
+		</where>
+	</select>
+
+	<!-- add -->
+	<insert id="insert" parameterType="SysDatadicGroup">		
+		insert into SYS_DATADIC_GROUP (GROUP_ID_, GROUP_CODE_ , GROUP_NAME_ , GROUP_DESC_
+		, ORDER_ID_, IS_DELETE_ ,IS_FINAL_ , CRT_TIME_ , UPD_TIME_ ,
+		CRT_USERID_, UPD_USERID_ )
+		VALUES(#{groupId,jdbcType=NUMERIC}, #{groupCode,jdbcType=VARCHAR},
+		#{groupName,jdbcType=VARCHAR},#{groupDesc,jdbcType=VARCHAR},#{orderId,jdbcType=NUMERIC},
+		#{isDelete,jdbcType=NUMERIC},#{isFinal,jdbcType=NUMERIC},#{crtTime,jdbcType=TIMESTAMP},
+		#{updTime,jdbcType=TIMESTAMP} ,#{crtUserid,jdbcType=NUMERIC} ,
+		#{updUserid,jdbcType=NUMERIC})
+	</insert>
+
+	<!-- update -->
+	<update id="update" parameterType="SysDatadicGroup">
+		UPDATE SYS_DATADIC_GROUP
+		<set>
+
+			<if test="groupCode !=null">
+				GROUP_CODE_ = #{groupCode} ,
+			</if>
+			<if test="groupName !=null">
+				GROUP_NAME_ = #{groupName} ,
+			</if>
+			<if test="groupDesc !=null">
+				GROUP_DESC_ = #{groupDesc} ,
+			</if>
+			<if test="orderId !=null">
+				ORDER_ID_ = #{orderId} ,
+			</if>
+			<if test="isDelete !=null">
+				IS_DELETE_ = #{isDelete} ,
+			</if>
+			<if test="isFinal !=null">
+				IS_FINAL_ = #{isFinal} ,
+			</if>
+			<if test="crtTime !=null">
+				CRT_TIME_ = #{crtTime} ,
+			</if>
+			<if test="updTime !=null">
+				UPD_TIME_ = #{updTime} ,
+			</if>
+			<if test="crtUserid !=null">
+				CRT_USERID_ = #{crtUserid} ,
+			</if>
+			<if test="updUserid !=null">
+				UPD_USERID_ = #{updUserid}
+			</if>
+		</set>
+		WHERE
+		GROUP_ID_=#{groupId} and IS_FINAL_=0
+	</update>
+
+	<!-- delete -->
+	<delete id="delete" parameterType="SysDatadicGroup">
+		DELETE FROM SYS_DATADIC_GROUP
+		WHERE
+		GROUP_ID_=#{groupId}
+	</delete>
+
+	<!-- delete(ids) -->
+	<delete id="deleteById" parameterType="java.lang.Integer">
+		DELETE FROM
+		SYS_DATADIC_GROUP
+		WHERE
+		GROUP_ID_=#{groupId}
+	</delete>
+
+</mapper>

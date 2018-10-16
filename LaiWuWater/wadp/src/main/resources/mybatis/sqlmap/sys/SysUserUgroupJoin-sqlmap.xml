@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hongguaninfo.hgdf.wadp.mapper.sys.SysUserUgroupJoinMapper">
+	
+	<!-- The corresponding field and type -->
+	<resultMap type="SysUserUgroupJoin" id="ResultMap">
+					<result column="userId" javaType="java.math.BigDecimal" property="userId" />
+					<result column="groupId" javaType="java.math.BigDecimal" property="groupId" />
+					<result column="isFinal" javaType="Integer" property="isFinal" />
+					<result column="crtTime" javaType="java.util.Date" property="crtTime" />
+					<result column="crtUserid" javaType="java.math.BigDecimal" property="crtUserid" />
+			</resultMap>
+
+		<!-- Each field corresponding alias, convenient call -->
+	<sql id="SQL_SYS_USER_UGROUP_JOIN_COLUMN">
+					SUUJ.USER_ID_ userId,					SUUJ.GROUP_ID_ groupId,					SUUJ.IS_FINAL_ isFinal,					SUUJ.CRT_TIME_ crtTime,					SUUJ.CRT_USERID_ crtUserid			</sql>
+
+		<!-- whether multiple fields is empty -->
+    <sql id="SQL_SYS_USER_UGROUP_JOIN_WHERE">
+   			        				<if test="userId !=null ">
+								AND SUUJ.USER_ID_=#{userId}
+				</if>
+			        				<if test="groupId !=null ">
+								AND SUUJ.GROUP_ID_=#{groupId}
+				</if>
+			        				<if test="isFinal !=null ">
+								AND SUUJ.IS_FINAL_=#{isFinal}
+				</if>
+			        				<if test="crtTime !=null ">
+								AND SUUJ.CRT_TIME_=#{crtTime}
+				</if>
+			        				<if test="crtUserid !=null ">
+								AND SUUJ.CRT_USERID_=#{crtUserid}
+				</if>
+			</sql>
+
+		<!-- Query All  -->
+	<select id="getList" parameterType="SysUserUgroupJoin" resultType="SysUserUgroupJoin">
+		select <include  refid="SQL_SYS_USER_UGROUP_JOIN_COLUMN"/>,SUG.GROUP_NAME_ groupName
+		from SYS_USER_UGROUP_JOIN SUUJ,SYS_USER_GROUP SUG
+		<where>
+			SUUJ.GROUP_ID_ = SUG.GROUP_ID_
+			<include  refid="SQL_SYS_USER_UGROUP_JOIN_WHERE"/>
+		</where>
+		<if test="orderStr != null and orderStr.length() != 0">
+			ORDER BY ${orderStr}
+		</if>
+		<if test="orderStr == null or orderStr.length() == 0">
+			ORDER BY SUUJ.USER_ID_ desc
+		</if>
+	</select>
+
+		<!-- Statistical line   -->
+	<select id="getListCount" parameterType="SysUserUgroupJoin" resultType="int">
+		select count(*) as counts
+		from SYS_USER_UGROUP_JOIN SUUJ
+		<where>
+			<include  refid="SQL_SYS_USER_UGROUP_JOIN_WHERE"/>
+		</where>
+	</select>
+
+		<!-- According to the id check record  -->
+	<select id="getById" parameterType="int" resultType="SysUserUgroupJoin">
+		select <include  refid="SQL_SYS_USER_UGROUP_JOIN_COLUMN"/>
+		from SYS_USER_UGROUP_JOIN SUUJ
+		<where>
+							SUUJ.USER_ID_ = #{idValue}
+							SUUJ.GROUP_ID_ = #{idValue}
+					</where>
+	</select>
+
+		<!-- add  -->
+	<insert id="insert" parameterType="SysUserUgroupJoin" >
+		insert into SYS_USER_UGROUP_JOIN (
+		USER_ID_ ,	GROUP_ID_ ,	IS_FINAL_ ,	CRT_TIME_ ,	CRT_USERID_ ) VALUES (
+		#{userId,jdbcType=NUMERIC} ,#{groupId,jdbcType=NUMERIC} ,#{isFinal,jdbcType=NUMERIC} ,
+		#{crtTime,jdbcType=DATE} ,	#{crtUserid,jdbcType=NUMERIC})
+    </insert>
+
+		<!-- update  -->
+	<update id="update" parameterType="SysUserUgroupJoin">
+		UPDATE SYS_USER_UGROUP_JOIN
+		<set>
+					<if test="userId !=null">
+				USER_ID_ = #{userId}  ,			</if>
+					<if test="groupId !=null">
+				GROUP_ID_ = #{groupId}  ,			</if>
+					<if test="isFinal !=null">
+				IS_FINAL_ = #{isFinal}  ,			</if>
+					<if test="crtTime !=null">
+				CRT_TIME_ = #{crtTime}  ,			</if>
+					<if test="crtUserid !=null">
+				CRT_USERID_ = #{crtUserid}  			</if>
+				</set>
+		WHERE USER_ID_=#{userId}  and GROUP_ID_=#{groupId}
+	</update>
+
+		<!-- delete  -->
+	<delete id="delete" parameterType="SysUserUgroupJoin">
+		DELETE FROM SYS_USER_UGROUP_JOIN
+		WHERE USER_ID_=#{userId}  and 	GROUP_ID_=#{groupId} 			
+	</delete>
+
+		<!-- delete(ids)  -->
+	<delete id="deleteById" parameterType="java.lang.Integer">
+		DELETE FROM SYS_USER_UGROUP_JOIN
+		WHERE USER_ID_=#{userId}  and 	IS_FINAL_= 0
+	</delete>
+
+</mapper>

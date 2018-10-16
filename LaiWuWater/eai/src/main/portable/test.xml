@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<portable-config>
+    <config-file path="WEB-INF/classes/logback.xml">
+        <replace xpath="/configuration/property[@name='LOG_DIR']/@value">/opt/logs/hgdf-adp/</replace>
+        <replace xpath="/configuration/property[@name='LOG_LEVEL']/@value">ERROR</replace>
+        <!-- <replace xpath="/configuration/root/@level">ERROR</replace> -->
+        <replace xpath="/configuration/property[@name='LOG_REF']/@value">FILE</replace>
+    </config-file>ig-file>
+    <config-file path="WEB-INF/classes/env.properties" type=".properties">
+        <replace key="jdbc.driverUrl">jdbc:mysql://192.168.2.181:3306/db_oa?useUnicode=true&amp;characterEncoding=utf-8&amp;zeroDateTimeBehavior=convertToNull</replace>
+        <replace key="jdbc.password">oa</replace>
+        <replace key="jdbc.password">oa</replace>
+    </config-file>
+</portable-config>

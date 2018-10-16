@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE Configure PUBLIC "-//Mort Bay Consulting//DTD Configure//EN" "http://jetty.mortbay.org/configure.dtd">
+
+<Configure class="org.eclipse.jetty.webapp.WebAppContext">
+
+	<!-- an XADataSource -->
+	<New id="mydatasourceHgadp" class="org.eclipse.jetty.plus.jndi.Resource">
+        <Arg>java:/comp/env/jdbc/wadp</Arg>
+        <Arg>
+            <New class="com.alibaba.druid.pool.DruidDataSource">
+                <Set name="driverClassName">com.mysql.jdbc.Driver</Set>
+                <Set name="url">jdbc:mysql://192.168.2.181:3306/db_wadp?useUnicode=true&amp;characterEncoding=utf-8</Set>
+                <Set name="username">wadp</Set>
+                <Set name="password">wadp</Set>
+                <Set name="maxActive">5</Set>
+            </New>
+        </Arg>
+	</New>
+
+</Configure>

@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hongguaninfo.hgdf.adp.mapper.sys.SysMetaMethodMapper">
+
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_META_METHOD_COLUMN">
+        smm.META_METHOD_ID_ metaMethodId,
+        smm.TENANT_ID_ tenantId,
+        smm.CLASS_NAME_ className,
+        smm.METHOD_NAME_ methodName,
+        smm.ARGS_NAME_ argsName,
+        smm.METHOD_CODE_ methodCode,
+        smm.METHOD_ZH_NAME_ methodZhName,
+        smm.METHOD_ENG_NAME_ methodEngName,
+        smm.LOG_LEVEL_ logLevel,
+        smm.LOG_TYPE_ logType,
+        smm.LOG_REMARK_CLASS_ logRemarkClass,
+        smm.DESCR_ descr,
+        smm.IS_VALID_ isValid,
+        smm.IS_DELETE_ isDelete,
+        smm.IS_FINAL_ isFinal,
+        smm.CRT_TIME_ crtTime,
+        smm.UPD_TIME_ updTime,
+        smm.CRT_USER_ID_ crtUserId,
+        smm.UPD_USER_ID_ updUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_META_METHOD_WHERE">
+        	<if test="metaMethodId != null">
+	            AND smm.META_METHOD_ID_ = #{metaMethodId}
+        </if>
+        	<if test="tenantId != null">
+	            AND smm.TENANT_ID_ = #{tenantId}
+        </if>
+        		<if test="className != null and className.length() != 0">
+        		AND smm.CLASS_NAME_ like '%${className}%'
+        </if>
+        		<if test="methodName != null and methodName.length() != 0">
+        		AND smm.METHOD_NAME_ like '%${methodName}%'
+        </if>
+        		<if test="argsName != null and argsName.length() != 0">
+        		AND smm.ARGS_NAME_ like '%${argsName}%'
+        </if>
+        		<if test="methodCode != null and methodCode.length() != 0">
+        		AND smm.METHOD_CODE_ like '%${methodCode}%'
+        </if>
+        		<if test="methodZhName != null and methodZhName.length() != 0">
+        		AND smm.METHOD_ZH_NAME_ like '%${methodZhName}%'
+        </if>
+        		<if test="methodEngName != null and methodEngName.length() != 0">
+        		AND smm.METHOD_ENG_NAME_ like '%${methodEngName}%'
+        </if>
+        	<if test="logLevel != null">
+	            AND smm.LOG_LEVEL_ = #{logLevel}
+        </if>
+        	<if test="logType != null">
+	            AND smm.LOG_TYPE_ = #{logType}
+        </if>
+        	<if test="logRemarkClass != null and logRemarkClass.length() != 0">
+        		AND smm.LOG_REMARK_CLASS_ like '%${logRemarkClass}%'
+        </if>
+        	<if test="descr != null and descr.length() != 0">
+        		AND smm.DESCR_ like '%${descr}%'
+        </if>
+        	<if test="isValid != null">
+	            AND smm.IS_VALID_ = #{isValid}
+        </if>
+        	<if test="isFinal != null">
+	            AND smm.IS_FINAL_ = #{isFinal}
+        </if>
+        	<if test="isDelete != null">
+	            AND smm.IS_DELETE_ = #{isDelete}
+        </if>
+        	<if test="crtTime != null">
+	            AND smm.CRT_TIME_ = #{crtTime}
+        </if>
+        	<if test="updTime != null">
+	            AND smm.UPD_TIME_ = #{updTime}
+        </if>
+        	<if test="crtUserId != null">
+	            AND smm.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        	<if test="updUserId != null">
+	            AND smm.UPD_USER_ID_ = #{updUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+    
+    <!-- sqlWhere search exactly by method signature: className、methodName、argsName-->
+    <sql id="SQL_SYS_META_METHOD_WHERE_EXACTLY">
+        	<if test="metaMethodId != null">
+	            AND smm.META_METHOD_ID_ = #{metaMethodId}
+        </if>
+        	<if test="tenantId != null">
+	            AND smm.TENANT_ID_ = #{tenantId}
+        </if>
+        		<if test="className != null and className.length() != 0">
+        		AND smm.CLASS_NAME_ = #{className}
+        </if>
+        		<if test="methodName != null and methodName.length() != 0">
+        		AND smm.METHOD_NAME_ = #{methodName}
+        </if>
+        		<if test="argsName != null and argsName.length() != 0">
+        		AND smm.ARGS_NAME_ = #{argsName}
+        </if>
+        		<if test="methodCode != null and methodCode.length() != 0">
+        		AND smm.METHOD_CODE_ like '%${methodCode}%'
+        </if>
+        		<if test="methodZhName != null and methodZhName.length() != 0">
+        		AND smm.METHOD_ZH_NAME_ like '%${methodZhName}%'
+        </if>
+        		<if test="methodEngName != null and methodEngName.length() != 0">
+        		AND smm.METHOD_ENG_NAME_ like '%${methodEngName}%'
+        </if>
+        	<if test="logLevel != null">
+	            AND smm.LOG_LEVEL_ = #{logLevel}
+        </if>
+        	<if test="logType != null">
+	            AND smm.LOG_TYPE_ = #{logType}
+        </if>
+        	<if test="logRemarkClass != null and logRemarkClass.length() != 0">
+        		AND smm.LOG_REMARK_CLASS_ like '%${logRemarkClass}%'
+        </if>
+        	<if test="descr != null and descr.length() != 0">
+        		AND smm.DESCR_ like '%${descr}%'
+        </if>
+        	<if test="isValid != null">
+	            AND smm.IS_VALID_ = #{isValid}
+        </if>
+        	<if test="isFinal != null">
+	            AND smm.IS_FINAL_ = #{isFinal}
+        </if>
+        	<if test="isDelete != null">
+	            AND smm.IS_DELETE_ = #{isDelete}
+        </if>
+        	<if test="crtTime != null">
+	            AND smm.CRT_TIME_ = #{crtTime}
+        </if>
+        	<if test="updTime != null">
+	            AND smm.UPD_TIME_ = #{updTime}
+        </if>
+        	<if test="crtUserId != null">
+	            AND smm.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        	<if test="updUserId != null">
+	            AND smm.UPD_USER_ID_ = #{updUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultType="SysMetaMethod">
+        select <include  refid="SQL_SYS_META_METHOD_COLUMN" />
+        from SYS_META_METHOD smm
+        <where>
+            smm.META_METHOD_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysMetaMethod" resultType="SysMetaMethod">
+        select <include  refid="SQL_SYS_META_METHOD_COLUMN"/>
+        from SYS_META_METHOD smm
+        <where>
+            <include  refid="SQL_SYS_META_METHOD_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                smm.IS_VALID_ desc, smm.META_METHOD_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysMetaMethod" resultType="int">
+        select count(
+            smm.META_METHOD_ID_
+        ) as counts
+        from SYS_META_METHOD smm
+        <where>
+            <include  refid="SQL_SYS_META_METHOD_WHERE"/>
+        </where>
+    </select>
+    
+	<!-- add 默认使用全局ID -->
+	<insert id="insert" parameterType="SysMetaMethod" >
+		insert into SYS_META_METHOD 
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+		  	<if test="metaMethodId != null">
+        		META_METHOD_ID_,
+      		</if>
+		  	<if test="tenantId != null">
+        		TENANT_ID_,
+      		</if>
+		  	<if test="className != null">
+        		CLASS_NAME_,
+      		</if>
+		  	<if test="methodName != null">
+        		METHOD_NAME_,
+      		</if>
+		  	<if test="argsName != null">
+        		ARGS_NAME_,
+      		</if>
+		  	<if test="methodCode != null">
+        		METHOD_CODE_,
+      		</if>
+		  	<if test="methodZhName != null">
+        		METHOD_ZH_NAME_,
+      		</if>
+		  	<if test="methodEngName != null">
+        		METHOD_ENG_NAME_,
+      		</if>
+		  	<if test="logLevel != null">
+        		LOG_LEVEL_,
+      		</if>
+      		<if test="logType != null">
+        		LOG_TYPE_,
+      		</if>
+      		<if test="logRemarkClass != null">
+        		LOG_REMARK_CLASS_,
+      		</if>
+		  	<if test="descr != null">
+        		DESCR_,
+      		</if>
+		  	<if test="isValid != null">
+        		IS_VALID_,
+      		</if>
+		  	<if test="isFinal != null">
+        		IS_FINAL_,
+      		</if>
+      		<if test="isDelete != null">
+        		IS_DELETE_,
+      		</if>
+		  	<if test="crtTime != null">
+        		CRT_TIME_,
+      		</if>
+		  	<if test="updTime != null">
+        		UPD_TIME_,
+      		</if>
+		  	<if test="crtUserId != null">
+        		CRT_USER_ID_,
+      		</if>
+		  	<if test="updUserId != null">
+        		UPD_USER_ID_,
+      		</if>
+		</trim> 
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			  	<if test="metaMethodId != null">
+			  	  	   #{metaMethodId,jdbcType=NUMERIC},
+			  	</if>  
+			  	<if test="tenantId != null">
+			  	  	   #{tenantId,jdbcType=NUMERIC},
+			  	</if>  
+			  	<if test="className != null">
+			  	  	   #{className,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="methodName != null">
+			  	  	   #{methodName,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="argsName != null">
+			  	  	   #{argsName,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="methodCode != null">
+			  	  	   #{methodCode,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="methodZhName != null">
+			  	  	   #{methodZhName,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="methodEngName != null">
+			  	  	   #{methodEngName,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="logLevel != null">
+			  	  	   #{logLevel,jdbcType=NUMERIC},
+			  	</if>
+			  	<if test="logType != null">
+			  	  	   #{logType,jdbcType=NUMERIC},
+			  	</if>
+			  	<if test="logRemarkClass != null">
+			  	  	   #{logRemarkClass,jdbcType=VARCHAR},
+			  	</if>
+			  	<if test="descr != null">
+			  	  	   #{descr,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="isValid != null">
+			  	  	   #{isValid,jdbcType=NUMERIC},
+			  	</if>  
+			  	<if test="isFinal != null">
+			  	  	   #{isFinal,jdbcType=NUMERIC},
+			  	</if>
+			  	<if test="isDelete != null">
+			  	  	   #{isDelete,jdbcType=NUMERIC},
+			  	</if>  
+			  	<if test="crtTime != null">
+			  	  	   #{crtTime,jdbcType=TIMESTAMP},
+			  	</if>  
+			  	<if test="updTime != null">
+			  	  	   #{updTime,jdbcType=TIMESTAMP},
+			  	</if>  
+			  	<if test="crtUserId != null">
+			  	  	   #{crtUserId,jdbcType=NUMERIC},
+			  	</if>  
+			  	<if test="updUserId != null">
+			  	  	   #{updUserId,jdbcType=NUMERIC},
+			  	</if>  
+		</trim>
+    </insert>
+
+	<!-- update  -->
+	<update id="update" parameterType="SysMetaMethod">
+		UPDATE SYS_META_METHOD
+		<set>
+		  	<if test="metaMethodId != null">
+        		META_METHOD_ID_ = #{metaMethodId} ,
+      		</if>
+		  	<if test="tenantId != null">
+        		TENANT_ID_ = #{tenantId} ,
+      		</if>
+		  	<if test="className != null">
+        		CLASS_NAME_ = #{className} ,
+      		</if>
+		  	<if test="methodName != null">
+        		METHOD_NAME_ = #{methodName} ,
+      		</if>
+		  	<if test="argsName != null">
+        		ARGS_NAME_ = #{argsName} ,
+      		</if>
+		  	<if test="methodCode != null">
+        		METHOD_CODE_ = #{methodCode} ,
+      		</if>
+		  	<if test="methodZhName != null">
+        		METHOD_ZH_NAME_ = #{methodZhName} ,
+      		</if>
+		  	<if test="methodEngName != null">
+        		METHOD_ENG_NAME_ = #{methodEngName} ,
+      		</if>
+		  	<if test="logLevel != null">
+        		LOG_LEVEL_ = #{logLevel} ,
+      		</if>
+      		<if test="logType != null">
+        		LOG_TYPE_ = #{logType} ,
+      		</if>
+      		<if test="logRemarkClass != null">
+        		LOG_REMARK_CLASS_ = #{logRemarkClass} ,
+      		</if>
+		  	<if test="descr != null">
+        		DESCR_ = #{descr} ,
+      		</if>
+		  	<if test="isValid != null">
+        		IS_VALID_ = #{isValid} ,
+      		</if>
+		  	<if test="isFinal != null">
+        		IS_FINAL_ = #{isFinal} ,
+      		</if>
+      		<if test="isDelete != null">
+        		IS_DELETE_ = #{isDelete} ,
+      		</if>
+		  	<if test="crtTime != null">
+        		CRT_TIME_ = #{crtTime} ,
+      		</if>
+		  	<if test="updTime != null">
+        		UPD_TIME_ = #{updTime} ,
+      		</if>
+		  	<if test="crtUserId != null">
+        		CRT_USER_ID_ = #{crtUserId} ,
+      		</if>
+		  	<if test="updUserId != null">
+        		UPD_USER_ID_ = #{updUserId} 
+      		</if>
+		 
+		</set>
+		WHERE
+            META_METHOD_ID_ = #{metaMethodId}
+	</update>
+
+	<!-- delete  -->
+	<delete id="delete" parameterType="SysMetaMethod">
+		DELETE FROM SYS_META_METHOD
+		WHERE
+            META_METHOD_ID_ = #{metaMethodId}
+	</delete>
+ 	
+ 	<update id="setAllInvalid">
+        update SYS_META_METHOD set IS_VALID_ = 0
+    </update>
+    
+    <select id="getListByMethodSignature" parameterType="SysMetaMethod" resultType="SysMetaMethod">
+        select <include  refid="SQL_SYS_META_METHOD_COLUMN"/>
+        from SYS_META_METHOD smm
+        <where>
+            <include  refid="SQL_SYS_META_METHOD_WHERE_EXACTLY"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                smm.META_METHOD_ID_ desc
+        </if>
+    </select>
+</mapper>

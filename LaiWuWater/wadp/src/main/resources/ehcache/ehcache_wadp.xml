@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="ehcache.xsd" updateCheck="false"
+	monitoring="autodetect" dynamicConfig="true">
+	
+	<diskStore path="java.io.tmpdir" />
+	
+	<!-- jgroup集群配置 TCP ;bind_addr=BIND_ADDR
+	<cacheManagerPeerProviderFactory
+		class="com.hongguaninfo.hgdf.core.utils.jgroup.CustomJGroupsCacheManagerPeerProviderFactory"
+		properties="connect=
+        TCP(bind_port=BIND_PORT;use_send_queues=true;sock_conn_timeout=300):
+	    TCPPING(initial_hosts=INITIAL_HOSTS;port_range=0;timeout=1000;num_initial_members=1):
+	   	FD_SOCK:
+	   	FD(max_tries=5):
+		VERIFY_SUSPECT(timeout=500):
+      	pbcast.NAKACK2(use_mcast_xmit=false;discard_delivered_msgs=true):
+      	UNICAST2:
+	   	pbcast.GMS(join_timeout=500;print_local_addr=false;view_bundling=true;print_physical_addrs=true):
+	   	pbcast.FLUSH(timeout=500;start_flush_timeout=10000)"
+		propertySeparator="::" />-->
+
+	<!-- jgroup集群配置 TCP old
+	<cacheManagerPeerProviderFactory class="com.hongguaninfo.hgdf.core.utils.jgroup.CustomJGroupsCacheManagerPeerProviderFactory"
+		properties="connect=TCP(bind_port=BIND_PORT;use_send_queues=true;sock_conn_timeout=300;bind_addr=BIND_ADDR):
+		TCPPING(initial_hosts=INITIAL_HOSTS;port_range=1;timeout=1000;num_initial_members=2):
+		VERIFY_SUSPECT(timeout=1500): pbcast.NAKACK(use_mcast_xmit=false;discard_delivered_msgs=true;retransmit_timeout=300,600,1200,2400,4800):
+		pbcast.GMS(join_timeout=1000;print_local_addr=false)" propertySeparator="::"
+		/> -->
+		
+	<!-- jgroup集群配置 UDP
+	<cacheManagerPeerProviderFactory
+		class="com.hongguaninfo.core.util.jgroup.CustomJGroupsCacheManagerPeerProviderFactory"
+		properties="connect=UDP(mcast_addr=MCAST_ADDR;mcast_port=MCAST_PORT;ip_ttl=32;
+		mcast_send_buf_size=150000;mcast_recv_buf_size=80000):PING(timeout=2000;num_initial_members=6):
+		MERGE2(min_interval=5000;max_interval=10000): FD_SOCK:VERIFY_SUSPECT(timeout=1500):
+		pbcast.NAKACK(retransmit_timeout=3000): UNICAST(timeout=5000): pbcast.STABLE(desired_avg_gossip=20000):
+		FRAG: pbcast.GMS(join_timeout=5000;print_local_addr=true)"
+		propertySeparator="::" /> -->
+
+	<!-- 默认cache -->
+	<defaultCache maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="120" timeToLiveSeconds="120" overflowToDisk="false"
+		diskSpoolBufferSizeMB="30" maxEntriesLocalDisk="10000000"
+		diskPersistent="false" diskExpiryThreadIntervalSeconds="120"
+		memoryStoreEvictionPolicy="LRU" statistics="false">
+		<!-- <cacheEventListenerFactory
+			class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"
+			properties="replicateAsynchronously=true, replicatePuts=true,
+                replicateUpdates=true, replicateUpdatesViaCopy=true, replicateRemovals=true" />-->
+		<!-- 启动后从集群初始化 <bootstrapCacheLoaderFactory class="net.sf.ehcache.distribution.jgroups.JGroupsBootstrapCacheLoaderFactory"
+			/> -->
+	</defaultCache>
+
+	<!-- 数据字典缓存 -->
+	<cache name="CACHE_SYS_DATADIC" maxElementsInMemory="5000"
+		eternal="true" timeToIdleSeconds="0" timeToLiveSeconds="0"
+		overflowToDisk="false" diskSpoolBufferSizeMB="50" maxElementsOnDisk="10000"
+		diskPersistent="false" diskExpiryThreadIntervalSeconds="120"
+		memoryStoreEvictionPolicy="LRU">
+		<!-- <cacheEventListenerFactory
+			class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"
+			properties="replicateAsynchronously=true, replicatePuts=true,
+                replicateUpdates=true, replicateUpdatesViaCopy=true, replicateRemovals=true" />-->
+	</cache>
+
+	<!-- 系统参数缓存 -->
+	<cache name="CACHE_AUTH_ARVIABLE" maxElementsInMemory="5000"
+		eternal="true" timeToIdleSeconds="0" timeToLiveSeconds="0"
+		overflowToDisk="false" diskSpoolBufferSizeMB="50" maxElementsOnDisk="10000"
+		diskPersistent="false" diskExpiryThreadIntervalSeconds="120"
+		memoryStoreEvictionPolicy="LRU">
+		<!-- <cacheEventListenerFactory
+			class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"
+			properties="replicateAsynchronously=true, replicatePuts=true,
+                replicateUpdates=true, replicateUpdatesViaCopy=true, replicateRemovals=true" />-->
+	</cache>
+	
+
+	<!-- Cache配置 name：Cache的唯一标识 maxElementsInMemory：内存中最大缓存对象数。 maxElementsOnDisk：磁盘中最大缓存对象数，若是0表示无穷大。
+		eternal：Element是否永久有效，一但设置了，timeout将不起作用。 overflowToDisk：配置此属性，当内存中Element数量达到maxElementsInMemory时，Ehcache将会Element写到磁盘中。
+		timeToIdleSeconds：设置Element在失效前的允许闲置时间。仅当element不是永久有效时使用，可选属性，默认值是0，也就是可闲置时间无穷大。
+		timeToLiveSeconds：设置Element在失效前允许存活时间。最大时间介于创建时间和失效时间之间。仅当element不是永久有效时使用，默认是0.，也就是element存活时间无穷大。
+		diskPersistent：是否缓存虚拟机重启期数据。（这个虚拟机是指什么虚拟机一直没看明白是什么,有高人还希望能指点一二）。 diskExpiryThreadIntervalSeconds：磁盘失效线程运行时间间隔，默认是120秒。
+		diskSpoolBufferSizeMB：这个参数设置DiskStore（磁盘缓存）的缓存区大小。默认是30MB。每个Cache都应该有自己的一个缓冲区。
+		memoryStoreEvictionPolicy：当达到maxElementsInMemory限制时，Ehcache将会根据指定的策略去清理内存。默认策略是LRU（最近最少使用）。你可以设置为FIFO（先进先出）或是LFU（较少使用）。这里比较遗憾，Ehcache并没有提供一个用户定制策略的接口，仅仅支持三种指定策略，感觉做的不够理想。
+		1分钟=60s 5分钟=300s 30分钟=1800s 1小时=3600s 12小时=43200s 1天=86400s 2天=172800s -->
+
+</ehcache>

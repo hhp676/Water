@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hongguaninfo.hgdf.adp.mapper.sys.SysNoticeMapper">
+
+	<!-- Each field corresponding alias, convenient call -->
+	<sql id="SQL_SYS_NOTICE_COLUMN">
+		sn.NOTIFY_ID_ notifyId, sn.STATUS_ status, sn.AUTO_PUB_ autoPub, sn.START_TIME_
+		startTime, sn.END_TIME_ endTime, sn.TITLE_ title, sn.CONTENT_ content,
+		sn.SORT_ID_ sortId, sn.IS_DELETE_ isDelete, sn.IS_FINAL_ isFinal,
+		sn.CRT_TIME_ crtTime, sn.UPD_TIME_ updTime, sn.CRT_USERID_ crtUserid,
+		sn.UPD_USERID_ updUserid
+	</sql>
+
+	<!-- whether multiple fields is empty -->
+	<sql id="SQL_SYS_NOTICE_WHERE">
+		<if test="notifyId !=null ">
+			AND sn.NOTIFY_ID_=#{notifyId}
+		</if>
+		<if test="status !=null ">
+			AND sn.STATUS_=#{status}
+		</if>
+		<if test="autoPub !=null ">
+			AND sn.AUTO_PUB_=#{autoPub}
+		</if>
+		<if test="startTime !=null ">
+			AND sn.START_TIME_=#{startTime}
+		</if>
+		<if test="endTime !=null ">
+			AND sn.END_TIME_=#{endTime}
+		</if>
+		<if test="queryDate !=null ">
+			 <![CDATA[ AND START_TIME_ <= "${queryDate}"  AND END_TIME_ >= "${queryDate}"]]>   
+		</if>
+		
+		<if test="title !=null and title.length()!=0 ">
+			AND sn.TITLE_=#{title}
+		</if>
+		<if test="content !=null and content.length()!=0 ">
+			AND sn.CONTENT_=#{content}
+		</if>
+		<if test="sortId !=null ">
+			AND sn.SORT_ID_=#{sortId}
+		</if>
+		<if test="isDelete !=null ">
+			AND sn.IS_DELETE_=#{isDelete}
+		</if>
+		<if test="isFinal !=null ">
+			AND sn.IS_FINAL_=#{isFinal}
+		</if>
+		<if test="crtTime !=null ">
+			AND sn.CRT_TIME_=#{crtTime}
+		</if>
+		<if test="updTime !=null ">
+			AND sn.UPD_TIME_=#{updTime}
+		</if>
+		<if test="crtUserid !=null ">
+			AND sn.CRT_USERID_=#{crtUserid}
+		</if>
+		<if test="updUserid !=null ">
+			AND sn.UPD_USERID_=#{updUserid}
+		</if>
+	</sql>
+
+	<!-- Query All -->
+	<select id="getList" parameterType="SysNotice" resultType="SysNotice">
+		select
+		<include refid="SQL_SYS_NOTICE_COLUMN" />
+		from SYS_NOTICE sn
+		<where>
+			<include refid="SQL_SYS_NOTICE_WHERE" />
+		</where>
+		<if test="orderStr != null and orderStr.length() != 0">
+			ORDER BY ${orderStr}
+		</if>
+		<if test="orderStr == null or orderStr.length() == 0">
+			ORDER BY
+			sn.NOTIFY_ID_ desc
+		</if>
+	</select>
+
+	<!-- Statistical line -->
+	<select id="getListCount" parameterType="SysNotice" resultType="int">
+		select count(*) as counts
+		from SYS_NOTICE sn
+		<where>
+			<include refid="SQL_SYS_NOTICE_WHERE" />
+		</where>
+	</select>
+
+	<!-- According to the id check record -->
+	<select id="getById" parameterType="int" resultType="SysNotice">
+		select
+		<include refid="SQL_SYS_NOTICE_COLUMN" />
+		from SYS_NOTICE sn
+		<where>
+			sn.NOTIFY_ID_ = #{idValue}
+		</where>
+	</select>
+
+	<!-- add é»è®¤ä½¿ç¨å¨å±ID -->
+	<!-- FOR ORACLE DEMO <selectKey resultType="java.math.BigDecimal" keyProperty="varId" 
+		order="BEFORE"> select SEQ_SYS_VARIABLE.nextVal as varId from dual </selectKey> -->
+	<!-- FOR MYSQL KEY DEMO <selectKey keyProperty="varId" resultType="java.math.BigDecimal" 
+		order="AFTER"> select LAST_INSERT_ID() </selectKey> -->
+	<insert id="insert" parameterType="SysNotice">
+		insert into SYS_NOTICE
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="notifyId != null">
+				NOTIFY_ID_,
+			</if>
+			<if test="status != null">
+				STATUS_,
+			</if>
+			<if test="autoPub != null">
+				AUTO_PUB_,
+			</if>
+			<if test="startTime != null">
+				START_TIME_,
+			</if>
+			<if test="endTime != null">
+				END_TIME_,
+			</if>
+			<if test="title != null">
+				TITLE_,
+			</if>
+			<if test="content != null">
+				CONTENT_,
+			</if>
+			<if test="sortId != null">
+				SORT_ID_,
+			</if>
+			<if test="isDelete != null">
+				IS_DELETE_,
+			</if>
+			<if test="isFinal != null">
+				IS_FINAL_,
+			</if>
+			<if test="crtTime != null">
+				CRT_TIME_,
+			</if>
+			<if test="updTime != null">
+				UPD_TIME_,
+			</if>
+			<if test="crtUserid != null">
+				CRT_USERID_,
+			</if>
+			<if test="updUserid != null">
+				UPD_USERID_,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="notifyId != null">
+				#{notifyId,jdbcType=NUMERIC},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=NUMERIC},
+			</if>
+			<if test="autoPub != null">
+				#{autoPub,jdbcType=NUMERIC},
+			</if>
+			<if test="startTime != null">
+				#{startTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endTime != null">
+				#{endTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="title != null">
+				#{title,jdbcType=VARCHAR},
+			</if>
+			<if test="content != null">
+				#{content,jdbcType=VARCHAR},
+			</if>
+			<if test="sortId != null">
+				#{sortId,jdbcType=NUMERIC},
+			</if>
+			<if test="isDelete != null">
+				#{isDelete,jdbcType=NUMERIC},
+			</if>
+			<if test="isFinal != null">
+				#{isFinal,jdbcType=NUMERIC},
+			</if>
+			<if test="crtTime != null">
+				#{crtTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updTime != null">
+				#{updTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="crtUserid != null">
+				#{crtUserid,jdbcType=NUMERIC},
+			</if>
+			<if test="updUserid != null">
+				#{updUserid,jdbcType=NUMERIC},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- update -->
+	<update id="update" parameterType="SysNotice">
+		UPDATE SYS_NOTICE
+		<set>
+			<if test="notifyId !=null">
+				NOTIFY_ID_ = #{notifyId} ,
+			</if>
+			<if test="status !=null">
+				STATUS_ = #{status} ,
+			</if>
+			<if test="autoPub !=null">
+				AUTO_PUB_ = #{autoPub} ,
+			</if>
+			<if test="startTime !=null">
+				START_TIME_ = #{startTime} ,
+			</if>
+			<if test="endTime !=null">
+				END_TIME_ = #{endTime} ,
+			</if>
+			<if test="title !=null">
+				TITLE_ = #{title} ,
+			</if>
+			<if test="content !=null">
+				CONTENT_ = #{content} ,
+			</if>
+			<if test="sortId !=null">
+				SORT_ID_ = #{sortId} ,
+			</if>
+			<if test="isDelete !=null">
+				IS_DELETE_ = #{isDelete} ,
+			</if>
+			<if test="isFinal !=null">
+				IS_FINAL_ = #{isFinal} ,
+			</if>
+			<if test="crtTime !=null">
+				CRT_TIME_ = #{crtTime} ,
+			</if>
+			<if test="updTime !=null">
+				UPD_TIME_ = #{updTime} ,
+			</if>
+			<if test="crtUserid !=null">
+				CRT_USERID_ = #{crtUserid} ,
+			</if>
+			<if test="updUserid !=null">
+				UPD_USERID_ = #{updUserid}
+			</if>
+		</set>
+		WHERE
+		NOTIFY_ID_=#{notifyId}
+	</update>
+
+	<!-- delete -->
+	<delete id="delete" parameterType="SysNotice">
+		DELETE FROM SYS_NOTICE
+		WHERE
+		NOTIFY_ID_=#{notifyId}
+	</delete>
+
+	<!-- delete(ids) -->
+	<delete id="deleteById" parameterType="java.lang.Integer">
+		DELETE FROM sys_notice
+		WHERE
+		NOTIFY_ID_=#{notifyId}
+	</delete>
+
+</mapper>

@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hongguaninfo.hgdf.adp.mapper.sys.SysUserStateChangeMapper">
+
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_USER_STATE_CHANGE_COLUMN">
+        susc.STATE_CHANGE_ID_ stateChangeId,
+        susc.ACCOUNT_ID_ accountId,
+        susc.TYPE_ type,
+        susc.IP_ ip,
+        susc.CRT_TIME_ crtTime,
+        susc.ORIGIN_STATE_ originState,
+        susc.CURRENT_STATE_ currentState,
+        susc.IS_CURRENT_ isCurrent,
+        susc.DESCR_ descr,
+        susc.CRT_TYPE_ crtType,
+        susc.IS_DELETE_ isDelete,
+        susc.IS_FINAL_ isFinal,
+        susc.UPD_TIME_ updTime,
+        susc.CRT_USER_ID_ crtUserId,
+        susc.UPD_USER_ID_ updUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_USER_STATE_CHANGE_WHERE">
+        <if test="stateChangeId != null">
+	            AND susc.STATE_CHANGE_ID_ = #{stateChangeId}
+        </if>
+        	<if test="accountId != null">
+	            AND susc.ACCOUNT_ID_ = #{accountId}
+        </if>
+        	<if test="type != null">
+	            AND susc.TYPE_ = #{type}
+        </if>
+        		<if test="ip != null and ip.length() != 0">
+        		AND susc.IP_ like '%${ip}%'
+        </if>
+        	<if test="crtTime != null">
+	            AND susc.CRT_TIME_ = #{crtTime}
+        </if>
+        	<if test="originState != null">
+	            AND susc.ORIGIN_STATE_ = #{originState}
+        </if>
+        	<if test="currentState != null">
+	            AND susc.CURRENT_STATE_ = #{currentState}
+        </if>
+        	<if test="isCurrent != null">
+	            AND susc.IS_CURRENT_ = #{isCurrent}
+        </if>
+        		<if test="descr != null and descr.length() != 0">
+        		AND susc.DESCR_ like '%${descr}%'
+        </if>
+        	<if test="crtType != null">
+	            AND susc.CRT_TYPE_ = #{crtType}
+        </if>
+        	<if test="isDelete != null">
+	            AND susc.IS_DELETE_ = #{isDelete}
+        </if>
+        	<if test="isFinal != null">
+	            AND susc.IS_FINAL_ = #{isFinal}
+        </if>
+        	<if test="updTime != null">
+	            AND susc.UPD_TIME_ = #{updTime}
+        </if>
+        	<if test="crtUserId != null">
+	            AND susc.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        	<if test="updUserId != null">
+	            AND susc.UPD_USER_ID_ = #{updUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+         <if test="startTime != null">
+            AND susc.CRT_TIME_ &gt; #{startTime}
+        </if>
+        <if test="userName != null and userName.length() != 0">
+        	AND suu.USER_NAME_ like '%${userName}%'
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="Integer" resultType="SysUserStateChange">
+        select <include  refid="SQL_SYS_USER_STATE_CHANGE_COLUMN" />
+        from SYS_USER_STATE_CHANGE susc
+        <where>
+            susc.STATE_CHANGE_ID_ = #{stateChangeId}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysUserStateChange" resultType="SysUserStateChange">
+        select <include  refid="SQL_SYS_USER_STATE_CHANGE_COLUMN"/>,suu.USER_NAME_ userName
+        from SYS_USER_STATE_CHANGE susc
+        LEFT JOIN sys_user suu ON suu.USER_ID_ = susc.ACCOUNT_ID_
+        <where>
+            <include  refid="SQL_SYS_USER_STATE_CHANGE_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                susc.STATE_CHANGE_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysUserStateChange" resultType="int">
+        select count(
+            susc.STATE_CHANGE_ID_
+        ) as counts
+        from SYS_USER_STATE_CHANGE susc
+        LEFT JOIN sys_user suu ON suu.USER_ID_ = susc.ACCOUNT_ID_
+        <where>
+            <include  refid="SQL_SYS_USER_STATE_CHANGE_WHERE"/>
+        </where>
+    </select>
+    
+	<!-- add 默认使用全局ID -->
+	<insert id="insert" parameterType="SysUserStateChange" >
+		insert into SYS_USER_STATE_CHANGE 
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+		  	<if test="stateChangeId != null">
+        		STATE_CHANGE_ID_,
+      		</if>
+		  	<if test="accountId != null">
+        		ACCOUNT_ID_,
+      		</if>
+		  	<if test="type != null">
+        		TYPE_,
+      		</if>
+		  	<if test="ip != null">
+        		IP_,
+      		</if>
+		  	<if test="crtTime != null">
+        		CRT_TIME_,
+      		</if>
+		  	<if test="originState != null">
+        		ORIGIN_STATE_,
+      		</if>
+		  	<if test="currentState != null">
+        		CURRENT_STATE_,
+      		</if>
+		  	<if test="isCurrent != null">
+        		IS_CURRENT_,
+      		</if>
+		  	<if test="descr != null">
+        		DESCR_,
+      		</if>
+		  	<if test="crtType != null">
+        		CRT_TYPE_,
+      		</if>
+		  	<if test="isDelete != null">
+        		IS_DELETE_,
+      		</if>
+		  	<if test="isFinal != null">
+        		IS_FINAL_,
+      		</if>
+		  	<if test="updTime != null">
+        		UPD_TIME_,
+      		</if>
+		  	<if test="crtUserId != null">
+        		CRT_USER_ID_,
+      		</if>
+		  	<if test="updUserId != null">
+        		UPD_USER_ID_,
+      		</if>
+		</trim> 
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			  	<if test="stateChangeId != null">
+			  	  	   #{stateChangeId,jdbcType=NUMERIC},
+			  	</if>  
+			  	<if test="accountId != null">
+			  	  	   #{accountId,jdbcType=NUMERIC},
+			  	</if>  
+			  	<if test="type != null">
+			  	  	   #{type,jdbcType=NUMERIC},
+			  	</if>  
+			  	<if test="ip != null">
+			  	  	   #{ip,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="crtTime != null">
+			  	  	   #{crtTime,jdbcType=TIMESTAMP},
+			  	</if>  
+			  	<if test="originState != null">
+			  	  	   #{originState,jdbcType=NUMERIC},
+			  	</if>  
+			  	<if test="currentState != null">
+			  	  	   #{currentState,jdbcType=NUMERIC},
+			  	</if>  
+			  	<if test="isCurrent != null">
+			  	  	   #{isCurrent,jdbcType=NUMERIC},
+			  	</if>  
+			  	<if test="descr != null">
+			  	  	   #{descr,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="crtType != null">
+			  	  	   #{crtType,jdbcType=NUMERIC},
+			  	</if>  
+			  	<if test="isDelete != null">
+			  	  	   #{isDelete,jdbcType=NUMERIC},
+			  	</if>  
+			  	<if test="isFinal != null">
+			  	  	   #{isFinal,jdbcType=NUMERIC},
+			  	</if>  
+			  	<if test="updTime != null">
+			  	  	   #{updTime,jdbcType=TIMESTAMP},
+			  	</if>  
+			  	<if test="crtUserId != null">
+			  	  	   #{crtUserId,jdbcType=NUMERIC},
+			  	</if>  
+			  	<if test="updUserId != null">
+			  	  	   #{updUserId,jdbcType=NUMERIC},
+			  	</if>  
+		</trim>
+    </insert>
+
+	<!-- update  -->
+	<update id="update" parameterType="SysUserStateChange">
+		UPDATE SYS_USER_STATE_CHANGE susc
+		<set>
+		  	<if test="stateChangeId != null">
+        		STATE_CHANGE_ID_ = #{stateChangeId} ,
+      		</if>
+		  	<if test="accountId != null">
+        		ACCOUNT_ID_ = #{accountId} ,
+      		</if>
+		  	<if test="type != null">
+        		TYPE_ = #{type} ,
+      		</if>
+		  	<if test="ip != null">
+        		IP_ = #{ip} ,
+      		</if>
+		  	<if test="crtTime != null">
+        		CRT_TIME_ = #{crtTime} ,
+      		</if>
+		  	<if test="originState != null">
+        		ORIGIN_STATE_ = #{originState} ,
+      		</if>
+		  	<if test="currentState != null">
+        		CURRENT_STATE_ = #{currentState} ,
+      		</if>
+		  	<if test="isCurrent != null">
+        		IS_CURRENT_ = #{isCurrent} ,
+      		</if>
+		  	<if test="descr != null">
+        		DESCR_ = #{descr} ,
+      		</if>
+		  	<if test="crtType != null">
+        		CRT_TYPE_ = #{crtType} ,
+      		</if>
+		  	<if test="isDelete != null">
+        		IS_DELETE_ = #{isDelete} ,
+      		</if>
+		  	<if test="isFinal != null">
+        		IS_FINAL_ = #{isFinal} ,
+      		</if>
+		  	<if test="updTime != null">
+        		UPD_TIME_ = #{updTime} ,
+      		</if>
+		  	<if test="crtUserId != null">
+        		CRT_USER_ID_ = #{crtUserId} ,
+      		</if>
+		  	<if test="updUserId != null">
+        		UPD_USER_ID_ = #{updUserId} 
+      		</if>
+		 
+		</set>
+		WHERE
+            susc.STATE_CHANGE_ID_ = #{stateChangeId}
+	</update>
+
+	<!-- delete  -->
+	<delete id="delete" parameterType="SysUserStateChange">
+		DELETE FROM SYS_USER_STATE_CHANGE
+		WHERE
+            susc.STATE_CHANGE_ID_ = #{stateChangeId}
+	</delete>
+ 
+</mapper>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hongguaninfo.hgdf.adp.mapper.sys.SysUgroupAuthJoinMapper">
+	
+	<!-- The corresponding field and type -->
+	<resultMap type="SysUgroupAuthJoin" id="ResultMap">
+					<result column="groupId" javaType="java.math.BigDecimal" property="groupId" />
+					<result column="authId" javaType="java.math.BigDecimal" property="authId" />
+					<result column="isFinal" javaType="Integer" property="isFinal" />
+					<result column="crtTime" javaType="java.util.Date" property="crtTime" />
+					<result column="crtUserid" javaType="java.math.BigDecimal" property="crtUserid" />
+					<result column="authType" javaType="Integer" property="authType" />
+			</resultMap>
+
+		<!-- Each field corresponding alias, convenient call -->
+	<sql id="SQL_SYS_UGROUP_AUTH_JOIN_COLUMN">
+					SUAJ.GROUP_ID_ groupId,					SUAJ.AUTH_ID_ authId,					SUAJ.IS_FINAL_ isFinal,					SUAJ.CRT_TIME_ crtTime,					SUAJ.CRT_USERID_ crtUserid,					SUAJ.AUTH_TYPE_ authType			</sql>
+
+		<!-- whether multiple fields is empty -->
+    <sql id="SQL_SYS_UGROUP_AUTH_JOIN_WHERE">
+   			        				<if test="groupId !=null ">
+								AND SUAJ.GROUP_ID_=#{groupId}
+				</if>
+			        				<if test="authId !=null ">
+								AND SUAJ.AUTH_ID_=#{authId}
+				</if>
+			        				<if test="isFinal !=null ">
+								AND SUAJ.IS_FINAL_=#{isFinal}
+				</if>
+			        				<if test="crtTime !=null ">
+								AND SUAJ.CRT_TIME_=#{crtTime}
+				</if>
+			        				<if test="crtUserid !=null ">
+								AND SUAJ.CRT_USERID_=#{crtUserid}
+				</if>
+			        				<if test="authType !=null ">
+								AND SUAJ.AUTH_TYPE_=#{authType}
+				</if>
+			</sql>
+
+		<!-- Query All  -->
+	<select id="getList" parameterType="SysUgroupAuthJoin" resultType="SysUgroupAuthJoin">
+		select <include  refid="SQL_SYS_UGROUP_AUTH_JOIN_COLUMN"/>
+		from SYS_UGROUP_AUTH_JOIN SUAJ
+		<where>
+			<include  refid="SQL_SYS_UGROUP_AUTH_JOIN_WHERE"/>
+		</where>
+		<if test="orderStr != null and orderStr.length() != 0">
+			ORDER BY ${orderStr}
+		</if>
+		<if test="orderStr == null or orderStr.length() == 0">
+			ORDER BY SUAJ.AUTH_ID_ desc
+		</if>
+	</select>
+
+		<!-- Statistical line   -->
+	<select id="getListCount" parameterType="SysUgroupAuthJoin" resultType="int">
+		select count(*) as counts
+		from SYS_UGROUP_AUTH_JOIN SUAJ
+		<where>
+			<include  refid="SQL_SYS_UGROUP_AUTH_JOIN_WHERE"/>
+		</where>
+	</select>
+
+		<!-- According to the id check record  -->
+	<select id="getById" parameterType="int" resultType="SysUgroupAuthJoin">
+		select <include  refid="SQL_SYS_UGROUP_AUTH_JOIN_COLUMN"/>
+		from SYS_UGROUP_AUTH_JOIN SUAJ
+		<where>
+							SUAJ.GROUP_ID_ = #{idValue}
+							SUAJ.AUTH_ID_ = #{idValue}
+					</where>
+	</select>
+
+		<!-- add  -->
+	<insert id="insert" parameterType="SysUgroupAuthJoin" >
+		insert into SYS_UGROUP_AUTH_JOIN (
+		GROUP_ID_ ,	AUTH_ID_ ,	IS_FINAL_ ,	CRT_TIME_ ,	CRT_USERID_ ,AUTH_TYPE_ )
+		VALUES (#{groupId,jdbcType=NUMERIC} ,#{authId,jdbcType=NUMERIC} ,#{isFinal,jdbcType=NUMERIC} ,
+		#{crtTime,jdbcType=DATE} ,	#{crtUserid,jdbcType=NUMERIC} ,	#{authType,jdbcType=NUMERIC} )
+    </insert>
+
+		<!-- update  -->
+	<update id="update" parameterType="SysUgroupAuthJoin">
+		UPDATE SYS_UGROUP_AUTH_JOIN
+		<set>
+					<if test="groupId !=null">
+				GROUP_ID_ = #{groupId}  ,			</if>
+					<if test="authId !=null">
+				AUTH_ID_ = #{authId}  ,			</if>
+					<if test="isFinal !=null">
+				IS_FINAL_ = #{isFinal}  ,			</if>
+					<if test="crtTime !=null">
+				CRT_TIME_ = #{crtTime}  ,			</if>
+					<if test="crtUserid !=null">
+				CRT_USERID_ = #{crtUserid}  ,			</if>
+					<if test="authType !=null">
+				AUTH_TYPE_ = #{authType}  			</if>
+				</set>
+		WHERE
+					GROUP_ID_=#{groupId}  and 					AUTH_ID_=#{authId} 				AND ISDELETE=0 AND ISFINAL=0
+	</update>
+
+		<!-- delete  -->
+	<delete id="delete" parameterType="SysUgroupAuthJoin">
+		DELETE FROM SYS_UGROUP_AUTH_JOIN
+		WHERE
+					GROUP_ID_=#{groupId}  and 					AUTH_ID_=#{authId} 			</delete>
+
+		<!-- delete(ids)  -->
+	<delete id="deleteById" parameterType="java.lang.Integer">
+		DELETE FROM SYS_UGROUP_AUTH_JOIN
+		WHERE GROUP_ID_=#{groupId}  and IS_FINAL_=	0			
+	</delete>
+	<delete id="deleteByAuthId" parameterType="java.lang.Integer">
+		DELETE FROM SYS_UGROUP_AUTH_JOIN
+		WHERE AUTH_ID_=#{authId}  and IS_FINAL_=	0			
+	</delete>
+</mapper>

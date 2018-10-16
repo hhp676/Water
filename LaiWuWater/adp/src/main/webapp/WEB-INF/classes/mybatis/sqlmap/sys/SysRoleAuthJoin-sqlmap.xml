@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hongguaninfo.hgdf.adp.mapper.sys.SysRoleAuthJoinMapper">
+	
+	<!-- The corresponding field and type -->
+	<resultMap type="SysRoleAuthJoin" id="ResultMap">
+					<result column="roleId" javaType="java.math.BigDecimal" property="roleId" />
+					<result column="authId" javaType="java.math.BigDecimal" property="authId" />
+					<result column="isFinal" javaType="Integer" property="isFinal" />
+					<result column="crtTime" jdbcType="TIMESTAMP" property="crtTime" />
+					<result column="crtUserid" javaType="java.math.BigDecimal" property="crtUserid" />
+	</resultMap>
+
+		<!-- Each field corresponding alias, convenient call -->
+	<sql id="SQL_SYS_ROLE_AUTH_JOIN_COLUMN">
+			SRAJ.ROLE_ID_ roleId,	SRAJ.AUTH_ID_ authId,	SRAJ.IS_FINAL_ isFinal,		SRAJ.CRT_TIME_ crtTime,	SRAJ.CRT_USERID_ crtUserid			
+	</sql>
+
+		<!-- whether multiple fields is empty -->
+    <sql id="SQL_SYS_ROLE_AUTH_JOIN_WHERE">
+   			        				<if test="roleId !=null ">
+								AND SRAJ.ROLE_ID_=#{roleId}
+				</if>
+			        				<if test="authId !=null ">
+								AND SRAJ.AUTH_ID_=#{authId}
+				</if>
+			        				<if test="isFinal !=null ">
+								AND SRAJ.IS_FINAL_=#{isFinal}
+				</if>
+			        				<if test="crtTime !=null ">
+								AND SRAJ.CRT_TIME_=#{crtTime}
+				</if>
+			        				<if test="crtUserid !=null ">
+								AND SRAJ.CRT_USERID_=#{crtUserid}
+				</if>
+			</sql>
+
+		<!-- Query All  -->
+	<select id="getList" parameterType="SysRoleAuthJoin" resultType="SysRoleAuthJoin">
+		select <include  refid="SQL_SYS_ROLE_AUTH_JOIN_COLUMN"/>
+		from SYS_ROLE_AUTH_JOIN SRAJ
+		<where>
+			<include  refid="SQL_SYS_ROLE_AUTH_JOIN_WHERE"/>
+		</where>
+		<if test="orderStr != null and orderStr.length() != 0">
+			ORDER BY ${orderStr}
+		</if>
+		<if test="orderStr == null or orderStr.length() == 0">
+			ORDER BY SRAJ.AUTH_ID_ desc
+		</if>
+	</select>
+
+		<!-- Statistical line   -->
+	<select id="getListCount" parameterType="SysRoleAuthJoin" resultType="int">
+		select count(*) as counts
+		from SYS_ROLE_AUTH_JOIN SRAJ
+		<where>
+			<include  refid="SQL_SYS_ROLE_AUTH_JOIN_WHERE"/>
+		</where>
+	</select>
+
+		<!-- According to the id check record  -->
+	<select id="getById" parameterType="int" resultType="SysRoleAuthJoin">
+		select <include  refid="SQL_SYS_ROLE_AUTH_JOIN_COLUMN"/>
+		from SYS_ROLE_AUTH_JOIN SRAJ
+		<where>
+							SRAJ.ROLE_ID_ = #{idValue}
+							SRAJ.AUTH_ID_ = #{idValue}
+					</where>
+	</select>
+
+		<!-- add  -->
+	<insert id="insert" parameterType="SysRoleAuthJoin" >
+		insert into SYS_ROLE_AUTH_JOIN (
+		ROLE_ID_ ,AUTH_ID_ ,	IS_FINAL_ ,	CRT_TIME_ ,	CRT_USERID_ )
+		 VALUES (#{roleId,jdbcType=NUMERIC} ,#{authId,jdbcType=NUMERIC} ,
+		 #{isFinal,jdbcType=NUMERIC} ,#{crtTime,jdbcType=TIMESTAMP} ,#{crtUserid,jdbcType=NUMERIC})
+    </insert>
+
+	
+
+		<!-- delete  -->
+	<delete id="delete" parameterType="SysRoleAuthJoin">
+		DELETE FROM SYS_ROLE_AUTH_JOIN
+		WHERE
+					ROLE_ID_=#{roleId}  and 					AUTH_ID_=#{authId} 			</delete>
+
+		<!-- delete(ids)  -->
+	<delete id="deleteById" parameterType="java.lang.Integer">
+		DELETE FROM SYS_ROLE_AUTH_JOIN
+		WHERE ROLE_ID_=#{roleId}  and 	IS_FINAL_=	0	
+	</delete>
+	<delete id="deleteByAuthId" parameterType="java.lang.Integer">
+		DELETE FROM SYS_ROLE_AUTH_JOIN
+		WHERE AUTH_ID_=#{authId}  and 	IS_FINAL_=	0	
+	</delete>
+</mapper>

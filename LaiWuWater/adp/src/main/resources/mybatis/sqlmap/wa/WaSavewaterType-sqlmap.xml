@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hongguaninfo.hgdf.wa.mapper.WaSavewaterTypeMapper">
+
+
+    <!-- sqlColumn -->
+    <sql id="SQL_WA_SAVEWATER_TYPE_COLUMN">
+        wst.ID_ id,
+        wst.CODE_ code,
+        wst.CONTENT_ content,
+        wst.IS_DELTE_ isDelte,
+        wst.CRT_TIME_ crtTime,
+        wst.UPD_TIME_ updTime
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_WA_SAVEWATER_TYPE_WHERE">
+        	<if test="id != null">
+	            AND wst.ID_ = #{id}
+        </if>
+        		<if test="code != null and code.length() != 0">
+        		AND wst.CODE_ like '%${code}%'
+        </if>
+        		<if test="content != null and content.length() != 0">
+        		AND wst.CONTENT_ like '%${content}%'
+        </if>
+        	<if test="isDelte != null">
+	            AND wst.IS_DELTE_ = #{isDelte}
+        </if>
+        	<if test="crtTime != null">
+	            AND wst.CRT_TIME_ = #{crtTime}
+        </if>
+        	<if test="updTime != null">
+	            AND wst.UPD_TIME_ = #{updTime}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultType="WaSavewaterType">
+        select <include  refid="SQL_WA_SAVEWATER_TYPE_COLUMN" />
+        from WA_SAVEWATER_TYPE wst
+        <where>
+            wst.ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="WaSavewaterType" resultType="WaSavewaterType">
+        select <include  refid="SQL_WA_SAVEWATER_TYPE_COLUMN"/>
+        from WA_SAVEWATER_TYPE wst
+        <where>
+            <include  refid="SQL_WA_SAVEWATER_TYPE_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                wst.ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="WaSavewaterType" resultType="int">
+        select count(
+            wst.ID_
+        ) as counts
+        from WA_SAVEWATER_TYPE wst
+        <where>
+            <include  refid="SQL_WA_SAVEWATER_TYPE_WHERE"/>
+        </where>
+    </select>
+    
+	<!-- add 默认使用全局ID -->
+	<insert id="insert" parameterType="WaSavewaterType" >
+		insert into WA_SAVEWATER_TYPE 
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+		  	<if test="id != null">
+        		ID_,
+      		</if>
+		  	<if test="code != null">
+        		CODE_,
+      		</if>
+		  	<if test="content != null">
+        		CONTENT_,
+      		</if>
+		  	<if test="isDelte != null">
+        		IS_DELTE_,
+      		</if>
+		  	<if test="crtTime != null">
+        		CRT_TIME_,
+      		</if>
+		  	<if test="updTime != null">
+        		UPD_TIME_,
+      		</if>
+		</trim> 
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			  	<if test="id != null">
+			  	  	   #{id,jdbcType=NUMERIC},
+			  	</if>  
+			  	<if test="code != null">
+			  	  	   #{code,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="content != null">
+			  	  	   #{content,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="isDelte != null">
+			  	  	   #{isDelte,jdbcType=NUMERIC},
+			  	</if>  
+			  	<if test="crtTime != null">
+			  	  	   #{crtTime,jdbcType=TIMESTAMP},
+			  	</if>  
+			  	<if test="updTime != null">
+			  	  	   #{updTime,jdbcType=TIMESTAMP},
+			  	</if>  
+		</trim>
+    </insert>
+
+	<!-- update  -->
+	<update id="update" parameterType="WaSavewaterType">
+		UPDATE WA_SAVEWATER_TYPE wst
+		<set>
+		  	<if test="id != null">
+        		ID_ = #{id} ,
+      		</if>
+		  	<if test="code != null">
+        		CODE_ = #{code} ,
+      		</if>
+		  	<if test="content != null">
+        		CONTENT_ = #{content} ,
+      		</if>
+		  	<if test="isDelte != null">
+        		IS_DELTE_ = #{isDelte} ,
+      		</if>
+		  	<if test="crtTime != null">
+        		CRT_TIME_ = #{crtTime} ,
+      		</if>
+		  	<if test="updTime != null">
+        		UPD_TIME_ = #{updTime} 
+      		</if>
+		 
+		</set>
+		WHERE
+            wst.ID_ = #{id}
+	</update>
+
+	<!-- delete  -->
+	<delete id="delete" parameterType="WaSavewaterType">
+		DELETE FROM WA_SAVEWATER_TYPE wst
+		WHERE
+            wst.ID_ = #{id}
+	</delete>
+ 
+</mapper>

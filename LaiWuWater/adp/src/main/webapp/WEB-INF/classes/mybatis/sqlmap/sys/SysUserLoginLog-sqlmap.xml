@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hongguaninfo.hgdf.adp.mapper.sys.SysUserLoginLogMapper">
+
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_USER_LOGIN_LOG_COLUMN">
+        sull.LOGIN_LOG_ID_ loginLogId,
+        sull.ACCOUNT_ID_ accountId,
+        sull.LOGIN_TYPE_ loginType,
+        sull.OPER_CODE_ operCode,
+        sull.OPER_NAME_ operName,
+        sull.ENG_NAME_ engName,
+        sull.REQ_URI_ reqUri,
+        sull.OPER_IP_ operIp,
+        sull.OPER_RES_ operRes,
+        sull.EXCEPTION_NAME_ exceptionName,
+        sull.IS_ACCUMULATE_LOGIN_TIMES_ isAccumulateLoginTimes,
+        sull.CONTENT_ content,
+        sull.REQ_TYPE_ reqType,
+        sull.REQ_METHOD_ reqMethod,
+        sull.BROWSER_TYPE_ browserType,
+        sull.REQ_USER_AGENT_ reqUserAgent,
+        sull.LOGIN_LOCATION_ loginLocation,
+        sull.IS_FINAL_ isFinal,
+        sull.CRT_TIME_ crtTime,
+        sull.CRT_USER_ID_ crtUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_USER_LOGIN_LOG_WHERE">
+        	<if test="loginLogId != null">
+	            AND sull.LOGIN_LOG_ID_ = #{loginLogId}
+        </if>
+        	<if test="accountId != null">
+	            AND sull.ACCOUNT_ID_ = #{accountId}
+        </if>
+        		<if test="loginType != null and loginType.length() != 0">
+        		AND sull.LOGIN_TYPE_ like '%${loginType}%'
+        </if>
+        		<if test="operCode != null and operCode.length() != 0">
+        		AND sull.OPER_CODE_ like '%${operCode}%'
+        </if>
+        		<if test="operName != null and operName.length() != 0">
+        		AND sull.OPER_NAME_ like '%${operName}%'
+        </if>
+        		<if test="engName != null and engName.length() != 0">
+        		AND sull.ENG_NAME_ like '%${engName}%'
+        </if>
+        		<if test="reqUri != null and reqUri.length() != 0">
+        		AND sull.REQ_URI_ like '%${reqUri}%'
+        </if>
+        		<if test="operIp != null and operIp.length() != 0">
+        		AND sull.OPER_IP_ like '%${operIp}%'
+        </if>
+        	<if test="operRes != null">
+	            AND sull.OPER_RES_ = #{operRes}
+        </if>
+        		<if test="exceptionName != null and exceptionName.length() != 0">
+        		AND sull.EXCEPTION_NAME_ like '%${exceptionName}%'
+        </if>
+        	<if test="isAccumulateLoginTimes != null">
+	            AND sull.IS_ACCUMULATE_LOGIN_TIMES_ = #{isAccumulateLoginTimes}
+        </if>
+        		<if test="content != null and content.length() != 0">
+        		AND sull.CONTENT_ like '%${content}%'
+        </if>
+        	<if test="reqType != null">
+	            AND sull.REQ_TYPE_ = #{reqType}
+        </if>
+        		<if test="reqMethod != null and reqMethod.length() != 0">
+        		AND sull.REQ_METHOD_ like '%${reqMethod}%'
+        </if>
+        		<if test="browserType != null and browserType.length() != 0">
+        		AND sull.BROWSER_TYPE_ like '%${browserType}%'
+        </if>
+        		<if test="reqUserAgent != null and reqUserAgent.length() != 0">
+        		AND sull.REQ_USER_AGENT_ like '%${reqUserAgent}%'
+        </if>
+        		<if test="loginLocation != null and loginLocation.length() != 0">
+        		AND sull.LOGIN_LOCATION_ like '%${loginLocation}%'
+        </if>
+        	<if test="isFinal != null">
+	            AND sull.IS_FINAL_ = #{isFinal}
+        </if>
+        	<if test="crtTime != null">
+	            AND sull.CRT_TIME_ = #{crtTime}
+        </if>
+        	<if test="crtUserId != null">
+	            AND sull.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+        <if test="userName != null and userName.length() != 0">
+        	AND suu.USER_NAME_ = #{userName}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultType="SysUserLoginLog">
+        select <include  refid="SQL_SYS_USER_LOGIN_LOG_COLUMN" />
+        from SYS_USER_LOGIN_LOG sull
+        <where>
+            sull.LOGIN_LOG_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysUserLoginLog" resultType="SysUserLoginLog">
+        select <include  refid="SQL_SYS_USER_LOGIN_LOG_COLUMN"/>,suu.USER_NAME_ userName
+        from SYS_USER_LOGIN_LOG sull
+        LEFT JOIN sys_user suu ON sull.ACCOUNT_ID_ = suu.USER_ID_
+        <where>
+            <include  refid="SQL_SYS_USER_LOGIN_LOG_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                sull.CRT_TIME_ desc
+        </if>
+        <if test="limitCount != null">
+        	LIMIT #{limitCount}
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysUserLoginLog" resultType="int">
+        select count(
+            sull.LOGIN_LOG_ID_
+        ) as counts
+        from SYS_USER_LOGIN_LOG sull
+        LEFT JOIN sys_user suu ON sull.ACCOUNT_ID_ = suu.USER_ID_
+        <where>
+            <include  refid="SQL_SYS_USER_LOGIN_LOG_WHERE"/>
+        </where>
+        <if test="limitCount != null">
+        	LIMIT #{limitCount}
+        </if>
+    </select>
+    
+	<!-- add 默认使用全局ID -->
+	<insert id="insert" parameterType="SysUserLoginLog" >
+		insert into SYS_USER_LOGIN_LOG 
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+		  	<if test="loginLogId != null">
+        		LOGIN_LOG_ID_,
+      		</if>
+		  	<if test="accountId != null">
+        		ACCOUNT_ID_,
+      		</if>
+		  	<if test="loginType != null">
+        		LOGIN_TYPE_,
+      		</if>
+		  	<if test="operCode != null">
+        		OPER_CODE_,
+      		</if>
+		  	<if test="operName != null">
+        		OPER_NAME_,
+      		</if>
+		  	<if test="engName != null">
+        		ENG_NAME_,
+      		</if>
+		  	<if test="reqUri != null">
+        		REQ_URI_,
+      		</if>
+		  	<if test="operIp != null">
+        		OPER_IP_,
+      		</if>
+		  	<if test="operRes != null">
+        		OPER_RES_,
+      		</if>
+		  	<if test="exceptionName != null">
+        		EXCEPTION_NAME_,
+      		</if>
+		  	<if test="isAccumulateLoginTimes != null">
+        		IS_ACCUMULATE_LOGIN_TIMES_,
+      		</if>
+		  	<if test="content != null">
+        		CONTENT_,
+      		</if>
+		  	<if test="reqType != null">
+        		REQ_TYPE_,
+      		</if>
+		  	<if test="reqMethod != null">
+        		REQ_METHOD_,
+      		</if>
+		  	<if test="browserType != null">
+        		BROWSER_TYPE_,
+      		</if>
+		  	<if test="reqUserAgent != null">
+        		REQ_USER_AGENT_,
+      		</if>
+		  	<if test="loginLocation != null">
+        		LOGIN_LOCATION_,
+      		</if>
+		  	<if test="isFinal != null">
+        		IS_FINAL_,
+      		</if>
+		  	<if test="crtTime != null">
+        		CRT_TIME_,
+      		</if>
+		  	<if test="crtUserId != null">
+        		CRT_USER_ID_,
+      		</if>
+		</trim> 
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			  	<if test="loginLogId != null">
+			  	  	   #{loginLogId,jdbcType=NUMERIC},
+			  	</if>  
+			  	<if test="accountId != null">
+			  	  	   #{accountId,jdbcType=NUMERIC},
+			  	</if>  
+			  	<if test="loginType != null">
+			  	  	   #{loginType,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="operCode != null">
+			  	  	   #{operCode,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="operName != null">
+			  	  	   #{operName,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="engName != null">
+			  	  	   #{engName,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="reqUri != null">
+			  	  	   #{reqUri,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="operIp != null">
+			  	  	   #{operIp,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="operRes != null">
+			  	  	   #{operRes,jdbcType=NUMERIC},
+			  	</if>  
+			  	<if test="exceptionName != null">
+			  	  	   #{exceptionName,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="isAccumulateLoginTimes != null">
+			  	  	   #{isAccumulateLoginTimes,jdbcType=NUMERIC},
+			  	</if>  
+			  	<if test="content != null">
+			  	  	   #{content,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="reqType != null">
+			  	  	   #{reqType,jdbcType=NUMERIC},
+			  	</if>  
+			  	<if test="reqMethod != null">
+			  	  	   #{reqMethod,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="browserType != null">
+			  	  	   #{browserType,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="reqUserAgent != null">
+			  	  	   #{reqUserAgent,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="loginLocation != null">
+			  	  	   #{loginLocation,jdbcType=VARCHAR},
+			  	</if>  
+			  	<if test="isFinal != null">
+			  	  	   #{isFinal,jdbcType=NUMERIC},
+			  	</if>  
+			  	<if test="crtTime != null">
+			  	  	   #{crtTime,jdbcType=TIMESTAMP},
+			  	</if>  
+			  	<if test="crtUserId != null">
+			  	  	   #{crtUserId,jdbcType=NUMERIC},
+			  	</if>  
+		</trim>
+    </insert>
+
+	<!-- update  -->
+	<update id="update" parameterType="SysUserLoginLog">
+		UPDATE SYS_USER_LOGIN_LOG
+		<set>
+		  	<if test="loginLogId != null">
+        		LOGIN_LOG_ID_ = #{loginLogId} ,
+      		</if>
+		  	<if test="accountId != null">
+        		ACCOUNT_ID_ = #{accountId} ,
+      		</if>
+		  	<if test="loginType != null">
+        		LOGIN_TYPE_ = #{loginType} ,
+      		</if>
+		  	<if test="operCode != null">
+        		OPER_CODE_ = #{operCode} ,
+      		</if>
+		  	<if test="operName != null">
+        		OPER_NAME_ = #{operName} ,
+      		</if>
+		  	<if test="engName != null">
+        		ENG_NAME_ = #{engName} ,
+      		</if>
+		  	<if test="reqUri != null">
+        		REQ_URI_ = #{reqUri} ,
+      		</if>
+		  	<if test="operIp != null">
+        		OPER_IP_ = #{operIp} ,
+      		</if>
+		  	<if test="operRes != null">
+        		OPER_RES_ = #{operRes} ,
+      		</if>
+		  	<if test="exceptionName != null">
+        		EXCEPTION_NAME_ = #{exceptionName} ,
+      		</if>
+		  	<if test="isAccumulateLoginTimes != null">
+        		IS_ACCUMULATE_LOGIN_TIMES_ = #{isAccumulateLoginTimes} ,
+      		</if>
+		  	<if test="content != null">
+        		CONTENT_ = #{content} ,
+      		</if>
+		  	<if test="reqType != null">
+        		REQ_TYPE_ = #{reqType} ,
+      		</if>
+		  	<if test="reqMethod != null">
+        		REQ_METHOD_ = #{reqMethod} ,
+      		</if>
+		  	<if test="browserType != null">
+        		BROWSER_TYPE_ = #{browserType} ,
+      		</if>
+		  	<if test="reqUserAgent != null">
+        		REQ_USER_AGENT_ = #{reqUserAgent} ,
+      		</if>
+		  	<if test="loginLocation != null">
+        		LOGIN_LOCATION_ = #{loginLocation} ,
+      		</if>
+		  	<if test="isFinal != null">
+        		IS_FINAL_ = #{isFinal} ,
+      		</if>
+		  	<if test="crtTime != null">
+        		CRT_TIME_ = #{crtTime} ,
+      		</if>
+		  	<if test="crtUserId != null">
+        		CRT_USER_ID_ = #{crtUserId} 
+      		</if>
+		 
+		</set>
+		WHERE
+            sull.LOGIN_LOG_ID_ = #{idValue}
+	</update>
+
+	<!-- delete  -->
+	<delete id="delete" parameterType="SysUserLoginLog">
+		DELETE FROM SYS_USER_LOGIN_LOG
+		WHERE
+            sull.LOGIN_LOG_ID_ = #{idValue}
+	</delete>
+ 
+</mapper>

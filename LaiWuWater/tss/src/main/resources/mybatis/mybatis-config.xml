@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.1//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<typeAliases>
+		<typeAlias type="com.hongguaninfo.hgdf.tss.core.base.BaseEntity"
+			alias="BaseEntity" />
+		<!-- 此处不需要添加其他实体entity别名，改在applicationContext-mybatis.xml里面扫描package -->
+	</typeAliases>
+	<plugins>
+		<!-- 指定数据库分页方言Dialect -->
+		<plugin interceptor="com.hongguaninfo.hgdf.tss.core.interceptor.OffsetLimitInterceptor">
+			<!-- 
+			<property name="dialectClass"
+				value="com.hongguaninfo.hgdf.core.utils.jdbc.dialect.OracleDialect" /> 
+			-->
+			<property name="dialectClass"
+                value="com.hongguaninfo.hgdf.core.utils.jdbc.dialect.MySQLDialect" />
+		</plugin>
+	</plugins>
+</configuration>

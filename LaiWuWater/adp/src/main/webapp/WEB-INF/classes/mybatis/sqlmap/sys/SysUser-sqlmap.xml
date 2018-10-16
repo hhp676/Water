@@ -1,0 +1,554 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hongguaninfo.hgdf.adp.mapper.sys.SysUserMapper">
+
+	<!-- The corresponding field and type -->
+	<resultMap type="SysUser" id="ResultMap">
+		<result column="userId" javaType="Integer" property="userId" />
+		<result column="userName" javaType="String" property="userName" />
+		<result column="engName" javaType="String" property="engName" />
+		<result column="loginName" javaType="String" property="loginName" />
+		<result column="loginPwd" javaType="String" property="loginPwd" />
+		<result column="sex" javaType="Integer" property="sex" />
+		<result column="birthday" javaType="String" property="birthday" />
+		<result column="mobile" javaType="String" property="mobile" />
+		<result column="email" javaType="String" property="email" />
+		<result column="address" javaType="String" property="address" />
+		<result column="telephone" javaType="String" property="telephone" />
+		<result column="descr" javaType="String" property="descr" />
+		<result column="isValid" javaType="Integer" property="isValid" />
+		<result column="isLock" javaType="Integer" property="isLock" />
+		<result column="lastLoginIp" javaType="String" property="lastLoginIp" />
+		<result column="lastLoginTime" jdbcType="TIMESTAMP" property="lastLoginTime" />
+		<result column="isDelete" javaType="Integer" property="isDelete" />
+		<result column="isFinal" javaType="Integer" property="isFinal" />
+		<result column="crtTime" jdbcType="TIMESTAMP" property="crtTime" />
+		<result column="updTime" jdbcType="TIMESTAMP" property="updTime" />
+		<result column="crtUserid" javaType="Integer" property="crtUserid" />
+		<result column="updUserid" javaType="Integer" property="updUserid" />
+		<!-- <result column="lastChangedPwd" javaType="TIMESTAMP" property="lastChangedPwd" />
+		<result column="lastLockTime" javaType="TIMESTAMP" property="lastLockTime" /> -->
+	</resultMap>
+
+	<!-- Each field corresponding alias, convenient call -->
+	<sql id="SQL_SYS_USER_COLUMN">
+		su.USER_ID_ userId, su.USER_NAME_ userName, su.ENG_NAME_
+		engName, su.LOGIN_NAME_
+		loginName, su.LOGIN_PWD_ loginPwd, su.SEX_ sex,
+		su.BIRTHDAY_ birthday,
+		su.MOBILE_ mobile, su.EMAIL_ email, su.ADDRESS_
+		address, su.TELEPHONE_
+		telephone, su.DESCR_ descr, su.IS_VALID_
+		isValid, su.IS_LOCK_ isLock,
+		su.LAST_LOGIN_IP_ lastLoginIp,
+		su.LAST_LOGIN_TIME_ lastLoginTime,
+		su.IS_DELETE_ isDelete, su.IS_FINAL_
+		isFinal, su.CRT_TIME_ crtTime,
+		su.UPD_TIME_ updTime, su.CRT_USERID_
+		crtUserid, su.UPD_USERID_
+		updUserid,su.LAST_CHANGED_PWD_ lastChangedPwd,su.LAST_LOCK_TIME_ lastLockTime
+	</sql>
+
+	<!-- whether multiple fields is empty -->
+	<sql id="SQL_SYS_USER_WHERE">
+		<if test="userId !=null ">
+			AND su.USER_ID_=#{userId}
+		</if>
+		<if test="userName !=null and userName.length()!=0 ">
+			AND su.USER_NAME_ like '%${userName}%'
+		</if>
+		<if test="engName !=null and engName.length()!=0 ">
+			AND su.ENG_NAME_=#{engName}
+		</if>
+		<if test="loginName !=null and loginName.length()!=0 ">                                            
+			AND su.LOGIN_NAME_ like '%${loginName}%'
+		</if>
+		<if test="loginPwd !=null and loginPwd.length()!=0 ">
+			AND su.LOGIN_PWD_=#{loginPwd}
+		</if>
+		<if test="sex !=null ">
+			AND su.SEX_=#{sex}
+		</if>
+		<if test="birthday !=null and birthday.length()!=0 ">
+			AND su.BIRTHDAY_=#{birthday}
+		</if>
+		<if test="mobile !=null and mobile.length()!=0 ">
+			AND su.MOBILE_=#{mobile}
+		</if>
+		<if test="email !=null and email.length()!=0 ">
+			AND su.EMAIL_=#{email}
+		</if>
+		<if test="address !=null and address.length()!=0 ">
+			AND su.ADDRESS_=#{address}
+		</if>
+		<if test="telephone !=null and telephone.length()!=0 ">
+			AND su.TELEPHONE_=#{telephone}
+		</if>
+		<if test="descr !=null and descr.length()!=0 ">
+			AND su.DESCR_=#{descr}
+		</if>
+		<if test="isValid !=null ">
+			AND su.IS_VALID_=#{isValid}
+		</if>
+		<if test="isLock !=null ">
+			AND su.IS_LOCK_=#{isLock}
+		</if>
+		<if test="lastLoginIp !=null and lastLoginIp.length()!=0 ">
+			AND su.LAST_LOGIN_IP_=#{lastLoginIp}
+		</if>
+		<if test="lastLoginTime !=null ">
+			AND su.LAST_LOGIN_TIME_=#{lastLoginTime}
+		</if>
+		<if test="isDelete !=null ">
+			AND su.IS_DELETE_=#{isDelete}
+		</if>
+		<if test="isFinal !=null ">
+			AND su.IS_FINAL_=#{isFinal}
+		</if>
+		<if test="crtTime !=null ">
+			AND su.CRT_TIME_=#{crtTime}
+		</if>
+		<if test="updTime !=null ">
+			AND su.UPD_TIME_=#{updTime}
+		</if>
+		<if test="crtUserid !=null ">
+			AND su.CRT_USERID_=#{crtUserid}
+		</if>
+		<if test="updUserid !=null ">
+			AND su.UPD_USERID_=#{updUserid}
+		</if>
+	</sql>
+
+	<!-- Query All -->
+	<select id="getList" parameterType="SysUser" resultType="SysUser">
+		select
+		<include refid="SQL_SYS_USER_COLUMN" />
+		from SYS_USER su
+		<where>
+			<include refid="SQL_SYS_USER_WHERE" />
+		</where>
+		<if test="orderStr != null and orderStr.length() != 0">
+			ORDER BY ${orderStr}
+		</if>
+		<if test="orderStr == null or orderStr.length() == 0">
+			ORDER BY
+			su.CRT_TIME_ desc
+		</if>
+	</select>
+
+	<!-- Statistical line -->
+	<select id="getListCount" parameterType="SysUser" resultType="int">
+		select count(*) as counts
+		from SYS_USER su
+		<where>
+			<include refid="SQL_SYS_USER_WHERE" />
+		</where>
+	</select>
+<!-- Query All -->
+	<select id="getReportList" parameterType="SysUser" resultType="SysUser">
+		select
+		<include refid="SQL_SYS_USER_COLUMN" />,
+		su1.USER_NAME_ crtUserName,
+		su2.USER_NAME_ updUserName
+		from SYS_USER su 
+		left JOIN `sys_user_ugroup_join` ssuj ON su.`USER_ID_`=ssuj.`USER_ID_` 
+		left JOIN `sys_user_group` sug ON ssuj.`GROUP_ID_`=sug.`GROUP_ID_`
+		left JOIN `sys_department` sdp ON sug.`DEPART_ID_`=sdp.DEPART_ID_
+		
+		LEFT JOIN sys_user su1 ON su.CRT_USERID_ = su1.USER_ID_
+ 		LEFT JOIN sys_user su2 ON su.UPD_USERID_ = su2.USER_ID_
+		<where>
+			<include refid="SQL_SYS_USER_WHERE" />
+			 and su.USER_ID_ is not null ${sql}
+		</where>
+		group by su.USER_ID_
+		<if test="orderStr != null and orderStr.length() != 0">
+			ORDER BY ${orderStr}
+		</if>
+		<if test="orderStr == null or orderStr.length() == 0">
+			ORDER BY
+			su.USER_ID_ desc
+		</if>
+	</select>
+
+	<!-- Statistical line -->
+	<select id="getReportListCount" parameterType="SysUser" resultType="int">
+		select count(*) as counts
+		from (select su.USER_ID_ from SYS_USER su 
+		 
+		left JOIN `sys_user_ugroup_join` ssuj ON su.`USER_ID_`=ssuj.`USER_ID_` 
+		left JOIN `sys_user_group` sug ON ssuj.`GROUP_ID_`=sug.`GROUP_ID_`
+		left JOIN `sys_department` sdp ON sug.`DEPART_ID_`=sdp.DEPART_ID_
+		
+		LEFT JOIN sys_user su1 ON su.CRT_USERID_ = su1.USER_ID_
+ 		LEFT JOIN sys_user su2 ON su.UPD_USERID_ = su2.USER_ID_
+		<where>
+			<include refid="SQL_SYS_USER_WHERE" /> 
+			and su.USER_ID_ is not null ${sql} and su.IS_DELETE_ =0 
+		</where>
+		group by su.USER_ID_ ) tmpTable
+	</select>
+	
+	
+	<select id="getUserByGroupId" parameterType="Integer" resultType="SysUser">
+        select <include refid="SQL_SYS_USER_COLUMN" />
+        from SYS_USER_UGROUP_JOIN SUUJ
+        left join SYS_USER SU on SUUJ.USER_ID_=SU.USER_ID_
+        where  SU.IS_DELETE_ = 0
+        and GROUP_ID_=#{groupId}
+    </select>
+	<!-- According to the id check record -->
+	<select id="getById" parameterType="int" resultType="SysUser">
+		select
+		<include refid="SQL_SYS_USER_COLUMN" />
+		from SYS_USER su
+		<where>
+			su.USER_ID_ = #{idValue}
+		</where>
+	</select>
+
+	<!-- add -->
+	<insert id="insert" parameterType="SysUser">
+		insert into SYS_USER
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="userId != null">
+				USER_ID_,
+			</if>
+			<if test="userName != null">
+				USER_NAME_,
+			</if>
+			<if test="engName != null">
+				ENG_NAME_,
+			</if>
+			<if test="loginName != null">
+				LOGIN_NAME_,
+			</if>
+			<if test="loginPwd != null">
+				LOGIN_PWD_,
+			</if>
+			<if test="sex != null">
+				SEX_,
+			</if>
+			<if test="birthday != null">
+				BIRTHDAY_,
+			</if>
+			<if test="mobile != null">
+				MOBILE_,
+			</if>
+			<if test="email != null">
+				EMAIL_,
+			</if>
+			<if test="address != null">
+				ADDRESS_,
+			</if>
+			<if test="telephone != null">
+				TELEPHONE_,
+			</if>
+			<if test="descr != null">
+				DESCR_,
+			</if>
+			<if test="isValid != null">
+				IS_VALID_,
+			</if>
+			<if test="isLock != null">
+				IS_LOCK_,
+			</if>
+			<if test="lastLoginIp != null">
+				LAST_LOGIN_IP_,
+			</if>
+			<if test="lastLoginTime != null">
+				LAST_LOGIN_TIME_,
+			</if>
+			<if test="isDelete != null">
+				IS_DELETE_,
+			</if>
+			<if test="isFinal != null">
+				IS_FINAL_,
+			</if>
+			<if test="crtTime != null">
+				CRT_TIME_,
+			</if>
+			<if test="updTime != null">
+				UPD_TIME_,
+			</if>
+			<if test="crtUserid != null">
+				CRT_USERID_,
+			</if>
+			<if test="updUserid != null">
+				UPD_USERID_,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="userId != null">
+				#{userId,jdbcType=NUMERIC},
+			</if>
+			<if test="userName != null">
+				#{userName,jdbcType=VARCHAR},
+			</if>
+			<if test="engName != null">
+				#{engName,jdbcType=VARCHAR},
+			</if>
+			<if test="loginName != null">
+				#{loginName,jdbcType=VARCHAR},
+			</if>
+			<if test="loginPwd != null">
+				#{loginPwd,jdbcType=VARCHAR},
+			</if>
+			<if test="sex != null">
+				#{sex,jdbcType=NUMERIC},
+			</if>
+			<if test="birthday != null">
+				#{birthday,jdbcType=VARCHAR},
+			</if>
+			<if test="mobile != null">
+				#{mobile,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				#{email,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				#{address,jdbcType=VARCHAR},
+			</if>
+			<if test="telephone != null">
+				#{telephone,jdbcType=VARCHAR},
+			</if>
+			<if test="descr != null">
+				#{descr,jdbcType=VARCHAR},
+			</if>
+			<if test="isValid != null">
+				#{isValid,jdbcType=NUMERIC},
+			</if>
+			<if test="isLock != null">
+				#{isLock,jdbcType=NUMERIC},
+			</if>
+			<if test="lastLoginIp != null">
+				#{lastLoginIp,jdbcType=VARCHAR},
+			</if>
+			<if test="lastLoginTime != null">
+				#{lastLoginTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="isDelete != null">
+				#{isDelete,jdbcType=NUMERIC},
+			</if>
+			<if test="isFinal != null">
+				#{isFinal,jdbcType=NUMERIC},
+			</if>
+			<if test="crtTime != null">
+				#{crtTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updTime != null">
+				#{updTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="crtUserid != null">
+				#{crtUserid,jdbcType=NUMERIC},
+			</if>
+			<if test="updUserid != null">
+				#{updUserid,jdbcType=NUMERIC},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- update -->
+	<update id="update" parameterType="SysUser">
+		UPDATE SYS_USER
+		<set>
+
+			<if test="userName !=null">
+				USER_NAME_ = #{userName} ,
+			</if>
+			<if test="engName !=null">
+				ENG_NAME_ = #{engName} ,
+			</if>
+			<if test="loginName !=null">
+				LOGIN_NAME_ = #{loginName} ,
+			</if>
+			<if test="loginPwd !=null">
+				LOGIN_PWD_ = #{loginPwd} ,
+			</if>
+			<if test="sex !=null">
+				SEX_ = #{sex} ,
+			</if>
+			<if test="birthday !=null">
+				BIRTHDAY_ = #{birthday} ,
+			</if>
+			<if test="mobile !=null">
+				MOBILE_ = #{mobile} ,
+			</if>
+			<if test="email !=null">
+				EMAIL_ = #{email} ,
+			</if>
+			<if test="address !=null">
+				ADDRESS_ = #{address} ,
+			</if>
+			<if test="telephone !=null">
+				TELEPHONE_ = #{telephone} ,
+			</if>
+			<if test="descr !=null">
+				DESCR_ = #{descr} ,
+			</if>
+			<if test="isValid !=null">
+				IS_VALID_ = #{isValid} ,
+			</if>
+			<if test="isLock !=null">
+				IS_LOCK_ = #{isLock} ,
+			</if>
+			<if test="lastLoginIp !=null">
+				LAST_LOGIN_IP_ = #{lastLoginIp} ,
+			</if>
+			<if test="lastChangedPwd !=null">
+				LAST_CHANGED_PWD_ = #{lastChangedPwd} ,
+			</if>
+			<if test="lastLockTime !=null">
+				LAST_LOCK_TIME_ = #{lastLockTime} ,
+			</if>
+			<if test="lastLoginTime !=null">
+				LAST_LOGIN_TIME_ = #{lastLoginTime} ,
+			</if>
+			<if test="isDelete !=null">
+				IS_DELETE_ = #{isDelete} ,
+			</if>
+			<if test="isFinal !=null">
+				IS_FINAL_ = #{isFinal} ,
+			</if>
+			<if test="crtTime !=null">
+				CRT_TIME_ = #{crtTime} ,
+			</if>
+			<if test="updTime !=null">
+				UPD_TIME_ = #{updTime} ,
+			</if>
+			<if test="crtUserid !=null">
+				CRT_USERID_ = #{crtUserid} ,
+			</if>
+			<if test="updUserid !=null">
+				UPD_USERID_ = #{updUserid}
+			</if>
+		</set>
+		WHERE
+		USER_ID_=#{userId}
+	</update>
+
+	<!-- delete -->
+	<delete id="delete" parameterType="SysUser">
+		DELETE FROM SYS_USER
+		WHERE
+		USER_ID_=#{userId}
+	</delete>
+
+	<!-- delete(ids) -->
+	<delete id="deleteById" parameterType="java.lang.Integer">
+		DELETE FROM SYS_USER
+		WHERE
+		USER_ID_=#{userId}
+	</delete>
+
+	<!-- 获取用户角色 -->
+	<select id="getUserRoles" parameterType="int" resultType="SysRole">
+		select
+		distinct sr.role_code_ roleCode, sr.role_id_ roleId
+		from sys_user su,
+		sys_user_role_join surj, sys_role sr
+		where su.user_id_ = #{userId}
+		and
+		su.user_id_ = surj.user_id_
+		and surj.role_id_ = sr.role_id_
+	</select>
+
+	<!-- 获取用户权限 -->
+	<select id="getUserAuths" parameterType="java.util.Map" resultType="SysAuth">
+		SELECT DISTINCT a.authCode, a.authId, a.authName,a.authType, a.authUri, a.authIcon,
+		a.fid, a.fids,a.orderId,
+		a.isVisible, a.isDelete
+		FROM (SELECT sa.auth_code_ authCode,
+		sa.auth_id_ authId,
+		sa.auth_name_ authName,
+		sa.auth_uri_ authUri,
+		sa.auth_icon_ authIcon,
+		sa.fid_ fid,
+		sa.fids_ fids,
+		sa.order_id_ orderId,
+		sa.is_visible_ isVisible,
+		sa.is_delete_ isDelete,
+		sa.auth_type_ authType
+		FROM sys_user su, sys_user_auth_join suaj, sys_auth sa
+		WHERE su.user_id_ = #{userId}
+		AND su.user_id_ = suaj.user_id_
+		AND suaj.auth_id_ = sa.auth_id_
+		UNION ALL
+		SELECT sa.auth_code_ authCode,
+		sa.auth_id_ authId,
+		sa.auth_name_ authName,
+		sa.auth_uri_ authUri,
+		sa.auth_icon_ authIcon,
+		sa.fid_ fid,
+		sa.fids_ fids,
+		sa.order_id_ orderId,
+		sa.is_visible_ isVisible,
+		sa.is_delete_ isDelete,
+		sa.auth_type_ authType
+		FROM sys_user su,
+		sys_user_role_join surj,
+		sys_role_auth_join araj,
+		sys_auth sa
+		WHERE su.user_id_ = #{userId}
+		AND su.user_id_ = surj.user_id_
+		AND surj.role_id_ = araj.role_id_
+		AND araj.auth_id_ = sa.auth_id_
+		UNION ALL
+		SELECT sa.auth_code_ authCode,
+		sa.auth_id_ authId,
+		sa.auth_name_ authName,
+		sa.auth_uri_ authUri,
+		sa.auth_icon_ authIcon,
+		sa.fid_ fid,
+		sa.fids_ fids,
+		sa.order_id_ orderId,
+		sa.is_visible_ isVisible,
+		sa.is_delete_ isDelete,
+		sa.auth_type_ authType
+		FROM sys_user su,
+		sys_user_ugroup_join suuj,
+		sys_ugroup_auth_join suaj,
+		sys_auth sa
+		WHERE su.user_id_ = #{userId}
+		AND su.user_id_ = suuj.user_id_
+		AND suuj.group_id_ = suaj.group_id_
+		AND suaj.auth_id_ = sa.auth_id_	
+		UNION ALL
+		SELECT sa.auth_code_ authCode,
+		sa.auth_id_ authId,
+		sa.auth_name_ authName,
+		sa.auth_uri_ authUri,
+		sa.auth_icon_ authIcon,
+		sa.fid_ fid,
+		sa.fids_ fids,
+		sa.order_id_ orderId,
+		sa.is_visible_ isVisible,
+		sa.is_delete_ isDelete,
+		sa.auth_type_ authType
+		FROM 
+		sys_auth sa,sys_role_ugroup_join sruj ,sys_user_ugroup_join suuj,sys_user su, 
+ 		sys_role_auth_join sraj
+		 where su.user_id_ = #{userId} 
+         and su.USER_ID_ = suuj.USER_ID_  
+		 and   sa.AUTH_ID_ = sraj.AUTH_ID_
+		 and   sraj.ROLE_ID_ = sruj.ROLE_ID_
+		 and  suuj.group_id_ = sruj.GROUP_ID_
+		) a
+		WHERE a.isVisible=1 AND a.isDelete!=1 
+		<if test="authType !=null">
+			AND a.authType = #{authType}
+		</if>
+		order by a.orderId asc, a.authId asc
+	</select>
+	
+	<select id="getCntListForChart" parameterType="SysUser" resultType="SysUser">
+		SELECT COUNT(*) as count,MONTH(BIRTHDAY_) as month FROM sys_user
+		<where>
+			<if test="sex !=null ">
+				SEX_=#{sex}
+			</if>
+		</where>		 
+		 GROUP BY MONTH(BIRTHDAY_)
+	</select>
+</mapper>

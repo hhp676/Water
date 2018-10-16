@@ -1,0 +1,35 @@
+#set($entityFolder="entity")
+package $meta.pkgName.$entityFolder;
+import java.util.Date;
+import com.hongguaninfo.hgdf.adp.core.base.BaseEntity;
+
+ /**
+ * $meta.tableDesc: $meta.tableName
+ * entity $meta.sLayer
+ * @author henry
+ */
+
+public class $meta.className extends BaseEntity{
+#foreach( $col in $meta.cols )
+	//$col.colName : $col.colDesc
+	private $col.javaType $col.fieldName;
+
+#end
+
+#foreach( $col in $meta.cols )
+	/**
+	 * $col.colName
+	 */
+	public $col.javaType $col.geOperName () {
+		return $col.fieldName;
+	}
+
+	/**
+	 * $col.colName
+	 */
+	public void $col.seOperName ($col.javaType $col.fieldName) {
+		this.$col.fieldName = $col.fieldName;
+	}
+#end
+
+}

@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE Configure PUBLIC "-//Mort Bay Consulting//DTD Configure//EN" "http://jetty.mortbay.org/configure.dtd">
+
+<Configure class="org.eclipse.jetty.webapp.WebAppContext">
+
+	<!-- an XADataSource -->
+	<New id="mydatasourceHgadp" class="org.eclipse.jetty.plus.jndi.Resource">
+        <Arg>java:/comp/env/jdbc/oa</Arg>
+        <Arg>
+            <New class="com.alibaba.druid.pool.DruidDataSource">
+                <Set name="driverClassName">com.mysql.jdbc.Driver</Set>
+                <Set name="url">jdbc:mysql://127.0.0.1:3306/db_oa?useUnicode=true&amp;characterEncoding=utf-8</Set>
+                <Set name="username">oa</Set>
+                <Set name="password">oa</Set>
+                <Set name="maxActive">10</Set>
+            </New>
+        </Arg>
+	</New>
+
+</Configure>

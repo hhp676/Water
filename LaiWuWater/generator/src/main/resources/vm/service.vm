@@ -1,0 +1,172 @@
+#set($daoFolder="dao")
+#set($mapperFolder="mapper")
+#set($entityFolder="entity")
+#set($MapperSuffix="Mapper")
+#set($DaoSuffix="Dao")
+#set($ServiceSuffix="Service")
+#set($add="add")
+#set($update="update")
+#set($get="get")
+#set($delete="delete")
+#set($list="List")
+#set($page="Page")
+#set($getAll="getAll")
+#set($strVo="vo")
+#set($logic="logic")
+#set($byId="byId")
+#set($seriviceFolder="service")
+#set($classSuffix="class.getName().toString()")
+package $meta.pkgName.$seriviceFolder;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.math.BigDecimal;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.hongguaninfo.hgdf.adp.core.base.BasePage;
+import com.hongguaninfo.hgdf.adp.core.exception.BizException;
+import com.hongguaninfo.hgdf.adp.core.utils.SessionUtils;
+import com.hongguaninfo.hgdf.adp.core.utils.generator.DbIdGenerator;
+import com.hongguaninfo.hgdf.core.utils.page.Page;
+
+import $meta.pkgName.$entityFolder.$meta.className;
+import $meta.pkgName.$daoFolder.$meta.className$DaoSuffix;
+
+ /**
+ * $meta.tableDesc: $meta.tableName
+ * biz $meta.sLayer
+ * @author henry
+ */
+
+@Service("$meta.firstLowertableName$ServiceSuffix")
+public class $meta.className$ServiceSuffix{
+
+	@Autowired
+	private $meta.className$DaoSuffix $meta.firstLowertableName$DaoSuffix;
+
+	@Autowired
+	private DbIdGenerator dbIdGenerator;	
+
+	/**
+	 * REMARK
+	 *
+	 * Show all content and can paging
+	 * The following id to give priority to key !
+	 */
+	public List<$meta.className> $get$meta.className$list
+	(BasePage<$meta.className> basePage,
+            $meta.className vo, Map<String, Object> map) throws BizException {
+		vo.setIsDelete(0);
+        basePage.setFilters(vo);
+        Page<$meta.className> page = $meta.firstLowertableName$DaoSuffix
+        .pageQuery(basePage);
+        List<$meta.className> list = page.getResult();
+        /**for ($meta.className bo : list) {
+            bo.setIsFinalStr(sysDatadicItemBiz.getItemNameByValue("LOGIC_TAG",
+                    bo.getIsFinal() + ""));
+        }*/
+        map.put("rows", list);
+        map.put("total", page.getTotalCount());
+        return list;
+	}
+
+	/**
+	 * REMARK
+	 *
+	 * Through the id inquires the out a data
+	 * Date need their conversion !
+	 * UserName is the current user name !
+	 */
+	public void $add$meta.className
+	($meta.className $meta.firstLowertableName) throws BizException{
+		#foreach( $col in $meta.pkCols )
+			$meta.firstLowertableName
+			.set$col.fieldNameBig
+			(dbIdGenerator.getNextId().intValue());
+	    #end
+		$meta.firstLowertableName
+		.setIsDelete(0);
+        $meta.firstLowertableName
+        .setIsFinal(0);
+        $meta.firstLowertableName
+        .setCrtTime(new Date());
+        $meta.firstLowertableName
+        .setCrtUserid(SessionUtils.getUserId());
+        $meta.firstLowertableName
+        .setUpdTime(new Date());
+        $meta.firstLowertableName
+        .setUpdUserid(SessionUtils.getUserId());
+		$meta.firstLowertableName$DaoSuffix
+					.save($meta.firstLowertableName);
+	}
+
+	/**
+	 * REMARK
+	 *
+	 * update data
+	 * Date need their conversion !
+	 */
+	public void $update$meta.className
+	($meta.className $meta.firstLowertableName) throws BizException{
+ 		$meta.firstLowertableName
+ 		.setUpdTime(new Date());
+        $meta.firstLowertableName
+        .setUpdUserid(SessionUtils.getUserId());
+		$meta.firstLowertableName$DaoSuffix
+						.update($meta.firstLowertableName);
+	}
+
+	/**
+	 * REMARK
+	 *
+	 * Through the id delete a data
+	 */
+	public void $delete$meta.className
+	(int id) throws BizException{
+		$meta.firstLowertableName$DaoSuffix
+		.delete(id);
+	}
+	
+	/**
+	 * REMARK
+	 *
+	 * Through the id delete a data logic
+	 */
+	public void $delete$meta.className$logic
+	(int id) throws BizException{
+        $meta.className $meta.firstLowertableName = new $meta.className
+        ();
+        $meta.firstLowertableName
+        .setUpdTime(new Date());
+        $meta.firstLowertableName
+        .setUpdUserid(SessionUtils.getUserId());
+        $meta.firstLowertableName
+        .setIsDelete(1);
+		#foreach( $col in $meta.pkCols )
+			$meta.firstLowertableName
+			.set$col.fieldNameBig
+			(id);
+	    #end        
+        $meta.firstLowertableName$DaoSuffix
+        .update($meta.firstLowertableName);
+	}	
+	
+
+	/**
+	 * REMARK
+	 *
+	 * Inquires the individual data
+	 * Date need their conversion !
+	 */
+	public $meta.className $get$meta.className$ById
+	(int id) throws BizException{
+		if (id == 0) {
+            return null;
+        }
+        return $meta.firstLowertableName$DaoSuffix
+        .getById(id);
+	}
+}

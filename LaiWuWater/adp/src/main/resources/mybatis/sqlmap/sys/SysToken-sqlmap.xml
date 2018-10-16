@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hongguaninfo.hgdf.adp.mapper.sys.SysTokenMapper">
+
+	<!-- The corresponding field and type -->
+	<resultMap type="SysToken" id="ResultMap">
+		<result column="tokenId" javaType="Integer" property="tokenId" />
+		<result column="userId" javaType="Integer" property="userId" />
+		<result column="status" javaType="Integer" property="status" />
+		<result column="useType" javaType="String" property="useType" />
+		<result column="avoidLogin" javaType="Integer" property="avoidLogin" />
+		<result column="tokenSign" javaType="String" property="tokenSign" />
+		<result column="crtTime" jdbcType="TIMESTAMP" property="crtTime" />
+		<result column="dueTime" jdbcType="TIMESTAMP" property="dueTime" />
+	</resultMap>
+
+	<!-- Each field corresponding alias, convenient call -->
+	<sql id="SQL_SYS_TOKEN_COLUMN">
+		st.TOKEN_ID_ tokenId, st.USER_ID_ userId, st.STATUS_ status, st.USE_TYPE_ useType,
+		st.AVOID_LOGIN_ avoidLogin, st.TOKEN_SIGN_ tokenSign, st.CRT_TIME_
+		crtTime, st.DUE_TIME_ dueTime
+	</sql>
+
+	<!-- whether multiple fields is empty -->
+	<sql id="SQL_SYS_TOKEN_WHERE">
+		<if test="tokenId !=null ">
+			AND st.TOKEN_ID_=#{tokenId}
+		</if>
+		<if test="userId !=null ">
+			AND st.USER_ID_=#{userId}
+		</if>
+		<if test="status !=null ">
+			AND st.STATUS_=#{status}
+		</if>
+		<if test="useType !=null and useType.length()!=0 ">
+			AND st.USE_TYPE_=#{useType}
+		</if>
+		<if test="avoidLogin !=null ">
+			AND st.AVOID_LOGIN_=#{avoidLogin}
+		</if>
+		<if test="tokenSign !=null and tokenSign.length()!=0 ">
+			AND st.TOKEN_SIGN_=#{tokenSign}
+		</if>
+		<if test="crtTime !=null ">
+			AND st.CRT_TIME_=#{crtTime}
+		</if>
+		<if test="dueTime !=null ">
+			<![CDATA[AND st.DUE_TIME_ <= #{dueTime}]]> 
+		</if>
+	</sql>
+
+	<!-- Query All -->
+	<select id="getList" parameterType="SysToken" resultType="SysToken">
+		select
+		<include refid="SQL_SYS_TOKEN_COLUMN" />
+		from SYS_TOKEN st
+		<where>
+			<include refid="SQL_SYS_TOKEN_WHERE" />
+		</where>
+		<if test="orderStr != null and orderStr.length() != 0">
+			ORDER BY ${orderStr}
+		</if>
+		<if test="orderStr == null or orderStr.length() == 0">
+			ORDER BY
+			st.TOKEN_ID_ desc
+		</if>
+	</select>
+
+	<!-- Statistical line -->
+	<select id="getListCount" parameterType="SysToken" resultType="int">
+		select count(*) as counts
+		from SYS_TOKEN st
+		<where>
+			<include refid="SQL_SYS_TOKEN_WHERE" />
+		</where>
+	</select>
+
+	<!-- According to the id check record -->
+	<select id="getById" parameterType="int" resultType="SysToken">
+		select
+		<include refid="SQL_SYS_TOKEN_COLUMN" />
+		from SYS_TOKEN st
+		<where>
+			st.TOKEN_ID_ = #{idValue}
+		</where>
+	</select>
+
+	<!-- add é»è®¤ä½¿ç¨å¨å±ID -->
+	<!-- FOR ORACLE DEMO <selectKey resultType="java.math.BigDecimal" keyProperty="varId" 
+		order="BEFORE"> select SEQ_SYS_VARIABLE.nextVal as varId from dual </selectKey> -->
+	<!-- FOR MYSQL KEY DEMO <selectKey keyProperty="varId" resultType="java.math.BigDecimal" 
+		order="AFTER"> select LAST_INSERT_ID() </selectKey> -->
+	<insert id="insert" parameterType="SysToken">
+		insert into SYS_TOKEN
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="tokenId != null">
+				TOKEN_ID_,
+			</if>
+			<if test="userId != null">
+				USER_ID_,
+			</if>
+			<if test="status != null">
+				STATUS_,
+			</if>
+			<if test="useType != null">
+				USE_TYPE_,
+			</if>
+			<if test="avoidLogin != null">
+				AVOID_LOGIN_,
+			</if>
+			<if test="tokenSign != null">
+				TOKEN_SIGN_,
+			</if>
+			<if test="crtTime != null">
+				CRT_TIME_,
+			</if>
+			<if test="dueTime != null">
+				DUE_TIME_,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="tokenId != null">
+				#{tokenId,jdbcType=NUMERIC},
+			</if>
+			<if test="userId != null">
+				#{userId,jdbcType=NUMERIC},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=NUMERIC},
+			</if>
+			<if test="useType != null">
+				#{useType,jdbcType=VARCHAR},
+			</if>
+			<if test="avoidLogin != null">
+				#{avoidLogin,jdbcType=NUMERIC},
+			</if>
+			<if test="tokenSign != null">
+				#{tokenSign,jdbcType=VARCHAR},
+			</if>
+			<if test="crtTime != null">
+				#{crtTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="dueTime != null">
+				#{dueTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- update -->
+	<update id="update" parameterType="SysToken">
+		UPDATE SYS_TOKEN
+		<set>
+			<if test="tokenId !=null">
+				TOKEN_ID_ = #{tokenId} ,
+			</if>
+			<if test="userId !=null">
+				USER_ID_ = #{userId} ,
+			</if>
+			<if test="status !=null">
+				STATUS_ = #{status} ,
+			</if>
+			<if test="useType !=null">
+				USE_TYPE_ = #{useType} ,
+			</if>
+			<if test="avoidLogin !=null">
+				AVOID_LOGIN_ = #{avoidLogin} ,
+			</if>
+			<if test="tokenSign !=null">
+				TOKEN_SIGN_ = #{tokenSign} ,
+			</if>
+			<if test="crtTime !=null">
+				CRT_TIME_ = #{crtTime} ,
+			</if>
+			<if test="dueTime !=null">
+				DUE_TIME_ = #{dueTime}
+			</if>
+		</set>
+		WHERE
+		TOKEN_ID_=#{tokenId}
+	</update>
+
+	<!-- delete -->
+	<delete id="delete" parameterType="SysToken">
+		DELETE FROM SYS_TOKEN
+		WHERE
+		TOKEN_ID_=#{tokenId}
+	</delete>
+
+	<!-- delete(ids) -->
+	<delete id="deleteById" parameterType="java.lang.Integer">
+		DELETE FROM sys_token
+		WHERE
+		TOKEN_ID_=#{tokenId}
+	</delete>
+
+</mapper>

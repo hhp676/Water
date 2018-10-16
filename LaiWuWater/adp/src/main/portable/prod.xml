@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<portable-config>
+    <config-file path="WEB-INF/classes/logback.xml">
+        <replace xpath="/configuration/property[@name='LOG_DIR']/@value">/var/log/hgdf-adp/</replace>
+        <replace xpath="/configuration/property[@name='LOG_LEVEL']/@value">ERROR</replace>
+        <!-- <replace xpath="/configuration/root/@level">ERROR</replace> -->
+        <replace xpath="/configuration/property[@name='LOG_REF']/@value">FILE</replace>
+    </config-file>
+</portable-config>
